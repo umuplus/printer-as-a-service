@@ -6,6 +6,11 @@
                     href="/?ts=<%- $qs.val('ts') %>"><i class="fa fa-dashboard"></i> <%= __('app.dashboard') %></a>
             </li>
             <li class="nav-item">
+                <a class="nav-link <%- $module === 'settings' ? 'active' : '' %>"
+                    href="/settings?ts=<%- $qs.val('ts') %>"><i class="fa fa-cogs"></i> <%= __('app.settings') %></a>
+            </li>
+            <li>&nbsp</li>
+            <li class="nav-item">
                 <a class="nav-link <%- $module === 'users' ? 'active' : '' %>"
                     href="/users?ts=<%- $qs.val('ts') %>"><i class="fa fa-users"></i> <%= __('app.users') %></a>
             </li>

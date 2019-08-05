@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fa fa-settings"></i> <%= __('app.settings') %> »
+        <% if (setting) { %>
+        <% const langKey = `settings.${ setting.name }` %>
+        <%= langKey === __(langKey) ? setting.name.toUpperCase() : __(langKey) %>
+        <% } else { %>
+        <%= __('btn.new.setting') %>
+        <% }; %>
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<form method="post">
+    <% if (!setting) { %>
+    <div class="form-group">
+        <label for="field-name"><%= __('field.name') %></label>
+        <input type="text" class="form-control" id="field-name" name="name"
+            placeholder="<%= __('field.name') %>" value="<%- setting ? setting.name : '' %>">
+    </div>
+    <% }; %>
+    <div id="jsoneditor" style="height: 500px;" class="d-none"><%- JSON.stringify(value) %></div>
+    <p>&nbsp;</p>
+    <a href="javascript:" id="save-json" class="btn btn-success btn-block mr-2"><%= __('btn.submit') %></a>
+</form>
+
+<script type="text/javascript">
+    const $loop = setInterval(function () {
+        try {
+            const el = $('#jsoneditor');
+            clearInterval($loop);
+
+            const formJSON = el.closest('form');
+            const data = JSON.parse(el.html());
+            el.empty().removeClass('d-none');
+            const editor = new JSONEditor(el.get(0), {});
+            editor.set(data);
+
+            $('#save-json').click(function () {
+                const holder = $('<textarea name="value"></textarea>');
+                holder.val(JSON.stringify(editor.get()));
+                holder.addClass('d-none');
+                formJSON.append(holder);
+                formJSON.submit();
+            });
+        } catch (e) {
+            console.log(e.message);
+        }
+    }, 500);
+</script>
