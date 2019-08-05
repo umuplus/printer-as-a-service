@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(session({
     store: new ConnectRedis({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT, ttl: 86400 }),
     resave: true,
-    secret: 'TZDfRnFZ8KBq7XANufcakdqX9cF9jwrKK5Z6FpFKXfQbNnJP',
+    secret: 'XRvJHkz7Q4w6CHnPgwwJkMGmG3qQPCdWWYrrNUxwfK93efnJ',
     saveUninitialized: true,
     cookie: { maxAge: 86400000 }
 }));
@@ -75,7 +75,7 @@ app.use(function (req, res, next) {
 app.use(async function (req, res, next) {
     try {
         const data = auth.verify(req.session.token);
-        const user = await UserModel.single({ email: data.email });
+        const user = await UserModel.single({ username: data.username });
         if (user && !user.deleted) {
             req.$user = user;
             res.locals.$user = user;
@@ -87,6 +87,7 @@ app.use(async function (req, res, next) {
 });
 
 app.use('/', require('./home'));
+app.use('/settings', require('./setting'));
 app.use('/users', require('./user'));
 
 module.exports = app;

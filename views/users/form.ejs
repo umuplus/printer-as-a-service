@@ -31,11 +31,11 @@
             placeholder="<%= __('field.name') %>" value="<%- user ? user.name : '' %>">
     </div>
     <div class="form-group">
-        <label for="field-email"><%= __('field.email') %></label>
+        <label for="field-username"><%= __('field.username') %></label>
         <% if (user) { %>
-        <p class="form-control"><%- user.email %></p>
+        <p class="form-control"><%- user.username %></p>
         <% } else { %>
-        <input type="email" class="form-control" id="field-email" name="email" placeholder="<%= __('field.email') %>">
+        <input type="text" class="form-control" id="field-username" name="username" placeholder="<%= __('field.username') %>">
         <% }; %>
     </div>
     <div class="form-group">
@@ -48,13 +48,19 @@
         <input type="password" class="form-control" id="field-passphrase"
             name="passphrase" placeholder="<%= __('field.passphrase') %>">
     </div>
+    <% if (user && user.level) { %>
     <div class="form-group">
-        <label for="field-admin"><%= __('field.admin') %></label>
-        <select class="form-control" id="field-admin" name="admin">
-            <option value="false" <%- user && !user.admin ? 'selected' : '' %> ><%= __('field.no') %></option>
-            <option value="true" <%- user && user.admin ? 'selected' : '' %> ><%= __('field.yes') %></option>
+        <label for="field-level"><%= __('field.level._') %></label>
+        <select class="form-control" id="field-level" name="level">
+            <% for (let privilege in privileges) { %>
+            <% if (privileges[privilege] <= $user.level) { %>
+            <option <%- user && user.level === privileges[privilege] ? 'selected' : '' %>
+                value="<%- privileges[privilege] %>"><%- __(`field.level.${ privilege }`) %></option>
+            <% }; %>
+            <% }; %>
         </select>
     </div>
+    <% }; %>
     <% if (user && user.login) { %>
     <% const seen = user && user.login && Date.now() - user.login < 300000; %>
     <div class="form-group">

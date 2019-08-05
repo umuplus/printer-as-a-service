@@ -15,8 +15,8 @@
         <thead>
             <tr>
                 <th><%= __('field.name') %></th>
-                <th><%= __('field.email') %></th>
-                <th><%= __('field.admin') %></th>
+                <th><%= __('field.username') %></th>
+                <th><%= __('field.level._') %></th>
                 <th><%= __('field.login') %></th>
                 <th colspan="2"><%= __('field.update') %></th>
             </tr>
@@ -24,11 +24,12 @@
         <tbody>
             <% for (let user of users) { %>
             <% const login = user.login && Date.now() - user.login < 300000; %>
+            <% const isMaster = user.level >= privileges.master ? __('field.level.master') : undefined; %>
             <tr>
                 <td><i class="fa fa-<%- login ? 'eye' : 'eye-slash' %> text-<%- login ? 'success' : 'danger' %>"></i>
                     <%- user.name %></td>
-                <td><%- user.email %></td>
-                <td><%- user.admin ? 'Evet' : 'Hayır' %></td>
+                <td><%- user.username %></td>
+                <td><%- isMaster || (user.level >= privileges.admin ? __('field.level.admin') : '') %></td>
                 <td><%- user.login ? $date(user.login, 'DD.MM.YYYY HH:mm') : '-' %></td>
                 <td><%- $date(user.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
                 <td>

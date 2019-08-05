@@ -20,16 +20,16 @@ class Controller {
         if (req.method === 'GET') return res.render('login', { layout: false });
 
         try {
-            if (is.not.email(req.body.email) || is.not.string(req.body.password))
+            if (is.not.string(req.body.username) || is.not.string(req.body.password))
                 throw new Error('INVALID_CREDENTIALS');
 
-            const user = await UserModel.single({ email: req.body.email });
+            const user = await UserModel.single({ username: req.body.username });
             if (!user || user.deleted || !user.checkPassword(req.body.password))
                 throw new Error('NOT_FOUND');
 
             user.login = Date.now();
             await user.save();
-            req.session.token = auth.sign({ email: user.email, t: new Date() });
+            req.session.token = auth.sign({ username: user.username, t: new Date() });
             await req.session.save();
             res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
         } catch (e) {
