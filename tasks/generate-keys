@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const auth = require('../lib/auth');
+const mongoose = require('../models');
+const params = require('yargs').argv;
+
+async function run() {
+    await auth.generate(params.o || params.overwrite, params.a || params.all).catch(console.log);
+    mongoose.connection.close();
+}
+
+if (params.h) {
+    console.log(`
+-o, --overwrite : overwrites existing key files
+-a, --all       : overwrites private key file too, otherwise overwrites only public key file
+-h              : shows help
+    `);
+} else run();

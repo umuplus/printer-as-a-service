@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const is = require('is_js');
+const mongoose = require('../models');
+const qoa = require('qoa');
+
+const UserModel = mongoose.model('User');
+
+const fields = [
+    { type: 'input', query: 'Full Name:', handle: 'name' },
+    { type: 'input', query: 'E-mail:', handle: 'email' },
+    { type: 'secure', query: 'Password:', handle: 'password' },
+    { type: 'secure', query: 'Password (Again):', handle: 'passphrase' },
+    { type: 'confirm', query: 'Admin:', handle: 'admin', accept: 'Y', deny: 'n' }
+];
+const values = {};
+
+qoa.prompt(fields)
+    .then(data => {
+        Object.assign(values, data);
+        if (is.empty(values.name)) throw new Error('invalid name');
+        if (is.not.email(values.email)) throw new Error('invalid email');
+        if (is.empty(values.password) || values.password !== values.passphrase)
+            throw new Error('invalid password');
+        return values;
+    })
+    .then(() => {
+        return upsertUser(values.name, values.email, values.password, values.admin);
+    })
+    .then(key => {
+        console.log(key);
+    })
+    .catch(e => {
+        console.log(e.message);
+    })
+    .finally(() => mongoose.connection.close());
+
+async function upsertUser(name, email, password, admin) {
+    let user = new UserModel({ name, email, password, admin });
+    user.updatePassword(password);
+    if (is.boolean(admin)) user.admin = admin;
+    await user.save();
+    return user;
+}
