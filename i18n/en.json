@@ -3,6 +3,7 @@
         "dashboard": "Dashboard",
         "language": "Change Language",
         "login": "Please sign in!",
+        "settings": "Settings",
         "title": "Printer as a Service",
         "users": "Users"
     },
@@ -16,7 +17,7 @@
         "logout": "Sign Out",
         "next": "Next",
         "new": {
-            "option": "New Option",
+            "setting": "New Setting",
             "user": "New User"
         },
         "prev": "Previous",
@@ -27,9 +28,14 @@
     },
     "field": {
         "active": "Active",
-        "admin": "Administrator",
         "email": "E-mail",
         "key": "Key",
+        "level": {
+            "_": "Access Level",
+            "admin": "Administrator",
+            "master": "Master",
+            "user": "User"
+        },
         "login": "Last Sign In",
         "name": "Name",
         "no": "No",
@@ -39,17 +45,25 @@
         "status": "Status",
         "total": "Total",
         "update": "Updated At",
-        "user": "User",
+        "username": "Username",
+        "value": "Value",
         "yes": "Yes"
+    },
+    "settings": {
+        "ad": "Active Directory",
+        "cp": "Custom Photocopy",
+        "crons": "Periodic Tasks",
+        "printer": "Virtual Printer",
+        "system": "System Settings"
     },
     "txt": {
         "del": "Deleted at %s",
         "e403": "Access denied.",
         "e500": "Something went terribly wrong.",
-        "email": "Please check e-mail field.",
         "login": "Please check your credentials and try again.",
         "name": "Please check name field.",
         "password": "Please check password fields.",
-        "seen": "Seen at %s"
+        "seen": "Seen at %s",
+        "username": "Please check username field."
     }
 }

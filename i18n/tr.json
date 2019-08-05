@@ -3,6 +3,7 @@
         "dashboard": "Özet Ekran",
         "language": "Dili Değiştir",
         "login": "Lütfen giriş yapınız!",
+        "settings": "Ayarlar",
         "title": "Baskı Yönetim Sistemi",
         "users": "Kullanıcılar"
     },
@@ -16,7 +17,7 @@
         "logout": "Güvenli Çıkış",
         "next": "Sonraki",
         "new": {
-            "option": "Yeni Seçenek Ekle",
+            "setting": "Yeni Ayar Ekle",
             "user": "Yeni Kullanıcı Ekle"
         },
         "prev": "Önceki",
@@ -27,9 +28,14 @@
     },
     "field": {
         "active": "Aktif",
-        "admin": "Yönetici",
         "email": "E-posta",
         "key": "Anahtar",
+        "level": {
+            "_": "Yetki Seviyesi",
+            "admin": "Yönetici",
+            "master": "Sistem Yöneticisi",
+            "user": "Kullanıcı"
+        },
         "login": "Son Giriş Tarihi",
         "name": "İsim",
         "no": "Hayır",
@@ -39,17 +45,25 @@
         "status": "Durum",
         "total": "Toplam",
         "update": "Güncellenme",
-        "user": "Kullanıcı",
+        "username": "Kullanıcı Adı",
+        "value": "Değer",
         "yes": "Evet"
+    },
+    "settings": {
+        "ad": "Active Directory",
+        "cp": "Özel Fotokopi",
+        "crons": "Periyodik Görevler",
+        "printer": "Sanal Yazıcı",
+        "system": "Sistem Ayarları"
     },
     "txt": {
         "del": "%s tarihinde silinmiş.",
         "e403": "Erişim engellendi.",
         "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
-        "email": "Lütfen e-posta alanını kontrol ediniz.",
         "login": "Lütfen bilgilerinizi kontrol ettikten sonra tekrar deneyiniz.",
         "name": "Lütfen isim alanını kontrol ediniz.",
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
-        "seen": "%s tarihinde görüldü."
+        "seen": "%s tarihinde görüldü.",
+        "username": "Lütfen kullanıcı adı alanını kontrol ediniz."
     }
 }
