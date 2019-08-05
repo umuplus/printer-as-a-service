@@ -11,10 +11,10 @@ const shortid = require('shortid');
  */
 const schema = mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, lowercase: true, index: true, unique: true },
+    username: { type: String, required: true, index: true, unique: true },
     salt: { type: String, default: shortid.generate },
     password: String,
-    admin: Boolean,
+    level: { type: Number, default: 0 },
     login: Number,
     options: Object
 }, {
@@ -35,6 +35,8 @@ const schema = mongoose.Schema({
 for (let name in auth) schema.methods[name] = auth[name];
 for (let name in methods) schema.methods[name] = methods[name];
 for (let name in statics) schema.statics[name] = statics[name]([]);
+schema.statics._ADMINISTRATOR = 10;
+schema.statics._MASTER = 20;
 
 schema.plugin(mongooseDelete, { deletedAt: true });
 schema.plugin(mongooseTimestamps);

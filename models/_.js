@@ -12,6 +12,12 @@ exports.auth = {
     checkPassword: function (password) {
         return this.password === md5(password, this.salt);
     },
+    hasPrivileges: function (privileges) {
+        if (is.array(privileges))
+            for (let privilege of privileges)
+                if (is.string(privilege) && this.privileges.includes(privilege)) return true;
+        return false;
+    },
     updatePassword: function (password) {
         this.password = md5(password, this.salt);
     }
