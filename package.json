@@ -36,7 +36,8 @@
     "raw-body": "^2.4.1",
     "rfmjs": "^0.1.4",
     "shortid": "^2.2.14",
-    "xlsx": "^0.14.4"
+    "xlsx": "^0.14.4",
+    "yargs": "^13.3.0"
   },
   "devDependencies": {
     "cli-progress": "^2.1.1",
