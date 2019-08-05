@@ -1,0 +1,53 @@
+'use strict';
+
+const auth = require('../../lib/auth');
+const is = require('is_js');
+const mongoose = require('../../models');
+
+const UserModel = mongoose.model('User');
+
+class Controller {
+    static async index(req, res) {
+        if (is.empty(req.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
+
+        const usersActive = await UserModel.count({ deleted: false });
+        const usersPassive = await UserModel.count({ deleted: true });
+
+        res.render('index', { usersActive, usersPassive });
+    }
+
+    static async login(req, res) {
+        if (req.method === 'GET') return res.render('login', { layout: false });
+
+        try {
+            if (is.not.email(req.body.email) || is.not.string(req.body.password))
+                throw new Error('INVALID_CREDENTIALS');
+
+            const user = await UserModel.single({ email: req.body.email });
+            if (!user || user.deleted || !user.checkPassword(req.body.password))
+                throw new Error('NOT_FOUND');
+
+            user.login = Date.now();
+            await user.save();
+            req.session.token = auth.sign({ email: user.email, t: new Date() });
+            await req.session.save();
+            res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
+        } catch (e) {
+            req.log.error(e.message);
+            req.flash('danger', res.__('txt.login'));
+            res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
+        }
+    }
+
+    static logout(req, res) {
+        req.session.token = undefined;
+        req.session.save(() => res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`));
+    }
+
+    static language(req, res) {
+        req.session.lang = req.params.lang;
+        req.session.save(() => res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`));
+    }
+}
+
+module.exports = Controller;

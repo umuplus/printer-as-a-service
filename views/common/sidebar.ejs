@@ -1,0 +1,20 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <%- $module === 'home' ? 'active' : '' %>"
+                    href="/?ts=<%- $qs.val('ts') %>"><i class="fa fa-dashboard"></i> <%= __('app.dashboard') %></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%- $module === 'users' ? 'active' : '' %>"
+                    href="/users?ts=<%- $qs.val('ts') %>"><i class="fa fa-users"></i> <%= __('app.users') %></a>
+            </li>
+            <li>&nbsp</li>
+            <li class="nav-item">
+                <a class="nav-link" href="/lang/<%- $lang === 'tr' ? 'en' : 'tr' %>?ts=<%- $qs.val('ts') %>">
+                    <i class="fa fa-flag"></i> <i><%= __('app.language') %>: <%= $lang === 'tr' ? 'English' : 'Türkçe' %></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

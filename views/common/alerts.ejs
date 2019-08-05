@@ -1,0 +1,12 @@
+<% if (flash && flash.length) { %>
+<div class="panel-body">
+    <% while(alert = flash.shift()) { %>
+    <div class="alert alert-<%- alert.type %>" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">×</span><span class="sr-only">×</span>
+        </button>
+        <%- alert.message %>
+    </div>
+    <% }; %>
+</div>
+<% }; %>
