@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const auth = require('../lib/auth.js');
+const mongoose = require('../models');
+const params = require('yargs').argv;
+
+const SettingModel = mongoose.model('Setting');
+
+const config = {
+    ad: { enabled: false },
+    cp: { enabled: false },
+    crons: { archive: 120, pop3: 120, reports: 300 },
+    ftp: { enabled: false },
+    mysql: { enabled: false },
+    mssql: { enabled: false },
+    printer: { enabled: false },
+    samba: { enabled: false },
+    smtp: { enabled: false },
+    system: { port: 3870, file_size: 5368709120 }
+};
+
+async function saveConfiguration() {
+    for (let name in config) {
+        try {
+            const setting = new SettingModel({ name, locked: true, value: auth.sign(config[name]) });
+            await setting.save();
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+}
+
+if (params.h) {
+    mongoose.connection.close();
+    console.log(`
+-f, --force     : populates default settings
+-h              : shows help`);
+} else if ((params.f || params.force))
+    saveConfiguration().catch(console.log).finally(() => {
+        mongoose.connection.close();
+    });
+else {
+    mongoose.connection.close();
+    console.log('aborted');
+}
