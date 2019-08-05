@@ -1,0 +1,55 @@
+{
+    "app": {
+        "dashboard": "Özet Ekran",
+        "language": "Dili Değiştir",
+        "login": "Lütfen giriş yapınız!",
+        "title": "Baskı Yönetim Sistemi",
+        "users": "Kullanıcılar"
+    },
+    "btn": {
+        "apply": "Uygula",
+        "back": "Geri Dön",
+        "download": "İndir",
+        "edit": "Düzenle",
+        "filter": "Filtrele",
+        "login": "Giriş Yap",
+        "logout": "Güvenli Çıkış",
+        "next": "Sonraki",
+        "new": {
+            "option": "Yeni Seçenek Ekle",
+            "user": "Yeni Kullanıcı Ekle"
+        },
+        "prev": "Önceki",
+        "reset": "Vazgeç",
+        "restore": "Çöpten Al",
+        "submit": "Değişiklikleri Kaydet",
+        "trash": "Çöpe At"
+    },
+    "field": {
+        "active": "Aktif",
+        "admin": "Yönetici",
+        "email": "E-posta",
+        "key": "Anahtar",
+        "login": "Son Giriş Tarihi",
+        "name": "İsim",
+        "no": "Hayır",
+        "password": "Şifre",
+        "passphrase": "Şifre (Tekrar)",
+        "seen": "Son Görülme",
+        "status": "Durum",
+        "total": "Toplam",
+        "update": "Güncellenme",
+        "user": "Kullanıcı",
+        "yes": "Evet"
+    },
+    "txt": {
+        "del": "%s tarihinde silinmiş.",
+        "e403": "Erişim engellendi.",
+        "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
+        "email": "Lütfen e-posta alanını kontrol ediniz.",
+        "login": "Lütfen bilgilerinizi kontrol ettikten sonra tekrar deneyiniz.",
+        "name": "Lütfen isim alanını kontrol ediniz.",
+        "password": "Lütfen şifre alanlarını kontrol ediniz.",
+        "seen": "%s tarihinde görüldü."
+    }
+}

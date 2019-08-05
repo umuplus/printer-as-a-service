@@ -1,0 +1,55 @@
+{
+    "app": {
+        "dashboard": "Dashboard",
+        "language": "Change Language",
+        "login": "Please sign in!",
+        "title": "Printer as a Service",
+        "users": "Users"
+    },
+    "btn": {
+        "apply": "Apply",
+        "back": "Back",
+        "download": "Download",
+        "edit": "Edit",
+        "filter": "Filter",
+        "login": "Sign In",
+        "logout": "Sign Out",
+        "next": "Next",
+        "new": {
+            "option": "New Option",
+            "user": "New User"
+        },
+        "prev": "Previous",
+        "reset": "Reset",
+        "restore": "Restore",
+        "submit": "Save Changes",
+        "trash": "Delete"
+    },
+    "field": {
+        "active": "Active",
+        "admin": "Administrator",
+        "email": "E-mail",
+        "key": "Key",
+        "login": "Last Sign In",
+        "name": "Name",
+        "no": "No",
+        "password": "Password",
+        "passphrase": "Password (Again)",
+        "seen": "Last Seen At",
+        "status": "Status",
+        "total": "Total",
+        "update": "Updated At",
+        "user": "User",
+        "yes": "Yes"
+    },
+    "txt": {
+        "del": "Deleted at %s",
+        "e403": "Access denied.",
+        "e500": "Something went terribly wrong.",
+        "email": "Please check e-mail field.",
+        "login": "Please check your credentials and try again.",
+        "name": "Please check name field.",
+        "password": "Please check password fields.",
+        "seen": "Seen at %s"
+    }
+}
