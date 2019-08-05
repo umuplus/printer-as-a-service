@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const http = require('http');
+const app = require('../routes');
+app.set('port', process.env.APP_PORT);
+
+const server = http.createServer(app);
+server.listen(process.env.APP_PORT);
+server.on('error', e => {
+    if (e.syscall !== 'listen') throw e;
+
+    switch (e.code) {
+    case 'EACCES':
+        console.error(process.env.APP_PORT + ' requires elevated privileges');
+        process.exit(1);
+        break;
+    case 'EADDRINUSE':
+        console.error(process.env.APP_PORT + ' is already in use');
+        process.exit(1);
+        break;
+    default:
+        throw e;
+    }
+});
+
+process.on('unhandledRejection', function (e) {
+    console.error('unhandledRejection', e.message);
+});

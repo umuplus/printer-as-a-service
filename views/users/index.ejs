@@ -1,0 +1,65 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fa fa-users"></i> <%= __('app.users') %></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a href="/<%- $module %>/create?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus-circle"></i> <%= __('btn.new.user') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><%= __('field.name') %></th>
+                <th><%= __('field.email') %></th>
+                <th><%= __('field.admin') %></th>
+                <th><%= __('field.login') %></th>
+                <th colspan="2"><%= __('field.update') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let user of users) { %>
+            <% const login = user.login && Date.now() - user.login < 300000; %>
+            <tr>
+                <td><i class="fa fa-<%- login ? 'eye' : 'eye-slash' %> text-<%- login ? 'success' : 'danger' %>"></i>
+                    <%- user.name %></td>
+                <td><%- user.email %></td>
+                <td><%- user.admin ? 'Evet' : 'Hayır' %></td>
+                <td><%- user.login ? $date(user.login, 'DD.MM.YYYY HH:mm') : '-' %></td>
+                <td><%- $date(user.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td>
+                    <div class="btn-group float-right">
+                        <a href="/<%- $module %>/<%- user._id %>/edit?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-dark">
+                            <i class="fa fa-edit"></i> <%= __('btn.edit') %></a>
+                        <% if (user.deleted) { %>
+                        <a href="/<%- $module %>/<%- user._id %>/restore?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-primary confirm">
+                            <i class="fa fa-undo"></i> <%= __('btn.restore') %></a>
+                        <% } else { %>
+                        <a href="/<%- $module %>/<%- user._id %>/trash?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                            <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+                        <% }; %>
+                    </div>
+                </td>
+            </tr>
+            <% }; %>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    <div class="btn-group">
+        <% if ($qs.val('page')) { %>
+        <a href="?<%- $qs.overwrite({ page: page - 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark">« <%= __('btn.prev') %></a>
+        <% }; %>
+        <a href="?<%- $qs.overwrite({ page: page + 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark"><%= __('btn.next') %> »</a>
+    </div>
+</div>
