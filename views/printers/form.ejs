@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fa fa-print"></i> <%= __('app.printers') %> »
+        <% if (printer) { %><%= printer.name %><% } else { %><%= __('btn.new.printer') %><% }; %>
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <% if (printer) { %>
+            <% if (printer.deleted) { %>
+            <a href="/<%- $module %>/<%- printer._id %>/restore?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-primary confirm">
+                <i class="fa fa-undo"></i> <%= __('btn.restore') %></a>
+            <% } else { %>
+            <a href="/<%- $module %>/<%- printer._id %>/trash?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+            <% }; %>
+            <% }; %>
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<form method="post">
+    <% if (printer) { %>
+    <div class="form-group">
+        <label>ID</label>
+        <p class="form-control"><span class="text-primary">
+            <%- printer._id %></span></p>
+    </div>
+    <% }; %>
+    <div class="form-group">
+        <label for="field-model"><%= __('field.model') %></label>
+        <select class="form-control" id="field-model" name="model">
+            <option>-</option>
+            <% for (let model of models) { %>
+            <option <%- printer.model && printer.model.id === model._id.toString() ? 'selected' : '' %>
+                value="<%- model._id %>"><%- model.brand %> <%- model.model %></option>
+            <% }; %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="field-ip">IP</label>
+        <input type="text" class="form-control" id="field-ip" name="ip"
+            placeholder="IP" value="<%- printer ? printer.ip : '' %>">
+    </div>
+    <div class="form-group">
+        <label for="field-name"><%= __('field.name') %></label>
+        <input type="text" class="form-control" id="field-name" name="name"
+            placeholder="<%= __('field.name') %>" value="<%- printer ? printer.name : '' %>">
+    </div>
+    <div class="form-group">
+        <label for="field-location"><%= __('field.location') %></label>
+        <input type="text" class="form-control" id="field-location" name="location"
+            placeholder="<%= __('field.location') %>" value="<%- printer ? printer.options.location : '' %>">
+    </div>
+    <% if (printer && printer.seen) { %>
+    <% const seen = printer && printer.seen && Date.now() - printer.seen < 300000; %>
+    <div class="form-group">
+        <label><%= __('field.seen') %></label>
+        <p class="form-control">
+            <i class="fa fa-<%- seen ? 'eye' : 'eye-slash' %> text-<%- seen ? 'success' : 'danger' %> float-right"></i>
+            <span class="text-info"><%= __('txt.seen', $date(printer.seen, 'DD.MM.YYYY HH:mm')) %></span>
+        </p>
+    </div>
+    <% }; %>
+    <% if (printer && printer.deleted) { %>
+    <div class="form-group">
+        <label><%= __('field.status') %></label>
+        <p class="form-control"><span class="text-danger">
+            <%= __('txt.del', $date(printer.deletedAt, 'DD.MM.YYYY HH:mm')) %></span></p>
+    </div>
+    <% }; %>
+    <button type="submit" class="btn btn-success mr-2"><%= __('btn.submit') %></button>
+    <button type="reset" class="btn btn-light"><%= __('btn.reset') %></button>
+</form>

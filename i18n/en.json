@@ -45,6 +45,7 @@
             "master": "Master",
             "user": "User"
         },
+        "location": "Location",
         "login": "Last Sign In",
         "model": "Model",
         "name": "Name",

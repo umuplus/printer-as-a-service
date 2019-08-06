@@ -45,6 +45,7 @@
             "master": "Sistem Yöneticisi",
             "user": "Kullanıcı"
         },
+        "location": "Bulunduğu Yer",
         "login": "Son Giriş Tarihi",
         "model": "Model",
         "name": "İsim",
