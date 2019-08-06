@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const auth = require('../lib/auth');
+const is = require('is_js');
+const { machineIdSync: machineId } = require('node-machine-id');
+const qoa = require('qoa');
+const timeTravel = require('date-fns/add_days');
+
+const fields = [
+    { type: 'input', query: 'Hardware:', handle: 'hardware' },
+    { type: 'input', query: 'Days:', handle: 'date' },
+    { type: 'input', query: 'Printers:', handle: 'printers' },
+    { type: 'input', query: 'Users:', handle: 'users' }
+];
+
+qoa.prompt(fields)
+    .then(data => {
+        if (is.empty(data.hardware)) data.hardware = machineId();
+        if (is.string(data.date) && is.not.empty(data.date)) data.date = parseInt(data.date);
+        if (is.string(data.printers) && is.not.empty(data.printers)) data.printers = parseInt(data.printers);
+        if (is.string(data.users) && is.not.empty(data.users)) data.users = parseInt(data.users);
+        if (is.not.number(data.date)) throw new Error('invalid date');
+        else if (is.not.number(data.printers)) throw new Error('invalid printers');
+        else if (is.not.number(data.users)) throw new Error('invalid users');
+        return data;
+    })
+    .then(data => {
+        data.date = timeTravel(new Date(), data.date);
+        console.log(auth.sign(data));
+    })
+    .catch(e => {
+        console.log(e.message);
+    });

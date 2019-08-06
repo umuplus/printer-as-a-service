@@ -24,6 +24,9 @@ router.post('/create', Controller.create);
 router.get('/:id/edit', Controller.edit);
 router.post('/:id/edit', Controller.edit);
 
+router.get('/license', Controller.license);
+router.post('/license', Controller.license);
+
 router.get('/:id/remove', Controller.remove);
 
 module.exports = router;

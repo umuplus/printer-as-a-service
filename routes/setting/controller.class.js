@@ -9,7 +9,7 @@ const SettingModel = mongoose.model('Setting');
 class Controller {
     static async list(req, res) {
         try {
-            const settings = await SettingModel.paginate({}, -1);
+            const settings = await SettingModel.paginate({}, -1, 'name');
             res.render(`${ res.locals.$module }/index`, {
                 settings: is.array(settings) ? settings : []
             });
@@ -25,8 +25,11 @@ class Controller {
             if (req.method === 'GET') return res.render(`${ res.locals.$module }/form`, { setting: null, value: {} });
 
             if (is.not.string(req.body.name) || is.empty(req.body.name)) throw new Error('NAME_REQUIRED');
+            req.body.value = JSON.parse(req.body.value);
+            if (is.not.object(req.body.value) || is.empty(req.body.value)) throw new Error('invalid value');
 
             const setting = new SettingModel({ name: req.body.name });
+            setting.value = auth.sign(req.body.value);
             await setting.save();
             res.redirect(`/${ res.locals.$module }/${ setting.id }/edit?ts=${ res.locals.$qs.val('ts') }`);
         } catch (e) {
@@ -49,6 +52,8 @@ class Controller {
 
             const setting = await SettingModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
             if (!setting) return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
+            else if (setting.name === 'license')
+                return res.redirect(`/${ res.locals.$module }/license?ts=${ res.locals.$qs.val('ts') }`);
 
             if (req.method === 'POST' && is.string(req.body.value) && is.not.empty(req.body.value)) {
                 req.body.value = JSON.parse(req.body.value);
@@ -69,6 +74,25 @@ class Controller {
         }
     }
 
+    static async license(req, res) {
+        try {
+            let setting = await SettingModel.single({ name: 'license' });
+            if (req.method === 'POST') {
+                if (is.not.string(req.body.license) || is.empty(req.body.license)) throw new Error('invalid license');
+
+                if (!setting) setting = new SettingModel({ name: 'license', keep: true });
+                else setting.increment();
+                setting.value = req.body.license.trim();
+                await setting.save();
+                res.redirect(`/${ res.locals.$module }/license?ts=${ res.locals.$qs.val('ts') }`);
+            } else res.render(`${ res.locals.$module }/license`, { setting });
+        } catch (e) {
+            req.log.error(e.message);
+            req.flash('danger', res.__('txt.e500'));
+            res.redirect(`/${ res.locals.$module }/license?ts=${ res.locals.$qs.val('ts') }`);
+        }
+    }
+
     static async remove(req, res) {
         try {
             if (!mongoose.Types.ObjectId.isValid(req.params.id))
@@ -77,7 +101,7 @@ class Controller {
             const setting = await SettingModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
             if (!setting) return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
 
-            await setting.remove();
+            if (!setting.keep) await setting.remove();
         } catch (e) {
             req.log.error(e.message);
             req.flash('danger', res.__('txt.e500'));

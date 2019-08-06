@@ -26,7 +26,7 @@ const config = {
 async function saveConfiguration() {
     for (let name in config) {
         try {
-            const setting = new SettingModel({ name, locked: true, value: auth.sign(config[name]) });
+            const setting = new SettingModel({ name, keep: true, value: auth.sign(config[name]) });
             await setting.save();
         } catch (e) {
             console.log(e.message);

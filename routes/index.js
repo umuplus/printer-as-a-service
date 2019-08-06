@@ -6,7 +6,9 @@ const express = require('express');
 const formatDate = require('date-fns/format');
 const helmet = require('helmet');
 const i18n = require('i18n');
+const is = require('is_js');
 const layout = require('express-ejs-layouts');
+const { machineIdSync: machineId } = require('node-machine-id');
 const mongoose = require('../models');
 const parseDate = require('date-fns/parse');
 const path = require('path');
@@ -15,7 +17,9 @@ const QueryString = require('libqs');
 const session = require('express-session');
 
 const app = express();
+const hardware = machineId();
 const ConnectRedis = require('connect-redis')(session);
+const SettingModel = mongoose.model('Setting');
 const UserModel = mongoose.model('User');
 
 const locales = [ 'tr', 'en' ];
@@ -47,15 +51,19 @@ app.use(pino);
 app.use(i18n.init);
 
 app.use(function (req, res, next) {
+    req.$hardware = hardware;
+    req.$license = {};
     req.$user = {};
     req.query.ts = Date.now();
     res.locals.$date = formatDate;
+    res.locals.$hardware = req.$hardware;
     res.locals.$module = 'home';
     res.locals.$parse = parseDate;
     res.locals.$qs = new QueryString();
     res.locals.$qs.overwrite(req.query);
     if (!req.url.includes('?')) res.locals.$url = req.url.substr(1);
     else res.locals.$url = req.url.substr(1, req.url.indexOf('?') - 1) || '';
+    res.locals.$license = req.$license;
     res.locals.$uri = req.originalUrl;
     res.locals.$user = req.$user;
     if (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].length) {
@@ -74,6 +82,14 @@ app.use(function (req, res, next) {
 
 app.use(async function (req, res, next) {
     try {
+        const setting = await SettingModel.single({ name: 'license' });
+        if (setting && is.string(setting.value) && is.not.empty(setting.value)) {
+            req.$license = auth.verify(setting.value);
+            res.locals.$license = req.$license;
+        }
+        if (!req.$license || req.$license.hardware !== hardware) req.flash('danger', res.__('txt.license.hardware'));
+        else if ((new Date(req.$license.date)).getTime() < (new Date()).getTime())
+            req.flash('danger', res.__('txt.license.date'));
         const data = auth.verify(req.session.token);
         const user = await UserModel.single({ username: data.username });
         if (user && !user.deleted) {

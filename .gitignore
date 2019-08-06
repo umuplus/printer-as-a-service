@@ -63,4 +63,4 @@ typings/
 .idea
 .vscode
 
-private.ke*
+*.key*

@@ -1,0 +1,45 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fa fa-settings"></i> <%= __('app.settings') %> » <%= __('settings.license') %>
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<form method="post">
+    <div class="form-group">
+        <label for="field-hardware"><%= __('field.hardware') %></label>
+        <p class="form-control" id="field-hardware"><%- $hardware %></p>
+    </div>
+    <% if ($license && $license.date) { %>
+    <div class="form-group">
+        <label for="field-date"><%= __('field.date') %></label>
+        <p class="form-control text-info" id="field-date"><%- $date($license.date, 'DD.MM.YYYY') %></p>
+    </div>
+    <% }; %>
+    <% if ($license && $license.printers) { %>
+    <div class="form-group">
+        <label for="field-printers"><%= __('app.printers') %></label>
+        <p class="form-control text-info" id="field-printers"><%- $license.printers %></p>
+    </div>
+    <% }; %>
+    <% if ($license && $license.users) { %>
+    <div class="form-group">
+        <label for="field-users"><%= __('app.users') %></label>
+        <p class="form-control text-info" id="field-users"><%- $license.users %></p>
+    </div>
+    <% }; %>
+    <div class="form-group">
+        <label for="field-license"><%= __('settings.license') %></label>
+        <textarea class="form-control" id="field-license" name="license" rows="10"
+            placeholder="<%= __('settings.license') %>"><%- setting ? setting.value : '' %></textarea>
+    </div>
+    <button type="submit" class="btn btn-success mr-2"><%= __('btn.submit') %></button>
+    <button type="reset" class="btn btn-light"><%= __('btn.reset') %></button>
+</form>
