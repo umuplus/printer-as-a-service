@@ -2,14 +2,12 @@
 
 const express = require('express');
 const is = require('is_js');
-const mongoose = require('../../models');
 const router = express.Router();
 
 const Controller = require('./controller.class');
-const UserModel = mongoose.model('User');
 
 router.use(function (req, res, next) {
-    if (!res.locals.$user || is.empty(res.locals.$user) || res.locals.$user.level < UserModel._MASTER)
+    if (!res.locals.$user || is.empty(res.locals.$user) || res.locals.$user.level < res.locals.$privileges.master)
         return res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
 
     res.locals.$module = 'settings';
