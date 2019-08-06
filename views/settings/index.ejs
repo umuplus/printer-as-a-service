@@ -31,11 +31,7 @@
                         <a href="/<%- $module %>/<%- setting._id %>/edit?ts=<%- $qs.val('ts') %>"
                             class="btn btn-rounded btn-sm btn-outline-dark">
                             <i class="fa fa-edit"></i> <%= __('btn.edit') %></a>
-                        <% if (setting.deleted) { %>
-                        <a href="/<%- $module %>/<%- setting._id %>/restore?ts=<%- $qs.val('ts') %>"
-                            class="btn btn-rounded btn-sm btn-outline-primary confirm">
-                            <i class="fa fa-undo"></i> <%= __('btn.restore') %></a>
-                        <% } else { %>
+                        <% if (!setting.keep) { %>
                         <a href="/<%- $module %>/<%- setting._id %>/remove?ts=<%- $qs.val('ts') %>"
                             class="btn btn-rounded btn-sm btn-outline-danger confirm">
                             <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>

@@ -9,7 +9,7 @@ const Controller = require('./controller.class');
 const UserModel = mongoose.model('User');
 
 router.use(function (req, res, next) {
-    if (!req.$user || is.empty(req.$user) || req.$user.level < UserModel._MASTER)
+    if (!res.locals.$user || is.empty(res.locals.$user) || res.locals.$user.level < UserModel._MASTER)
         return res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
 
     res.locals.$module = 'settings';

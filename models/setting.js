@@ -1,6 +1,6 @@
 'use strict';
 
-const { auth, methods, statics } = require('./_');
+const { methods, statics } = require('./_');
 const mongoose = require('mongoose');
 const mongooseTimestamps = require('mongoose-timestamp');
 
@@ -13,7 +13,6 @@ const schema = mongoose.Schema({
     keep: Boolean
 });
 
-for (let name in auth) schema.methods[name] = auth[name];
 for (let name in methods) schema.methods[name] = methods[name];
 for (let name in statics) schema.statics[name] = statics[name]([]);
 

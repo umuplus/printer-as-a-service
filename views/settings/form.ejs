@@ -10,6 +10,11 @@
     </h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
+            <% if (setting && !setting.keep) { %>
+            <a href="/<%- $module %>/<%- setting._id %>/remove?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+            <% }; %>
             <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
                 class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
         </div>

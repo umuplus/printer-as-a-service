@@ -8,7 +8,7 @@ const UserModel = mongoose.model('User');
 
 class Controller {
     static async index(req, res) {
-        if (is.empty(req.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
+        if (is.empty(res.locals.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
 
         const usersActive = await UserModel.count({ deleted: false });
         const usersPassive = await UserModel.count({ deleted: true });
