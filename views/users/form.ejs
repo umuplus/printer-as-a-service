@@ -52,10 +52,10 @@
     <div class="form-group">
         <label for="field-level"><%= __('field.level._') %></label>
         <select class="form-control" id="field-level" name="level">
-            <% for (let privilege in privileges) { %>
-            <% if (privileges[privilege] <= $user.level) { %>
-            <option <%- user && user.level === privileges[privilege] ? 'selected' : '' %>
-                value="<%- privileges[privilege] %>"><%- __(`field.level.${ privilege }`) %></option>
+            <% for (let privilege in $privileges) { %>
+            <% if ($privileges[privilege] <= $user.level) { %>
+            <option <%- user && user.level === $privileges[privilege] ? 'selected' : '' %>
+                value="<%- $privileges[privilege] %>"><%- __(`field.level.${ privilege }`) %></option>
             <% }; %>
             <% }; %>
         </select>

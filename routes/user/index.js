@@ -7,7 +7,7 @@ const router = express.Router();
 const Controller = require('./controller.class');
 
 router.use(function (req, res, next) {
-    if (!req.$user || is.empty(req.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
+    if (!res.locals.$user || is.empty(res.locals.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
 
     res.locals.$module = 'users';
     next();

@@ -5,8 +5,6 @@ const mongoose = require('../../models');
 
 const UserModel = mongoose.model('User');
 
-const privileges = { admin: UserModel._ADMINISTRATOR, master: UserModel._MASTER, user: 0 };
-
 class Controller {
     static async list(req, res) {
         try {
@@ -14,7 +12,7 @@ class Controller {
             page = is.not.number(page) ? 0 : Math.abs(page);
             const users = await UserModel.paginate({}, page);
             res.render(`${ res.locals.$module }/index`, {
-                users: is.array(users) ? users : [], page, privileges
+                users: is.array(users) ? users : [], page
             });
         } catch (e) {
             req.log.error(e.message);
@@ -25,11 +23,11 @@ class Controller {
 
     static async create(req, res) {
         try {
-            if (req.method === 'GET') return res.render(`${ res.locals.$module }/form`, { user: null, privileges });
+            if (req.method === 'GET') return res.render(`${ res.locals.$module }/form`, { user: null });
 
-            if (req.$license && req.$license.users) {
+            if (res.locals.$license && res.locals.$license.users) {
                 const count = await UserModel.count({});
-                if (is.not.number(count) || req.$license.users <= count) throw new Error('LICENSE');
+                if (is.not.number(count) || res.locals.$license.users <= count) throw new Error('LICENSE');
             }
 
             if (is.string(req.body.level) && is.not.empty(req.body.level)) req.body.level = parseInt(req.body.level);
@@ -37,7 +35,7 @@ class Controller {
             else if (is.not.string(req.body.username) || is.empty(req.body.username)) throw new Error('USERNAME_REQUIRED');
             else if (is.not.string(req.body.password) || is.empty(req.body.password)) throw new Error('PASSWORD_REQUIRED');
             else if (req.body.password !== req.body.passphrase) throw new Error('PASSWORD_REQUIRED');
-            else if (is.number(req.body.level) && req.body.level > req.$user.level) throw new Error('ACCESS_DENIED');
+            else if (is.number(req.body.level) && req.body.level > res.locals.$user.level) throw new Error('ACCESS_DENIED');
 
             const user = new UserModel({
                 name: req.body.name,
@@ -45,7 +43,7 @@ class Controller {
                 password: req.body.password
             });
             user.updatePassword(req.body.password);
-            if (req.body.level === privileges.master || req.body.level === privileges.admin || !req.body.level)
+            if (req.body.level === res.locals.$privileges.master || req.body.level === res.locals.$privileges.admin || !req.body.level)
                 user.level = req.body.level;
             await user.save();
             res.redirect(`/${ res.locals.$module }/${ user.id }/edit?ts=${ res.locals.$qs.val('ts') }`);
@@ -92,12 +90,12 @@ class Controller {
                     user.updatePassword(req.body.password);
                 }
                 if (is.string(req.body.level) && is.not.empty(req.body.level)) req.body.level = parseInt(req.body.level);
-                if (is.number(req.body.level) && req.body.level > req.$user.level) throw new Error('ACCESS_DENIED');
-                if (req.body.level === privileges.master || req.body.level === privileges.admin || !req.body.level)
+                if (is.number(req.body.level) && req.body.level > res.locals.$user.level) throw new Error('ACCESS_DENIED');
+                if (req.body.level === res.locals.$privileges.master || req.body.level === res.locals.$privileges.admin || !req.body.level)
                     user.level = req.body.level;
                 await user.save();
             }
-            res.render(`${ res.locals.$module }/form`, { user, privileges });
+            res.render(`${ res.locals.$module }/form`, { user });
         } catch (e) {
             req.log.error(e.message);
             switch (e.message) {
