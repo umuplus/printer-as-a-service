@@ -3,6 +3,7 @@
         "dashboard": "Dashboard",
         "language": "Change Language",
         "login": "Please sign in!",
+        "printers": "Printers",
         "settings": "Settings",
         "title": "Printer as a Service",
         "users": "Users"
@@ -28,7 +29,9 @@
     },
     "field": {
         "active": "Active",
+        "date": "Date",
         "email": "E-mail",
+        "hardware": "Hardware",
         "key": "Key",
         "level": {
             "_": "Access Level",
@@ -53,6 +56,7 @@
         "ad": "Active Directory",
         "cp": "Custom Photocopy",
         "crons": "Periodic Tasks",
+        "license": "License",
         "printer": "Virtual Printer",
         "system": "System Settings"
     },
@@ -60,6 +64,12 @@
         "del": "Deleted at %s",
         "e403": "Access denied.",
         "e500": "Something went terribly wrong.",
+        "license": {
+            "date": "Your license is expired.",
+            "hardware": "You don't have any license for your hardware.",
+            "printers": "You have reached limit for allowed number of printers.",
+            "users": "You have reached limit for allowed number of users."
+        },
         "login": "Please check your credentials and try again.",
         "name": "Please check name field.",
         "password": "Please check password fields.",

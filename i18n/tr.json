@@ -3,6 +3,7 @@
         "dashboard": "Özet Ekran",
         "language": "Dili Değiştir",
         "login": "Lütfen giriş yapınız!",
+        "printers": "Yazıcılar",
         "settings": "Ayarlar",
         "title": "Baskı Yönetim Sistemi",
         "users": "Kullanıcılar"
@@ -28,7 +29,9 @@
     },
     "field": {
         "active": "Aktif",
+        "date": "Tarih",
         "email": "E-posta",
+        "hardware": "Donanım",
         "key": "Anahtar",
         "level": {
             "_": "Yetki Seviyesi",
@@ -53,6 +56,7 @@
         "ad": "Active Directory",
         "cp": "Özel Fotokopi",
         "crons": "Periyodik Görevler",
+        "license": "Lisans",
         "printer": "Sanal Yazıcı",
         "system": "Sistem Ayarları"
     },
@@ -60,6 +64,12 @@
         "del": "%s tarihinde silinmiş.",
         "e403": "Erişim engellendi.",
         "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
+        "license": {
+            "date": "Lisans süreniz sona ermiştir.",
+            "hardware": "Donanımınızla uyumlu bir lisansınız bulunmamaktadır.",
+            "printers": "İzin verilen yazıcı sayısına ulaştınız.",
+            "users": "İzin verilen kullanıcı sayısına ulaştınız."
+        },
         "login": "Lütfen bilgilerinizi kontrol ettikten sonra tekrar deneyiniz.",
         "name": "Lütfen isim alanını kontrol ediniz.",
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
