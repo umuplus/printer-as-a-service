@@ -27,6 +27,11 @@ class Controller {
         try {
             if (req.method === 'GET') return res.render(`${ res.locals.$module }/form`, { user: null, privileges });
 
+            if (req.$license && req.$license.users) {
+                const count = await UserModel.count({});
+                if (is.not.number(count) || req.$license.users <= count) throw new Error('LICENSE');
+            }
+
             if (is.string(req.body.level) && is.not.empty(req.body.level)) req.body.level = parseInt(req.body.level);
             if (is.not.string(req.body.name) || is.empty(req.body.name)) throw new Error('NAME_REQUIRED');
             else if (is.not.string(req.body.username) || is.empty(req.body.username)) throw new Error('USERNAME_REQUIRED');
@@ -49,6 +54,9 @@ class Controller {
             switch (e.message) {
             case 'ACCESS_DENIED':
                 req.flash('danger', res.__('txt.e403'));
+                break;
+            case 'LICENSE':
+                req.flash('danger', res.__('txt.license.users'));
                 break;
             case 'USERNAME_REQUIRED':
                 req.flash('danger', res.__('txt.username'));

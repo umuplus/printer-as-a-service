@@ -48,7 +48,7 @@
         <input type="password" class="form-control" id="field-passphrase"
             name="passphrase" placeholder="<%= __('field.passphrase') %>">
     </div>
-    <% if (user && user.level) { %>
+    <% if ($user.level) { %>
     <div class="form-group">
         <label for="field-level"><%= __('field.level._') %></label>
         <select class="form-control" id="field-level" name="level">
