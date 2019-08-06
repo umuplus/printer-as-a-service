@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fa fa-print"></i> <%= __('app.models') %> »
+        <% if (model) { %><%= model.name %><% } else { %><%= __('btn.new.model') %><% }; %>
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <% if (model) { %>
+            <a href="/<%- $module %>/<%- model._id %>/remove?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+            <% }; %>
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<form method="post">
+    <% if (model) { %>
+    <div class="form-group">
+        <label>ID</label>
+        <p class="form-control"><span class="text-primary">
+            <%- model._id %></span></p>
+    </div>
+    <% }; %>
+    <div class="form-group">
+        <label for="field-brand"><%= __('field.brand') %></label>
+        <input type="text" class="form-control" id="field-brand" name="brand"
+            placeholder="<%= __('field.brand') %>" value="<%- model ? model.brand : '' %>">
+    </div>
+    <div class="form-group">
+        <label for="field-model"><%= __('field.model') %></label>
+        <input type="text" class="form-control" id="field-model" name="model"
+            placeholder="<%= __('field.model') %>" value="<%- model ? model.model : '' %>">
+    </div>
+    <div class="form-group">
+        <label for="field-code"><%= __('field.code') %></label>
+        <input type="text" class="form-control" id="field-code" name="code"
+            placeholder="<%= __('field.code') %>" value="<%- model ? model.options.code : '' %>">
+    </div>
+    <% if (model && model.deleted) { %>
+    <div class="form-group">
+        <label><%= __('field.status') %></label>
+        <p class="form-control"><span class="text-danger">
+            <%= __('txt.del', $date(model.deletedAt, 'DD.MM.YYYY HH:mm')) %></span></p>
+    </div>
+    <% }; %>
+    <button type="submit" class="btn btn-success mr-2"><%= __('btn.submit') %></button>
+    <button type="reset" class="btn btn-light"><%= __('btn.reset') %></button>
+</form>

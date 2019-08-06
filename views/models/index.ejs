@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fa fa-print"></i> <%= __('app.models') %></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a href="/<%- $module %>/create?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus-circle"></i> <%= __('btn.new.model') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><%= __('field.brand') %></th>
+                <th><%= __('field.model') %></th>
+                <th colspan="2"><%= __('field.update') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let model of models) { %>
+            <% const seen = model.seen && Date.now() - model.seen < 300000; %>
+            <tr>
+                <td><%- model.brand %></td>
+                <td><%- model.model %></td>
+                <td><%- $date(model.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td>
+                    <div class="btn-group float-right">
+                        <a href="/<%- $module %>/<%- model._id %>/edit?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-dark">
+                            <i class="fa fa-edit"></i> <%= __('btn.edit') %></a>
+                        <a href="/<%- $module %>/<%- model._id %>/remove?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                            <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+                    </div>
+                </td>
+            </tr>
+            <% }; %>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    <div class="btn-group">
+        <% if ($qs.val('page')) { %>
+        <a href="?<%- $qs.overwrite({ page: page - 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark">« <%= __('btn.prev') %></a>
+        <% }; %>
+        <a href="?<%- $qs.overwrite({ page: page + 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark"><%= __('btn.next') %> »</a>
+    </div>
+</div>

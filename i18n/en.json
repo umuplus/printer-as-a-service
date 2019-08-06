@@ -3,6 +3,7 @@
         "dashboard": "Dashboard",
         "language": "Change Language",
         "login": "Please sign in!",
+        "models": "Printer Models",
         "printers": "Printers",
         "settings": "Settings",
         "title": "Printer as a Service",
@@ -18,6 +19,8 @@
         "logout": "Sign Out",
         "next": "Next",
         "new": {
+            "model": "New Printer Model",
+            "printer": "New Printer",
             "setting": "New Setting",
             "user": "New User"
         },
@@ -29,6 +32,8 @@
     },
     "field": {
         "active": "Active",
+        "brand": "Brand",
+        "code": "Code",
         "date": "Date",
         "email": "E-mail",
         "hardware": "Hardware",
@@ -40,6 +45,7 @@
             "user": "User"
         },
         "login": "Last Sign In",
+        "model": "Model",
         "name": "Name",
         "no": "No",
         "password": "Password",

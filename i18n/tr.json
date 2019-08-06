@@ -3,6 +3,7 @@
         "dashboard": "Özet Ekran",
         "language": "Dili Değiştir",
         "login": "Lütfen giriş yapınız!",
+        "models": "Yazıcı Modelleri",
         "printers": "Yazıcılar",
         "settings": "Ayarlar",
         "title": "Baskı Yönetim Sistemi",
@@ -18,6 +19,8 @@
         "logout": "Güvenli Çıkış",
         "next": "Sonraki",
         "new": {
+            "model": "Yeni Yazıcı Modeli Ekle",
+            "printer": "Yeni Yazıcı Ekle",
             "setting": "Yeni Ayar Ekle",
             "user": "Yeni Kullanıcı Ekle"
         },
@@ -29,6 +32,8 @@
     },
     "field": {
         "active": "Aktif",
+        "brand": "Marka",
+        "code": "Kod",
         "date": "Tarih",
         "email": "E-posta",
         "hardware": "Donanım",
@@ -40,6 +45,7 @@
             "user": "Kullanıcı"
         },
         "login": "Son Giriş Tarihi",
+        "model": "Model",
         "name": "İsim",
         "no": "Hayır",
         "password": "Şifre",

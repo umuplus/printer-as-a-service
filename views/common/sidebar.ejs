@@ -5,14 +5,24 @@
                 <a class="nav-link <%- $module === 'home' ? 'active' : '' %>"
                     href="/?ts=<%- $qs.val('ts') %>"><i class="fa fa-dashboard"></i> <%= __('app.dashboard') %></a>
             </li>
+            <% if ($user.level >= 20) { %>
             <li class="nav-item">
                 <a class="nav-link <%- $module === 'settings' ? 'active' : '' %>"
                     href="/settings?ts=<%- $qs.val('ts') %>"><i class="fa fa-cogs"></i> <%= __('app.settings') %></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link <%- $module === 'models' ? 'active' : '' %>"
+                    href="/models?ts=<%- $qs.val('ts') %>"><i class="fa fa-print"></i> <%= __('app.models') %></a>
+            </li>
             <li>&nbsp</li>
+            <% }; %>
             <li class="nav-item">
                 <a class="nav-link <%- $module === 'users' ? 'active' : '' %>"
                     href="/users?ts=<%- $qs.val('ts') %>"><i class="fa fa-users"></i> <%= __('app.users') %></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%- $module === 'printers' ? 'active' : '' %>"
+                    href="/printers?ts=<%- $qs.val('ts') %>"><i class="fa fa-print"></i> <%= __('app.printers') %></a>
             </li>
             <li>&nbsp</li>
             <li class="nav-item">
