@@ -16,6 +16,7 @@
             <tr>
                 <th><%= __('field.brand') %></th>
                 <th><%= __('field.model') %></th>
+                <th><%= __('field.color') %></th>
                 <th colspan="2"><%= __('field.update') %></th>
             </tr>
         </thead>
@@ -25,6 +26,7 @@
             <tr>
                 <td><%- model.brand %></td>
                 <td><%- model.model %></td>
+                <td><%- model.options.color ? __('field.yes') : __('field.no') %></td>
                 <td><%- $date(model.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">

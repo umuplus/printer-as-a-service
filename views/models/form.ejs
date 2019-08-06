@@ -41,6 +41,13 @@
         <input type="text" class="form-control" id="field-code" name="code"
             placeholder="<%= __('field.code') %>" value="<%- model ? model.options.code : '' %>">
     </div>
+    <div class="form-group">
+        <label for="field-color"><%= __('field.color') %></label>
+        <select class="form-control" id="field-color" name="color">
+            <option <%- model && model.options.color ? 'selected' : '' %> value="yes"><%- __('field.yes') %></option>
+            <option <%- model && !model.options.color ? 'selected' : '' %> value="no"><%- __('field.no') %></option>
+        </select>
+    </div>
     <% if (model && model.deleted) { %>
     <div class="form-group">
         <label><%= __('field.status') %></label>

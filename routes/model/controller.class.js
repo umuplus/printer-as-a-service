@@ -32,7 +32,7 @@ class Controller {
             if (is.not.string(req.body.code) || is.empty(req.body.code)) throw new Error('invalid code');
 
             const model = new PrinterModel({ brand: req.body.brand, model: req.body.model });
-            model.options = { code: req.body.code };
+            model.options = { code: req.body.code, color: req.body.color === 'yes' };
             await model.save();
             res.redirect(`/${ res.locals.$module }/${ model.id }/edit?ts=${ res.locals.$qs.val('ts') }`);
         } catch (e) {
@@ -57,6 +57,7 @@ class Controller {
                     model.options.code = req.body.code;
                     model.markModified('options');
                 }
+                model.options.color = req.body.color === 'yes';
                 await model.save();
             }
             res.render(`${ res.locals.$module }/form`, { model });
