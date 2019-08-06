@@ -24,8 +24,8 @@ class Controller {
                 throw new Error('INVALID_CREDENTIALS');
 
             const user = await UserModel.single({ username: req.body.username });
-            if (!user || user.deleted || !user.checkPassword(req.body.password))
-                throw new Error('NOT_FOUND');
+            if (!user || user.deleted || !user.checkPassword(req.body.password)) throw new Error('NOT_FOUND');
+            if (user.level < res.locals.$privileges.admin) throw new Error('ACCESS_DENIED');
 
             user.login = Date.now();
             await user.save();
