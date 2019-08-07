@@ -1,0 +1,184 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const Configuration = require('../lib/config');
+const fs = require('fs');
+const { createInterface: lineReader } = require('readline');
+const i18n = require('i18n');
+const IPP_Printer = require('ipp-printer');
+const is = require('is_js');
+const isGZIP = require('is-gzip');
+const mongoose = require('../models');
+const shortid = require('shortid');
+const zlib = require('zlib');
+
+const JobModel = mongoose.model('Job');
+const locales = [ 'tr', 'en' ];
+
+// TODO: put helpers into lib!
+class VirtualPrinter {
+    static _isGZIP(file) {
+        try {
+            return fs.existsSync(file) && isGZIP(fs.readFileSync(file));
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static _unzip(ps) {
+        return new Promise((resolve, reject) => {
+            const archive = `${ ps }.gz`;
+            try {
+                fs.renameSync(ps, archive);
+                const dest = fs.createWriteStream(ps);
+                fs.createReadStream(archive).pipe(zlib.createGunzip()).pipe(dest);
+                dest.on('close', () => {
+                    if (fs.existsSync(archive)) fs.unlinkSync(archive);
+                    resolve();
+                });
+            } catch (e) {
+                if (fs.existsSync(archive)) fs.unlinkSync(archive);
+                reject(e);
+            }
+        });
+    }
+
+    static _parse(ps) {
+        return new Promise((resolve, reject) => {
+            const lineHolder = lineReader({ input: fs.createReadStream(ps) }), data = {};
+            lineHolder.on('line', async line => {
+                if (is.string(line) && is.not.empty(line)) {
+                    if (!line.startsWith('%%') && !line.startsWith('@PJL') && line.includes('featurebegin{<<')) return;
+
+                    try {
+                        if (line.includes('Pages:')) {
+                            const value = parseInt(line.split('Pages:')[1]);
+                            if (is.number(value)) data.pages = value;
+                        } else if (line.includes('NumCopies:')) {
+                            const value = parseInt(line.split('NumCopies:')[1]);
+                            if (is.number(value)) data.copies = value;
+                        } else if (line.includes('TargetDevice:')) {
+                            const value = line.split('TargetDevice:')[1];
+                            if (is.string(value)) data.driver = value.replace('(', '').replace(')', '').trim();
+                        } else if (line.startsWith('%%Orientation:')) {
+                            const value = line.split('Orientation:')[1];
+                            if (is.string(value)) data.orientation = value.trim();
+                        } else if (line.includes('BeginFeature:')) {
+                            if (line.includes('*Collate')) {
+                                const value = line.split('*Collate')[1];
+                                if (is.string(value)) data.collate = value.trim();
+                            } else if (line.includes('*Duplex')) { // None, DuplexNoTumble, DuplexTumble
+                                const value = line.split('*Duplex')[1];
+                                if (is.string(value)) data.duplex = value.trim();
+                            } else if (line.includes('*InputSlot')) { // Tray1
+                                const value = line.split('*InputSlot')[1];
+                                if (is.string(value)) data.tray = value.trim();
+                            } else if (line.includes('*PageSize')) { // A4
+                                const value = line.split('*PageSize')[1];
+                                if (is.string(value)) data.paper = value.trim();
+                            } else if (line.includes('*StapleLocation')) { // None
+                                const value = line.split('*StapleLocation')[1];
+                                if (is.string(value)) data.staple = value.trim();
+                            }
+                        } else if (line.includes('BeginNonPPDFeature:')) {
+                            if (line.includes('NumCopies')) {
+                                const value = parseInt(line.split('NumCopies')[1]);
+                                if (is.number(value)) data.copies = value;
+                            }
+                        } else if (line.includes('featurebegin{<<')) {
+                            if (line.includes('/Collate')) {
+                                let value = line.split('/Collate')[1];
+                                if (is.string(value)) {
+                                    value = value.split('>>')[0].trim();
+                                    if (is.not.empty(value)) data.collate = value;
+                                }
+                            } else if (line.includes('/MediaPosition')) {
+                                let value = line.split('/MediaPosition')[1];
+                                if (value.length >= 2) {
+                                    value = parseInt(value.split('/TraySwitch')[0].trim());
+                                    if (is.number(value) && value >= 0) data.tray = `Tray${ value + 1 }`;
+                                }
+                            } else if (line.includes('/ProcessColorModel')) data.color = line.includes('/DeviceCMYK');
+                        }
+                    } catch (e) {
+                        // TODO: what to do?!
+                    }
+                }
+            });
+            lineHolder.on('error', e => reject(e));
+            lineHolder.on('close', () => resolve(data));
+        });
+    }
+
+    static accept(printer, spool, job) {
+        const filename = shortid.generate();
+        const ps = `${ spool }/${ filename }.ps`;
+        job.pipe(fs.createWriteStream(ps));
+        job.on('error', console.log);
+        job.on('cancel', console.log);
+        job.on('abort', console.log);
+        job.on('end', async () => {
+            try {
+                job.cancel();
+                const data = { username: job.userName || job.username, name: job.name || '-' };
+                if (data.name.includes(' - ')) {
+                    data.name = data.name.split(' - ');
+                    data.name.shift();
+                    data.name = data.name.join(' - ');
+                }
+                const file = fs.statSync(ps);
+                if (printer.file_size && file.size > printer.file_size)
+                    throw new Error(`OVERSIZED_FILE: ~${ (file.size / 1024 / 1024).toFixed(2) } mb`);
+
+                for (let attr of job.attributes())
+                    if (attr.name === 'attributes-charset') data.charset = attr.value;
+                    else if (attr.name === 'attributes-natural-language') data.language = attr.value;
+                    else if (attr.name === 'job-originating-user-name') data.username = attr.value;
+
+                if (VirtualPrinter._isGZIP(ps)) await VirtualPrinter._unzip(ps);
+                const properties = await VirtualPrinter._parse(ps);
+
+                if (printer.driver && properties.driver && printer.driver !== properties.driver)
+                    throw new Error(`INVALID DRIVER: ${ properties.driver }`);
+
+                // TODO: upsert username
+
+                const job = new JobModel({ name: data.name || '-' });
+                job.save();
+            } catch (e) {
+                // TODO: delete postscript file and notify its owner about error
+                console.log(e.message);
+            }
+        });
+    }
+
+    async start() {
+        this._sys = await Configuration.system({});
+        if (!locales.includes(this._sys.lang)) this._sys.lang = 'en';
+        i18n.configure({ locales, updateFiles: false, objectNotation: true, directory: `${ __dirname }/../i18n/printer` });
+
+        this._printer = await Configuration.printer({});
+        if (!this._printer.folder || !fs.existsSync(this._printer.folder) || fs.accessSync(this._printer.folder, fs.constants.W_OK))
+            throw new Error(i18n.__('folder'));
+
+        if (!this._printer.folder.endsWith('/')) this._printer.folder = `${ this._printer.folder }/`;
+        this._spool = `${ this._printer.folder }spool`;
+        this._tmp = `${ this._printer.folder }tmp`;
+        if (!fs.existsSync(this._spool)) fs.mkdirSync(this._spool);
+        if (!fs.existsSync(this._tmp)) fs.mkdirSync(this._tmp);
+
+        // ? think about starting multiple instances in cluster mode for large deployments
+        // * https://github.com/watson/ipp-spy
+        this._ipp = new IPP_Printer({ name: this._printer.name, port: this._printer.port, zeroconf: !!this._printer.zero });
+        this._ipp.on('job', job => VirtualPrinter.accept(this._printer, this._spool, job));
+    }
+}
+
+const printer = new VirtualPrinter();
+printer.start().catch(e => {
+    console.log(e.message);
+    process.exit(1);
+});
