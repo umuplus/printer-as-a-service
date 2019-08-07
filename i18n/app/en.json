@@ -1,6 +1,7 @@
 {
     "app": {
         "dashboard": "Dashboard",
+        "jobs": "Print Jobs",
         "language": "Change Language",
         "login": "Please sign in!",
         "models": "Printer Models",
@@ -35,6 +36,10 @@
         "brand": "Brand",
         "code": "Code",
         "color": "Color",
+        "copies": {
+            "s": "Copy",
+            "p": "Copies"
+        },
         "date": "Date",
         "email": "E-mail",
         "hardware": "Hardware",
@@ -50,12 +55,18 @@
         "model": "Model",
         "name": "Name",
         "no": "No",
+        "options": "Options",
+        "pages": {
+            "s": "Page",
+            "p": "Pages"
+        },
         "password": "Password",
         "passphrase": "Password (Again)",
         "seen": "Last Seen At",
         "status": "Status",
         "total": "Total",
         "update": "Updated At",
+        "user": "User",
         "username": "Username",
         "value": "Value",
         "yes": "Yes"

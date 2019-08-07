@@ -1,6 +1,7 @@
 {
     "app": {
         "dashboard": "Özet Ekran",
+        "jobs": "Baskı İşleri",
         "language": "Dili Değiştir",
         "login": "Lütfen giriş yapınız!",
         "models": "Yazıcı Modelleri",
@@ -35,6 +36,10 @@
         "brand": "Marka",
         "code": "Kod",
         "color": "Renkli",
+        "copies": {
+            "s": "Kopya",
+            "p": "Kopya"
+        },
         "date": "Tarih",
         "email": "E-posta",
         "hardware": "Donanım",
@@ -50,12 +55,18 @@
         "model": "Model",
         "name": "İsim",
         "no": "Hayır",
+        "options": "Seçenekler",
+        "pages": {
+            "s": "Sayfa",
+            "p": "Sayfa"
+        },
         "password": "Şifre",
         "passphrase": "Şifre (Tekrar)",
         "seen": "Son Görülme",
         "status": "Durum",
         "total": "Toplam",
         "update": "Güncellenme",
+        "user": "Kullanıcı",
         "username": "Kullanıcı Adı",
         "value": "Değer",
         "yes": "Evet"
