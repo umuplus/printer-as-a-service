@@ -27,7 +27,7 @@ i18n.configure({
     locales,
     updateFiles: false,
     objectNotation: true,
-    directory: `${ __dirname }/../i18n`
+    directory: `${ __dirname }/../i18n/app`
 });
 
 app.set('views', path.join(__dirname, '../views'));
@@ -97,6 +97,7 @@ app.use(async function (req, res, next) {
 });
 
 app.use('/', require('./home'));
+app.use('/jobs', require('./job'));
 app.use('/models', require('./model'));
 app.use('/printers', require('./printer'));
 app.use('/settings', require('./setting'));

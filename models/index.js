@@ -8,8 +8,10 @@ mongoose.connect(process.env.MONGODB_URL, { useCreateIndex: true, useNewUrlParse
     .catch(e => console.error(e));
 
 require('./model');
-require('./printer');
 require('./setting');
 require('./user');
+
+require('./printer');
+require('./job');
 
 module.exports = mongoose;

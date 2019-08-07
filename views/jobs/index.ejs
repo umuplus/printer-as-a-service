@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fa fa-copy"></i> <%= __('app.jobs') %></h1>
+</div>
+
+<% include ../common/alerts %>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><%= __('field.name') %></th>
+                <th><%= __('field.user') %></th>
+                <th><%= __('field.options') %></th>
+                <th colspan="2"><%= __('field.update') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let job of jobs) { %>
+            <tr>
+                <td><%- job.name %></td>
+                <td><%- job.user.name %> (<%- job.user.username %>)</td>
+                <td>
+                    <% if (job.options.paper) { %><span class="badge badge-dark"><%- job.options.paper %></span><% }; %>
+                    <% if (job.options.pages) { %><span class="badge badge-dark"><%- job.options.pages %>
+                        <%- __(`field.pages.${ job.options.pages > 1 ? 'p' : 's' }`) %></span><% }; %>
+                    <% if (job.options.copies) { %><span class="badge badge-dark"><%- job.options.copies %>
+                        <%- __(`field.copies.${ job.options.copies > 1 ? 'p' : 's' }`) %></span><% }; %>
+                    <% if (job.options.color) { %><span class="badge badge-primary"><%- __(`field.color`) %></span><% }; %>
+                    <% if (job.options.tray || job.options.orientation || job.options.color || job.options.collate ||
+                        job.options.staple || job.options.duplex) { %><br><% }; %>
+                    <% if (job.options.collate) { %><span class="badge badge-dark"><%- job.options.collate %></span><% }; %>
+                    <% if (job.options.duplex) { %><span class="badge badge-dark"><%- job.options.duplex %></span><% }; %>
+                    <% if (job.options.staple) { %><span class="badge badge-dark"><%- job.options.staple %></span><% }; %>
+                    <% if (job.options.orientation) { %><span class="badge badge-dark"><%- job.options.orientation %></span><% }; %>
+                    <% if (job.options.tray) { %><span class="badge badge-dark"><%- job.options.tray %></span><% }; %>
+                </td>
+                <td><%- $date(job.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td>
+                    <div class="btn-group float-right">
+                        <a href="/<%- $module %>/<%- job._id %>/remove?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                            <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+                    </div>
+                </td>
+            </tr>
+            <% }; %>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    <div class="btn-group">
+        <% if ($qs.val('page')) { %>
+        <a href="?<%- $qs.overwrite({ page: page - 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark">« <%= __('btn.prev') %></a>
+        <% }; %>
+        <a href="?<%- $qs.overwrite({ page: page + 1 }).build() %>"
+            class="btn btn-rounded btn-sm btn-outline-dark"><%= __('btn.next') %> »</a>
+    </div>
+</div>

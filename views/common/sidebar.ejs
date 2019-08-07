@@ -17,6 +17,10 @@
             <li>&nbsp</li>
             <% }; %>
             <li class="nav-item">
+                <a class="nav-link <%- $module === 'jobs' ? 'active' : '' %>"
+                    href="/jobs?ts=<%- $qs.val('ts') %>"><i class="fa fa-copy"></i> <%= __('app.jobs') %></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link <%- $module === 'printers' ? 'active' : '' %>"
                     href="/printers?ts=<%- $qs.val('ts') %>"><i class="fa fa-print"></i> <%= __('app.printers') %></a>
             </li>
