@@ -1,0 +1,16 @@
+SSLINK:"_resources/includes/xrxSDK.css"
+---CONTENT BREAK---
+
+<p class=Subtitle>Presentation Services</p>
+
+<p class=Abstract>The Presentation Services Software Developers Kit provides Xerox Partners with documentation, tools and application examples which allow application control from the device local user interface.</p>
+
+	<h1>Registration API WSDLs</h1>
+	<p class=BodyText>
+	The Registration Web Service Description Language Files (WSDL) include:
+<ul>
+<li>Registration WSDL</li>
+</ul>
+	</p>
+
+<!-- ****************************************************** -->
