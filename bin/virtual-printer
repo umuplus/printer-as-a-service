@@ -166,14 +166,14 @@ class VirtualPrinter {
                 job.markModified('options');
                 await job.save();
                 fs.renameSync(ps, `${ spool }/${ job.id }.ps`);
-                bee.forward('spool', 'archive', { id: job.id });
+                bee.forward('spool', 'archive', { id: job.id }); // TODO: backoff policy?!
                 if (is.number(printer.expire) && printer.expire > 0)
                     bee.forward('spool', 'expire', { id: job.id }, {
                         delayUntil: timeTravel(new Date(), printer.expire)
                     });
                 if (is.number(printer.expirePrinted) && printer.expirePrinted > 0)
-                    bee.forward('spool', 'expire', { id: job.id }, {
-                        delayUntil: timeTravel(new Date(), printer.expirePrinted), printed: true
+                    bee.forward('spool', 'expire', { id: job.id, printed: true }, {
+                        delayUntil: timeTravel(new Date(), printer.expirePrinted)
                     });
 
             } catch (e) {
