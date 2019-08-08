@@ -35,12 +35,15 @@
         "active": "Active",
         "brand": "Brand",
         "code": "Code",
+        "collate": "Collate",
         "color": "Color",
         "copies": {
             "s": "Copy",
             "p": "Copies"
         },
         "date": "Date",
+        "driver": "Driver",
+        "duplex": "Duplex",
         "email": "E-mail",
         "hardware": "Hardware",
         "key": "Key",
@@ -56,6 +59,7 @@
         "name": "Name",
         "no": "No",
         "options": "Options",
+        "oerientation": "Orientation",
         "pages": {
             "s": "Page",
             "p": "Pages"
@@ -63,8 +67,10 @@
         "password": "Password",
         "passphrase": "Password (Again)",
         "seen": "Last Seen At",
+        "staple": "Staple",
         "status": "Status",
         "total": "Total",
+        "tray": "Tray",
         "update": "Updated At",
         "user": "User",
         "username": "Username",

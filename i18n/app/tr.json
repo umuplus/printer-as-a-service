@@ -35,12 +35,15 @@
         "active": "Aktif",
         "brand": "Marka",
         "code": "Kod",
+        "collate": "Collate",
         "color": "Renkli",
         "copies": {
             "s": "Kopya",
             "p": "Kopya"
         },
         "date": "Tarih",
+        "driver": "Sürücü",
+        "duplex": "Çift Taraflı",
         "email": "E-posta",
         "hardware": "Donanım",
         "key": "Anahtar",
@@ -56,6 +59,7 @@
         "name": "İsim",
         "no": "Hayır",
         "options": "Seçenekler",
+        "orientation": "Orientation",
         "pages": {
             "s": "Sayfa",
             "p": "Sayfa"
@@ -63,8 +67,10 @@
         "password": "Şifre",
         "passphrase": "Şifre (Tekrar)",
         "seen": "Son Görülme",
+        "staple": "Staple",
         "status": "Durum",
         "total": "Toplam",
+        "tray": "Tray",
         "update": "Güncellenme",
         "user": "Kullanıcı",
         "username": "Kullanıcı Adı",
