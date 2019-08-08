@@ -18,6 +18,7 @@
         "filter": "Filter",
         "login": "Sign In",
         "logout": "Sign Out",
+        "manage": "Manage",
         "next": "Next",
         "new": {
             "model": "New Printer Model",
@@ -33,6 +34,7 @@
     },
     "field": {
         "active": "Active",
+        "application": "Application",
         "archived": "Archived?",
         "brand": "Brand",
         "code": "Code",

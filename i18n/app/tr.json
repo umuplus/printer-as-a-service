@@ -18,6 +18,7 @@
         "filter": "Filtrele",
         "login": "Giriş Yap",
         "logout": "Güvenli Çıkış",
+        "manage": "Yönet",
         "next": "Sonraki",
         "new": {
             "model": "Yeni Yazıcı Modeli Ekle",
@@ -33,6 +34,7 @@
     },
     "field": {
         "active": "Aktif",
+        "application": "Uygulama",
         "archived": "Arşivlendi mi?",
         "brand": "Marka",
         "code": "Kod",
