@@ -10,6 +10,8 @@ const mongooseTimestamps = require('mongoose-timestamp');
 const schema = mongoose.Schema({
     user: { type: 'ObjectId', ref: 'User', required: true, index: true },
     name: { type: String, required: true },
+    prints: { type: Number, default: 0 },
+    archived: Boolean,
     options: Object
 });
 

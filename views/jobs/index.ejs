@@ -27,12 +27,19 @@
                         <%- __(`field.copies.${ job.options.copies > 1 ? 'p' : 's' }`) %></span><% }; %>
                     <% if (job.options.color) { %><span class="badge badge-primary"><%- __(`field.color`) %></span><% }; %>
                     <% if (job.options.tray || job.options.orientation || job.options.color || job.options.collate ||
-                        job.options.staple || job.options.duplex) { %><br><% }; %>
-                    <% if (job.options.collate) { %><span class="badge badge-dark"><%- job.options.collate %></span><% }; %>
-                    <% if (job.options.duplex) { %><span class="badge badge-dark"><%- job.options.duplex %></span><% }; %>
-                    <% if (job.options.staple) { %><span class="badge badge-dark"><%- job.options.staple %></span><% }; %>
-                    <% if (job.options.orientation) { %><span class="badge badge-dark"><%- job.options.orientation %></span><% }; %>
-                    <% if (job.options.tray) { %><span class="badge badge-dark"><%- job.options.tray %></span><% }; %>
+                        job.options.staple || job.options.duplex || job.options.driver) { %><br><% }; %>
+                    <% if (job.options.collate !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.collate') %>"><%- job.options.collate %></span><% }; %>
+                    <% if (job.options.duplex !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.duplex') %>"><%- job.options.duplex %></span><% }; %>
+                    <% if (job.options.staple !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.staple') %>"><%- job.options.staple %></span><% }; %>
+                    <% if (job.options.orientation !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.orientation') %>"><%- job.options.orientation %></span><% }; %>
+                    <% if (job.options.tray !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.tray') %>"><%- job.options.tray %></span><% }; %>
+                    <% if (job.options.driver !== 'None') { %><span class="badge badge-dark"
+                        title="<%- __('field.driver') %>"><%- job.options.driver %></span><% }; %>
                 </td>
                 <td><%- $date(job.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
                 <td>

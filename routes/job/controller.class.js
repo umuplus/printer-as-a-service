@@ -1,5 +1,7 @@
 'use strict';
 
+const { accessSync: access, constants, existsSync: exists, unlinkSync: unlink } = require('fs');
+const Configuration = require('../../lib/config');
 const is = require('is_js');
 const mongoose = require('../../models');
 
@@ -11,6 +13,7 @@ class Controller {
             let page = parseInt(res.locals.$qs.val('page'));
             page = is.not.number(page) ? 0 : Math.abs(page);
             const query = {};
+            if (!res.locals.$user.level) query.user = res.locals.$user._id;
             const jobs = await JobModel.paginate(query, page);
             res.render(`${ res.locals.$module }/index`, {
                 jobs: is.array(jobs) ? jobs : [],
@@ -31,8 +34,14 @@ class Controller {
             const job = await JobModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
             if (!job) return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
 
+            const printer = await Configuration.printer({});
+            if (is.not.string(printer.folder) || !exists(printer.folder) || access(printer.folder, constants.W_OK))
+                throw new Error('invalid folder');
+
+            if (!printer.folder.endsWith('/')) printer.folder = `${ printer.folder }/`;
+            const ps = `${ printer.folder }spool/${ job.id }.ps`;
+            if (exists(ps)) unlink(ps);
             await job.remove();
-            // TODO: remove postscript file
         } catch (e) {
             req.log.error(e.message);
             req.flash('danger', res.__('txt.e500'));
