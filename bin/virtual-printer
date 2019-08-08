@@ -4,6 +4,7 @@
 
 require('dotenv').config();
 
+const { Client: DotBee } = require('dot-bee');
 const Configuration = require('../lib/config');
 const fs = require('fs');
 const { createInterface: lineReader } = require('readline');
@@ -11,14 +12,18 @@ const i18n = require('i18n');
 const IPP_Printer = require('ipp-printer');
 const is = require('is_js');
 const isGZIP = require('is-gzip');
+const locales = [ 'tr', 'en' ];
 const mongoose = require('../models');
 const shortid = require('shortid');
+const timeTravel = require('date-fns/add_hours');
 const zlib = require('zlib');
 
 const JobModel = mongoose.model('Job');
-const locales = [ 'tr', 'en' ];
+const UserModel = mongoose.model('User');
 
-// TODO: put helpers into lib!
+const bee = new DotBee();
+bee.acceptServices([ 'spool' ]);
+
 class VirtualPrinter {
     static _isGZIP(file) {
         try {
@@ -104,7 +109,7 @@ class VirtualPrinter {
                             } else if (line.includes('/ProcessColorModel')) data.color = line.includes('/DeviceCMYK');
                         }
                     } catch (e) {
-                        // TODO: what to do?!
+                        console.log(e.message);
                     }
                 }
             });
@@ -113,44 +118,67 @@ class VirtualPrinter {
         });
     }
 
-    static accept(printer, spool, job) {
-        const filename = shortid.generate();
+    static accept(printer, spool, document) {
+        const filename = `doc-${ document.id }-${ shortid.generate() }`;
         const ps = `${ spool }/${ filename }.ps`;
-        job.pipe(fs.createWriteStream(ps));
-        job.on('error', console.log);
-        job.on('cancel', console.log);
-        job.on('abort', console.log);
-        job.on('end', async () => {
+        let username, name;
+        document.pipe(fs.createWriteStream(ps));
+        document.on('error', console.log);
+        document.on('cancel', console.log);
+        document.on('abort', console.log);
+        document.on('end', async () => {
             try {
-                job.cancel();
-                const data = { username: job.userName || job.username, name: job.name || '-' };
-                if (data.name.includes(' - ')) {
-                    data.name = data.name.split(' - ');
-                    data.name.shift();
-                    data.name = data.name.join(' - ');
+                document.cancel();
+                username = document.userName || document.username, name = document.name || '-';
+                if (name.includes(' - ')) {
+                    name = name.split(' - ');
+                    name.shift();
+                    name = name.join(' - ');
                 }
                 const file = fs.statSync(ps);
                 if (printer.file_size && file.size > printer.file_size)
                     throw new Error(`OVERSIZED_FILE: ~${ (file.size / 1024 / 1024).toFixed(2) } mb`);
 
-                for (let attr of job.attributes())
+                const data = { id: document.id };
+                for (let attr of document.attributes()) {
                     if (attr.name === 'attributes-charset') data.charset = attr.value;
                     else if (attr.name === 'attributes-natural-language') data.language = attr.value;
-                    else if (attr.name === 'job-originating-user-name') data.username = attr.value;
-
+                    else if (attr.name === 'job-originating-user-name') username = attr.value;
+                }
                 if (VirtualPrinter._isGZIP(ps)) await VirtualPrinter._unzip(ps);
                 const properties = await VirtualPrinter._parse(ps);
-
                 if (printer.driver && properties.driver && printer.driver !== properties.driver)
                     throw new Error(`INVALID DRIVER: ${ properties.driver }`);
 
-                // TODO: upsert username
+                let user = await UserModel.single({ username });
+                if (user && user.deleted) throw new Error(`USER_SUSPENDED: ${ user.username }`);
+                else if (!user) {
+                    user = new UserModel({ username, name: username, password: '-' });
+                    user.updatePassword(shortid.generate());
+                }
+                user.login = Date.now();
+                await user.save();
 
-                const job = new JobModel({ name: data.name || '-' });
-                job.save();
+                const job = new JobModel({ name, user: user._id });
+                job.options = data;
+                for (let field in properties)
+                    if (is.undefined(job.options[field])) job.options[field] = properties[field];
+                job.markModified('options');
+                await job.save();
+                fs.renameSync(ps, `${ spool }/${ job.id }.ps`);
+                bee.forward('spool', 'archive', { id: job.id });
+                if (is.number(printer.expire) && printer.expire > 0)
+                    bee.forward('spool', 'expire', { id: job.id }, {
+                        delayUntil: timeTravel(new Date(), printer.expire)
+                    });
+                if (is.number(printer.expirePrinted) && printer.expirePrinted > 0)
+                    bee.forward('spool', 'expire', { id: job.id }, {
+                        delayUntil: timeTravel(new Date(), printer.expirePrinted), printed: true
+                    });
+
             } catch (e) {
-                // TODO: delete postscript file and notify its owner about error
                 console.log(e.message);
+                if (fs.existsSync(ps)) fs.unlinkSync(ps); // TODO: notify the owner about error
             }
         });
     }
