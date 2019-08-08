@@ -10,6 +10,8 @@
             <tr>
                 <th><%= __('field.name') %></th>
                 <th><%= __('field.user') %></th>
+                <th><%= __('field.archived') %></th>
+                <th><%= __('field.prints') %></th>
                 <th><%= __('field.options') %></th>
                 <th colspan="2"><%= __('field.update') %></th>
             </tr>
@@ -19,6 +21,8 @@
             <tr>
                 <td><%- job.name %></td>
                 <td><%- job.user.name %> (<%- job.user.username %>)</td>
+                <td><%- job.archived ? __('field.yes') : __('field.no') %></td>
+                <td><%- job.prints %></td>
                 <td>
                     <% if (job.options.paper) { %><span class="badge badge-dark"><%- job.options.paper %></span><% }; %>
                     <% if (job.options.pages) { %><span class="badge badge-dark"><%- job.options.pages %>

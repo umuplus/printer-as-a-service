@@ -33,6 +33,7 @@
     },
     "field": {
         "active": "Aktif",
+        "archived": "Arşivlendi mi?",
         "brand": "Marka",
         "code": "Kod",
         "collate": "Collate",
@@ -66,6 +67,7 @@
         },
         "password": "Şifre",
         "passphrase": "Şifre (Tekrar)",
+        "prints": "Baskı Sayısı",
         "seen": "Son Görülme",
         "staple": "Staple",
         "status": "Durum",

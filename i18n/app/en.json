@@ -33,6 +33,7 @@
     },
     "field": {
         "active": "Active",
+        "archived": "Archived?",
         "brand": "Brand",
         "code": "Code",
         "collate": "Collate",
@@ -66,6 +67,7 @@
         },
         "password": "Password",
         "passphrase": "Password (Again)",
+        "prints": "Prints",
         "seen": "Last Seen At",
         "staple": "Staple",
         "status": "Status",
