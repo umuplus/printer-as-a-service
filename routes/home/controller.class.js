@@ -4,16 +4,23 @@ const auth = require('../../lib/auth');
 const is = require('is_js');
 const mongoose = require('../../models');
 
+const JobModel = mongoose.model('Job');
+const PrinterModel = mongoose.model('Printer');
 const UserModel = mongoose.model('User');
 
 class Controller {
     static async index(req, res) {
         if (is.empty(res.locals.$user)) return res.redirect(`/sign-in?ts=${ res.locals.$qs.val('ts') }`);
 
+        const jobs = await JobModel.count({ });
+
+        const printersActive = await PrinterModel.count({ deleted: false });
+        const printersPassive = await PrinterModel.count({ deleted: true });
+
         const usersActive = await UserModel.count({ deleted: false });
         const usersPassive = await UserModel.count({ deleted: true });
 
-        res.render('index', { usersActive, usersPassive });
+        res.render('index', { jobs, printersActive, printersPassive, usersActive, usersPassive });
     }
 
     static async login(req, res) {

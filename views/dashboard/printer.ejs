@@ -1,0 +1,18 @@
+<div class="col-md-3 col-sm-6 mt-3">
+    <div class="card text-white bg-dark">
+        <div class="card-header">
+            <h4 class="my-0">
+                <a href="/printers?ts=<%- $qs.val('ts') %>" class="text-decoration-none text-white">
+                    <i class="fa fa-print float-right"></i>
+                    <%= __('app.printers') %>
+                </a>
+            </h4>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title pricing-card-title">
+                <%- printersActive %> <%- __('field.active') %>
+                <small>/ <%- printersActive + printersPassive %> <%- __('field.total') %></small>
+            </h2>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="col-md-3 col-sm-6 mt-3">
+    <div class="card text-white bg-dark">
+        <div class="card-header">
+            <h4 class="my-0">
+                <a href="/jobs?ts=<%- $qs.val('ts') %>" class="text-decoration-none text-white">
+                    <i class="fa fa-copy float-right"></i>
+                    <%= __('app.jobs') %>
+                </a>
+            </h4>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title pricing-card-title">
+                <%- jobs %>
+            </h2>
+        </div>
+    </div>
+</div>
