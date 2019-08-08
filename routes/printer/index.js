@@ -21,6 +21,9 @@ router.post('/create', Controller.create);
 router.get('/:id/edit', Controller.edit);
 router.post('/:id/edit', Controller.edit);
 
+router.get('/:id/manage', Controller.manage);
+router.post('/:id/apps', Controller.apps);
+
 router.get('/:id/trash', function (req, res) {
     Controller.status(req, res, false);
 });

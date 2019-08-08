@@ -1,0 +1,125 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fa fa-print"></i> <%= __('app.printers') %> » <%- printer.name %> » <%- __('btn.manage') %></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <% if (printer.deleted) { %>
+            <a href="/<%- $module %>/<%- printer._id %>/restore?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-primary confirm">
+                <i class="fa fa-undo"></i> <%= __('btn.restore') %></a>
+            <% } else { %>
+            <a href="/<%- $module %>/<%- printer._id %>/trash?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-danger confirm">
+                <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
+            <% }; %>
+            <a href="/<%- $module %>/<%- printer._id %>/edit?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-secondary">
+                <i class="fa fa-edit"></i> <%= __('btn.edit') %></a>
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>IP</th>
+                <th><%= __('field.model') %></th>
+                <th><%= __('field.location') %></th>
+                <th><%= __('field.seen') %></th>
+                <th><%= __('field.update') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% const seen = printer.seen && Date.now() - printer.seen < 300000; %>
+            <tr>
+                <td><i class="fa fa-<%- seen ? 'eye' : 'eye-slash' %> text-<%- seen ? 'success' : 'danger' %>"></i>
+                    <%- printer.ip %></td>
+                <td>
+                    <% if (printer.model) { %>
+                    <% if ($user.level >= $privileges.master) { %>
+                    <a href="/models/<%- printer.model._id %>/edit?ts=<%- $qs.val('ts') %>">
+                        <%- printer.model.brand %> <%- printer.model.model %></a>
+                    <% } else { %>
+                    <%- printer.model.brand %> <%- printer.model.model %>
+                    <% }; %>
+                    <% }; %>
+                </td>
+                <td><%- printer.options.location %></td>
+                <td><%- printer.seen ? $date(printer.seen, 'DD.MM.YYYY HH:mm') : '-' %></td>
+                <td><%- $date(printer.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive">
+    <div class="col-md-6 float-right">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2"><%= __('field.application') %></th>
+                    </tr>
+                </thead>
+                <tbody id="container-apps"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <form onsubmit="return false;">
+            <div class="form-group">
+                <label for="field-username"><%= __('field.username') %></label>
+                <input type="text" class="form-control" id="field-username" placeholder="<%= __('field.username') %>">
+            </div>
+            <div class="form-group">
+                <label for="field-password"><%= __('field.password') %></label>
+                <input type="password" class="form-control" id="field-password" placeholder="<%= __('field.password') %>">
+            </div>
+        </form>
+        <a href="javascript:" class="btn btn-block btn-primary" data-printer="<%- printer.id %>" id="list-apps">!!!!</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ajax(url, data) {
+        return new Promise((resolve, reject) =>
+            $.post(url, data).done(r => resolve(r)).fail(e => reject(e || new Error(`${ url } failed`))));
+    }
+
+    const $loop = setInterval(function () {
+        try {
+            const container = $('#container-apps');
+            clearInterval($loop);
+
+            const listApps = $('#list-apps');
+            listApps.click(async function() {
+                const el = $(this);
+
+                try {
+                    container.empty();
+                    const apps = await ajax(`/printers/${ el.data('printer') }/apps`, {
+                        username: $('#field-username').val(),
+                        password: $('#field-password').val()
+                    });
+                    if (apps instanceof Array)
+                        for (let app of apps) {
+                            const row = $('<tr></tr>');
+                            if (parseInt(app.checksum)) row.append(`<td>${ app.name }</td>`)
+                                .append(`<td><a href="javascript:" class="btn btn-rounded btn-sm btn-outline-danger float-right">
+                                            <i class="fa fa-trash"></i></a></td>`);
+                            else row.append(`<td colspan="2">${ app.name }</td>`);
+                            container.append(row);
+                        }
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+        } catch (e) {
+            console.log(e.message);
+        }
+    }, 500);
+</script>

@@ -47,7 +47,9 @@
                         <a href="/<%- $module %>/<%- printer._id %>/edit?ts=<%- $qs.val('ts') %>"
                             class="btn btn-rounded btn-sm btn-outline-dark">
                             <i class="fa fa-edit"></i> <%= __('btn.edit') %></a>
-                        <!-- TODO: register device?! -->
+                        <a href="/<%- $module %>/<%- printer._id %>/manage?ts=<%- $qs.val('ts') %>"
+                            class="btn btn-rounded btn-sm btn-outline-dark">
+                            <i class="fa fa-save"></i> <%= __('btn.manage') %></a>
                         <% if (printer.deleted) { %>
                         <a href="/<%- $module %>/<%- printer._id %>/restore?ts=<%- $qs.val('ts') %>"
                             class="btn btn-rounded btn-sm btn-outline-primary confirm">

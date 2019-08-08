@@ -15,6 +15,9 @@
                 class="btn btn-rounded btn-sm btn-outline-danger confirm">
                 <i class="fa fa-trash"></i> <%= __('btn.trash') %></a>
             <% }; %>
+            <a href="/<%- $module %>/<%- printer._id %>/manage?ts=<%- $qs.val('ts') %>"
+                class="btn btn-rounded btn-sm btn-outline-secondary">
+                <i class="fa fa-save"></i> <%= __('btn.manage') %></a>
             <% }; %>
             <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
                 class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
@@ -37,7 +40,7 @@
         <select class="form-control" id="field-model" name="model">
             <option>-</option>
             <% for (let model of models) { %>
-            <option <%- printer.model && printer.model.id === model._id.toString() ? 'selected' : '' %>
+            <option <%- printer && printer.model && printer.model.id === model._id.toString() ? 'selected' : '' %>
                 value="<%- model._id %>"><%- model.brand %> <%- model.model %></option>
             <% }; %>
         </select>

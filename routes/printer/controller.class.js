@@ -1,5 +1,6 @@
 'use strict';
 
+const CUIRegistration = require('../../lib/eip/cui-registration');
 const is = require('is_js');
 const mongoose = require('../../models');
 
@@ -91,6 +92,38 @@ class Controller {
             req.log.error(e.message);
             req.flash('danger', res.__('txt.e500'));
             res.redirect(`/${ res.locals.$module }/${ req.params.id }/edit?ts=${ res.locals.$qs.val('ts') }`);
+        }
+    }
+
+    static async manage(req, res) {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.id))
+                return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
+
+            const printer = await PrinterModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
+            if (!printer) return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
+            res.render(`${ res.locals.$module }/manage`, { printer });
+        } catch (e) {
+            req.log.error(e.message);
+            req.flash('danger', res.__('txt.e500'));
+            res.redirect(`/${ res.locals.$module }/${ req.params.id }/manage?ts=${ res.locals.$qs.val('ts') }`);
+        }
+    }
+
+    static async apps(req, res) {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.id))
+                throw new Error('invalid printer id');
+
+            const printer = await PrinterModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
+            if (!printer) throw new Error('printer not found');
+
+            const register = new CUIRegistration(printer.ip, printer.options ? printer.options.https : false);
+            await register.create();
+            const apps = await register.list({ password: req.body.password, username: req.body.username });
+            res.json(apps);
+        } catch (e) {
+            res.json({ e: e.message });
         }
     }
 
