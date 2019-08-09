@@ -23,6 +23,8 @@ router.post('/:id/edit', Controller.edit);
 
 router.get('/:id/manage', Controller.manage);
 router.post('/:id/apps', Controller.apps);
+router.post('/:id/apps/:name/:checksum', Controller.app);
+router.post('/:id/register', Controller.register);
 
 router.get('/:id/trash', function (req, res) {
     Controller.status(req, res, false);

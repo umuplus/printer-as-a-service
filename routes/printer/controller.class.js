@@ -1,6 +1,8 @@
 'use strict';
 
+const Configuration = require('../../lib/config');
 const CUIRegistration = require('../../lib/eip/cui-registration');
+const ip = require('ip');
 const is = require('is_js');
 const mongoose = require('../../models');
 
@@ -120,8 +122,71 @@ class Controller {
 
             const register = new CUIRegistration(printer.ip, printer.options ? printer.options.https : false);
             await register.create();
-            const apps = await register.list({ password: req.body.password, username: req.body.username });
+            const apps = await register.list();
             res.json(apps);
+        } catch (e) {
+            res.json({ e: e.message });
+        }
+    }
+
+    static async app(req, res) {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.id))
+                throw new Error('invalid printer id');
+
+            const printer = await PrinterModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
+            if (!printer) throw new Error('printer not found');
+
+            const register = new CUIRegistration(printer.ip, printer.options ? printer.options.https : false);
+            await register.create({ password: req.body.password, username: req.body.username });
+            const app = await register.remove(req.params.name, req.params.checksum);
+            res.json(app);
+        } catch (e) {
+            res.json({ e: e.message });
+        }
+    }
+
+    static async register(req, res) {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.id))
+                throw new Error('invalid printer id');
+
+            const printer = await PrinterModel.single({ _id: mongoose.Types.ObjectId(req.params.id) });
+            if (!printer) throw new Error('printer not found');
+
+            const system = await Configuration.system();
+            if (!system) throw new Error('invalid system configuration');
+
+            const r = [], validApps = [ 'print', 'scan', 'custom' ];
+            const register = new CUIRegistration(printer.ip, printer.options ? printer.options.https : false);
+            await register.create({ password: req.body.password, username: req.body.username });
+            if (is.existy(req.body['apps[]'])) {
+                req.body.apps = req.body['apps[]'];
+                delete req.body['apps[]'];
+            }
+            if (is.string(req.body.apps)) req.body.apps = req.body.apps.split(',');
+            if (is.array(req.body.apps))
+                for (let app of req.body.apps) {
+                    try {
+                        if (!validApps.includes(app)) throw new Error('invalid app');
+
+                        const result = await register.put({
+                            Name: res.__(`reg.${ app }.name`),
+                            Description:  res.__(`reg.${ app }.description`),
+                            VendorName: system.vendor || 'DVS',
+                            SmallIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }.png`,
+                            LargeIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }_large.png`,
+                            ToolsIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }_tools.png`,
+                            Url: `http://${ ip.address() }:${ process.env.UI_PORT }/start?module=${ app }`,
+                            DescriptionUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/description/${ app }`
+                        });
+                        r.push(result);
+                    } catch (e) {
+                        console.log(e);
+                        r.push(null);
+                    }
+                }
+            res.json(r);
         } catch (e) {
             res.json({ e: e.message });
         }

@@ -96,6 +96,13 @@ app.use(async function (req, res, next) {
     }
 });
 
+app.use('/description/:name', function (req, res) {
+    res.render('description', {
+        layout: false,
+        name: req.params.name
+    });
+});
+
 app.use('/', require('./home'));
 app.use('/jobs', require('./job'));
 app.use('/models', require('./model'));

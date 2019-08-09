@@ -57,59 +57,103 @@
 </div>
 
 <div class="table-responsive">
-    <div class="col-md-6 float-right">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th colspan="2"><%= __('field.application') %></th>
-                    </tr>
-                </thead>
-                <tbody id="container-apps"></tbody>
-            </table>
+    <form onsubmit="return false;" class="form-inline">
+        <div class="form-group mb-2">
+            <label for="field-username" class="sr-only"><%= __('field.username') %></label>
+            <input type="text" class="form-control" id="field-username" placeholder="<%= __('field.username') %>">
         </div>
-    </div>
-    <div class="col-md-6">
-        <form onsubmit="return false;">
-            <div class="form-group">
-                <label for="field-username"><%= __('field.username') %></label>
-                <input type="text" class="form-control" id="field-username" placeholder="<%= __('field.username') %>">
-            </div>
-            <div class="form-group">
-                <label for="field-password"><%= __('field.password') %></label>
-                <input type="password" class="form-control" id="field-password" placeholder="<%= __('field.password') %>">
-            </div>
-        </form>
-        <a href="javascript:" class="btn btn-block btn-primary" data-printer="<%- printer.id %>" id="list-apps">!!!!</a>
-    </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="field-password" class="sr-only"><%= __('field.password') %></label>
+            <input type="password" class="form-control" id="field-password" placeholder="<%= __('field.password') %>">
+        </div>
+        <a href="javascript:" class="btn btn-dark mx-sm-3 mb-2"
+            data-printer="<%- printer.id %>" id="list-apps"><%- __('btn.list_apps') %></a>
+
+        <% for (let app of [ 'print', 'scan', 'custom' ]) { %>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" value="<%- app %>" id="field-<%- app %>">
+            <label for="field-<%- app %>"><%= __(`reg.${ app }.name`) %></label>
+        </div>
+        <% }; %>
+
+        <a href="javascript:" class="btn btn-info mb-2"
+            data-printer="<%- printer.id %>" id="register-app"><%- __('btn.register') %></a>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped d-none">
+        <thead>
+            <tr>
+                <th colspan="2"><%= __('field.application') %></th>
+            </tr>
+        </thead>
+        <tbody id="container-apps"></tbody>
+    </table>
 </div>
 
 <script type="text/javascript">
+    let container;
     function ajax(url, data) {
         return new Promise((resolve, reject) =>
             $.post(url, data).done(r => resolve(r)).fail(e => reject(e || new Error(`${ url } failed`))));
     }
 
+    async function removeApp(name, checksum, pid, msg) {
+        try {
+            if (confirm(msg)) {
+                const r = await ajax(`/printers/${ pid }/apps/${ name }/${ checksum }`, {
+                    username: $('#field-username').val(), password: $('#field-password').val(),
+                });
+                $('#list-apps').trigger('click');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    async function registerApp(pid) {
+        try {
+            const apps = [];
+            for (let app of [ 'print', 'scan', 'custom' ])
+                if ($(`#field-${ app }:checked`).length) apps.push(app);
+            const r = await ajax(`/printers/${ pid }/register`, {
+                apps, username: $('#field-username').val(), password: $('#field-password').val(),
+            });
+            console.log(r);
+            $('#list-apps').trigger('click');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const $loop = setInterval(function () {
         try {
-            const container = $('#container-apps');
+            container = $('#container-apps');
             clearInterval($loop);
 
-            const listApps = $('#list-apps');
-            listApps.click(async function() {
+            $('#register-app').click(async function() {
                 const el = $(this);
+                registerApp(el.data('printer'));
+            });
 
+            $('#list-apps').click(async function() {
+                const el = $(this);
                 try {
                     container.empty();
+                    container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+                    container.closest('table').removeClass('d-none');
                     const apps = await ajax(`/printers/${ el.data('printer') }/apps`, {
                         username: $('#field-username').val(),
                         password: $('#field-password').val()
                     });
+                    container.empty();
                     if (apps instanceof Array)
                         for (let app of apps) {
                             const row = $('<tr></tr>');
                             if (parseInt(app.checksum)) row.append(`<td>${ app.name }</td>`)
-                                .append(`<td><a href="javascript:" class="btn btn-rounded btn-sm btn-outline-danger float-right">
+                                .append(`<td><a href="javascript:removeApp('${ app.name }', '${ app.checksum }', '${ el.data('printer') }', '<%- __('txt.sure') %>')"
+                                            class="btn btn-rounded btn-sm btn-outline-danger float-right">
                                             <i class="fa fa-trash"></i></a></td>`);
                             else row.append(`<td colspan="2">${ app.name }</td>`);
                             container.append(row);
