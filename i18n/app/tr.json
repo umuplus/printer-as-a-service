@@ -16,6 +16,7 @@
         "download": "İndir",
         "edit": "Düzenle",
         "filter": "Filtrele",
+        "list_apps": "Uygulamaları Yükle",
         "login": "Giriş Yap",
         "logout": "Güvenli Çıkış",
         "manage": "Yönet",
@@ -27,6 +28,7 @@
             "user": "Yeni Kullanıcı Ekle"
         },
         "prev": "Önceki",
+        "register": "Uygulamaları Kaydet",
         "reset": "Vazgeç",
         "restore": "Çöpten Al",
         "submit": "Değişiklikleri Kaydet",
@@ -56,6 +58,7 @@
             "master": "Sistem Yöneticisi",
             "user": "Kullanıcı"
         },
+        "loading": "Yükleniyor...",
         "location": "Bulunduğu Yer",
         "login": "Son Giriş Tarihi",
         "model": "Model",
@@ -81,6 +84,20 @@
         "value": "Değer",
         "yes": "Evet"
     },
+    "reg": {
+        "custom": {
+            "name": "ÖzelFotokopi",
+            "description": "Arşiv destekli fotokopi"
+        },
+        "print": {
+            "name": "KolayYazdır",
+            "description": "Arşiv destekli doküman yazdırma"
+        },
+        "scan": {
+            "name": "ÖzelTarama",
+            "description": "Dokümanlarınızı paylaşımlı dizine tarayın"
+        }
+    },
     "settings": {
         "ad": "Active Directory",
         "cp": "Özel Fotokopi",
@@ -103,6 +120,7 @@
         "name": "Lütfen isim alanını kontrol ediniz.",
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
         "seen": "%s tarihinde görüldü.",
+        "sure": "Emin misiniz?",
         "username": "Lütfen kullanıcı adı alanını kontrol ediniz."
     }
 }
