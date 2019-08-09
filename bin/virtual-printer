@@ -169,7 +169,7 @@ class VirtualPrinter {
                 bee.forward('spool', 'archive', { id: job.id }); // TODO: backoff policy?!
                 if (is.number(printer.expire) && printer.expire > 0)
                     bee.forward('spool', 'expire', { id: job.id }, {
-                        delayUntil: timeTravel(new Date(), printer.expire)
+                        delayUntil: timeTravel(new Date(), printer.expire), printed: !printer.expirePrinted
                     });
                 if (is.number(printer.expirePrinted) && printer.expirePrinted > 0)
                     bee.forward('spool', 'expire', { id: job.id, printed: true }, {
