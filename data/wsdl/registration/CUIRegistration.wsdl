@@ -11,633 +11,656 @@
 <!--  8-03-11      1.6.2      James Howell    CQGbl00331931 - removed default values from optional attributes -->
 <!--  8-29-11      1.6.3      James Howell    Removed UpdateWebletRegistration. Change PutWebletRegistration to PutWeblet  -->
 <!--  01-23-12    1.6.4      James Howell      CQGbl00353438 - Added the RequestMustBeMTOM exception -->
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-             xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-             xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-             xmlns:xrx="http://www.xerox.com/webservices/office/cuiregistration/1"
-             xmlns:ns="http://www.w3.org/2000/09/xmldsig#"
-             targetNamespace="http://www.xerox.com/webservices/office/cuiregistration/1">
-    <documentation>
-        Version 1.6.4
-        This provides the CUI Registration API
-        Copyright 2011 Xerox Corp. All rights reserved
-    </documentation>
-    <types>
-        <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-                   elementFormDefault="qualified" attributeFormDefault="unqualified">
-            <xs:include schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
-        </xs:schema>
-        <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-                   elementFormDefault="qualified" attributeFormDefault="unqualified">
-            <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-                       schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
-            <xs:include schemaLocation="oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
-        </xs:schema>
-        <xs:schema elementFormDefault="qualified"
-                   targetNamespace="http://www.xerox.com/webservices/office/cuiregistration/1">
-            <xs:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="include.xsd"/>
-            <!-- Simple types -->
-            <xs:simpleType name="limitedString">
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="2047"/>
-                    <xs:whiteSpace value="preserve"/>
-                    <xs:minLength value="0"/>
-                </xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType name="Checksum">
-                <xs:restriction base="xs:int"/>
-            </xs:simpleType>
-            <xs:simpleType name="ApplicationType">
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="255"/>
-                    <xs:enumeration value="xeSERVICE"/>
-                    <xs:enumeration value="xeACCOUNTING"/>
-                    <xs:enumeration value="xeAUTHORIZATION"/>
-                    <xs:enumeration value="xeAUTHENTICATION"/>
-                </xs:restriction>
-            </xs:simpleType>
-            <!-- complex types: structures -->
-            <xs:complexType name="InterfaceVersion">
-                <xs:sequence>
-                    <xs:element name="MajorVersion" type="xs:short"/>
-                    <xs:element name="MinorVersion" type="xs:short"/>
-                    <xs:element name="Revision" type="xs:short"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="RegistrationProvides">
-                <xs:sequence>
-                    <xs:element name="Type" type="xrx:ApplicationType"/>
-                    <xs:element name="MustProvide" type="xs:boolean"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:simpleType name="STRegistrationType">
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="255"/>
-                    <!-- Valid values for the Registration Type
-                        These values are listed for reference only. Do not uncomment.
-                        Un-commenting these values will break compatibility when new values are added.
-                        <xs:enumeration value="standard"/>
-                        <xs:enumeration value="weblet"/>
-                    -->
-                </xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType name="STBrowserType">
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="255"/>
-                    <!-- Valid values for theBrowser Type
-                        These values are listed for reference only. Do not uncomment.
-                        Un-commenting these values will break compatibility when new values are added.
-                        <xs:enumeration value="nativeBrowser"/>
-                        <xs:enumeration value="firstGenEIPBrowser"/>
-                        <xs:enumeration value="secondGenEIPBrowser"/>
-                    -->
-                </xs:restriction>
-            </xs:simpleType>
-            <xs:complexType name="Registration">
-                <xs:sequence>
-                    <xs:element name="Name" type="xrx:limitedString"/>
-                    <xs:element name="Description" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="VendorName" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="IsNative" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="SmallIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <!-- LargeIconUrl is deprecated DO NOT USE -->
-                    <xs:element name="LargeIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="ToolsIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Url" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="DescriptionUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="IsDisabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
-                    <xs:element name="Provides" type="xrx:RegistrationProvides" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:complexType>
-            <!-- Complex types (method parameters and results) -->
-            <xs:complexType name="VoidResponse">
-                <xs:sequence>
-                    <!-- no parameters -->
-                </xs:sequence>
-            </xs:complexType>
-            <!-- because Checksum is a simpletype, we need a complex type for proper serialization.
-                 This is named 'ChecksumResponse' because it's used in multiple methods. -->
-            <xs:complexType name="ChecksumResponse">
-                <xs:sequence>
-                    <xs:element name="Checksum" type="xrx:Checksum"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="GetInterfaceVersionRequest">
-                <!-- no parameters -->
-            </xs:complexType>
-            <xs:complexType name="PutRegistrationRequest">
-                <xs:sequence>
-                    <xs:element name="entry" type="xrx:Registration"/>
-                    <xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="DeleteRegistrationRequest">
-                <xs:sequence>
-                    <xs:element name="name" type="xrx:limitedString"/>
-                    <xs:element name="checksum" type="xrx:Checksum"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="UpdateRegistrationRequest">
-                <xs:sequence>
-                    <xs:element name="entry" type="xrx:Registration"/>
-                    <xs:element name="checksum" type="xrx:Checksum"/>
-                    <xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="GetRegistrationResponse">
-                <xs:sequence>
-                    <xs:element name="entry" type="xrx:Registration"/>
-                    <xs:element name="checksum" type="xrx:Checksum"/>
-                    <xs:element name="RegistrationType" type="xrx:STRegistrationType" minOccurs="0" maxOccurs="1"/>
-                    <!-- DeviceRestriction minOccurs=1 -->
-                    <xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
-                    <!-- DeviceRestriction minOccurs=1 -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="GetRegistrationRequest">
-                <xs:sequence>
-                    <xs:element name="name" type="xrx:limitedString"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ListRegistrationsResponseElement">
-                <xs:sequence>
-                    <xs:element name="name" type="xrx:limitedString"/>
-                    <xs:element name="checksum" type="xrx:Checksum"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ListRegistrationsResponse">
-                <xs:sequence>
-                    <xs:element name="element" type="xrx:ListRegistrationsResponseElement" minOccurs="0"
-                                maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="ListRegistrationsRequest">
-                <xs:sequence>
-                    <!-- no parameters -->
-                </xs:sequence>
-            </xs:complexType>
-            <!-- PutWeblet request -->
-            <xs:complexType name="PutWebletRequestType">
-                <xs:all>
-                    <xs:element name="WebletFile" type="xs:base64Binary"/>
-                </xs:all>
-            </xs:complexType>
-            <!-- HLD says SetLoginService and SetAccountingService aren't supported -->
-            <!-- complex types:  exceptions -->
-            <xs:complexType name="InvalidArgumentException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="InvalidChecksumException">
-                <xs:sequence>
-                    <xs:element name="Checksum" type="xrx:Checksum"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="RegistrationExistsException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="RegistryFullException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="RegistrationNotFoundException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="OperationNotSupportedException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="InvalidStateException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="UnsupportedArgumentException">
-                <xs:sequence>
-                    <xs:element name="UnsupportedTypes" type="xrx:ApplicationType" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="BrowserNotSupportedException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="WebletModificationDisabledException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="FailedAuthentication">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="FailedNoAuthenticationProvided">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="IPLockoutException">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="InternalServerError">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="RequestMustBeMTOM">
-                <xs:sequence>
-                    <!-- no members -->
-                </xs:sequence>
-            </xs:complexType>
-            <!-- elements -->
-            <xs:element name="InterfaceVersion" type="xrx:InterfaceVersion"/>
-            <xs:element name="Registration" type="xrx:Registration"/>
-            <xs:element name="VoidResponse" type="xrx:VoidResponse"/>
-            <xs:element name="ChecksumResponse" type="xrx:ChecksumResponse"/>
-            <xs:element name="GetInterfaceVersionRequest" type="xrx:GetInterfaceVersionRequest"/>
-            <xs:element name="PutRegistrationRequest" type="xrx:PutRegistrationRequest"/>
-            <xs:element name="DeleteRegistrationRequest" type="xrx:DeleteRegistrationRequest"/>
-            <xs:element name="UpdateRegistrationRequest" type="xrx:UpdateRegistrationRequest"/>
-            <xs:element name="GetRegistrationResponse" type="xrx:GetRegistrationResponse"/>
-            <xs:element name="GetRegistrationRequest" type="xrx:GetRegistrationRequest"/>
-            <xs:element name="ListRegistrationsResponse" type="xrx:ListRegistrationsResponse"/>
-            <xs:element name="ListRegistrationsRequest" type="xrx:ListRegistrationsRequest"/>
-            <xs:element name="PutWebletRequest" type="xrx:PutWebletRequestType"/>
-            <xs:element name="InvalidArgumentException" type="xrx:InvalidArgumentException"/>
-            <xs:element name="InvalidChecksumException" type="xrx:InvalidChecksumException"/>
-            <xs:element name="RegistrationExistsException" type="xrx:RegistrationExistsException"/>
-            <xs:element name="RegistryFullException" type="xrx:RegistryFullException"/>
-            <xs:element name="RegistrationNotFoundException" type="xrx:RegistrationNotFoundException"/>
-            <xs:element name="OperationNotSupportedException" type="xrx:OperationNotSupportedException"/>
-            <xs:element name="InvalidStateException" type="xrx:InvalidStateException"/>
-            <xs:element name="UnsupportedArgumentException" type="xrx:UnsupportedArgumentException"/>
-            <xs:element name="BrowserNotSupportedException" type="xrx:BrowserNotSupportedException"/>
-            <xs:element name="WebletModificationDisabledException" type="xrx:WebletModificationDisabledException"/>
-            <xs:element name="FailedAuthentication" type="xrx:FailedAuthentication"/>
-            <xs:element name="FailedNoAuthenticationProvided" type="xrx:FailedNoAuthenticationProvided"/>
-            <xs:element name="IPLockoutException" type="xrx:IPLockoutException"/>
-            <xs:element name="InternalServerError" type="xrx:InternalServerError"/>
-            <xs:element name="RequestMustBeMTOM" type="xrx:RequestMustBeMTOM"/>
-        </xs:schema>
-    </types>
-    <message name="SecurityHeader">
-        <part name="Security" element="wsse:Security"/>
-    </message>
-    <message name="GetInterfaceVersionRequest">
-        <part name="request" element="xrx:GetInterfaceVersionRequest"/>
-    </message>
-    <message name="InterfaceVersionResponse">
-        <part name="response" element="xrx:InterfaceVersion"/>
-    </message>
-    <message name="PutRegistrationRequest">
-        <part name="request" element="xrx:PutRegistrationRequest"/>
-    </message>
-    <message name="ChecksumResponse">
-        <part name="response" element="xrx:ChecksumResponse"/>
-    </message>
-    <message name="UpdateChecksumResponse">
-        <part name="response" element="xrx:ChecksumResponse"/>
-    </message>
-    <message name="DeleteRegistrationRequest">
-        <part name="request" element="xrx:DeleteRegistrationRequest"/>
-    </message>
-    <message name="VoidResponse">
-        <part name="response" element="xrx:VoidResponse"/>
-    </message>
-    <message name="UpdateRegistrationRequest">
-        <part name="request" element="xrx:UpdateRegistrationRequest"/>
-    </message>
-    <message name="GetRegistrationRequest">
-        <part name="request" element="xrx:GetRegistrationRequest"/>
-    </message>
-    <message name="GetRegistrationResponse">
-        <part name="response" element="xrx:GetRegistrationResponse"/>
-    </message>
-    <message name="ListRegistrationsRequest">
-        <part name="request" element="xrx:ListRegistrationsRequest"/>
-    </message>
-    <message name="ListRegistrationsResponse">
-        <part name="response" element="xrx:ListRegistrationsResponse"/>
-    </message>
-    <message name="PutWebletRequestMsg">
-        <part name="request" element="xrx:PutWebletRequest"/>
-    </message>
-    <message name="PutWebletResponseMsg">
-        <part name="request" element="xrx:VoidResponse"/>
-    </message>
-    <message name="InvalidArgumentException">
-        <part name="InvalidArgumentException" element="xrx:InvalidArgumentException"/>
-    </message>
-    <message name="InvalidChecksumException">
-        <part name="InvalidChecksumException" element="xrx:InvalidChecksumException"/>
-    </message>
-    <message name="RegistrationExistsException">
-        <part name="RegistrationExistsException" element="xrx:RegistrationExistsException"/>
-    </message>
-    <message name="RegistryFullException">
-        <part name="RegistryFullException" element="xrx:RegistryFullException"/>
-    </message>
-    <message name="RegistrationNotFoundException">
-        <part name="RegistrationNotFoundException" element="xrx:RegistrationNotFoundException"/>
-    </message>
-    <message name="OperationNotSupportedException">
-        <part name="OperationNotSupportedException" element="xrx:OperationNotSupportedException"/>
-    </message>
-    <message name="UnsupportedArgumentException">
-        <part name="UnsupportedArgumentException" element="xrx:UnsupportedArgumentException"/>
-    </message>
-    <message name="InvalidStateException">
-        <part name="InvalidStateException" element="xrx:InvalidStateException"/>
-    </message>
-    <message name="BrowserNotSupportedException">
-        <part name="BrowserNotSupportedException" element="xrx:BrowserNotSupportedException"/>
-    </message>
-    <message name="WebletModificationDisabledException">
-        <part name="WebletModificationDisabledException" element="xrx:WebletModificationDisabledException"/>
-    </message>
-    <message name="FailedAuthentication">
-        <part name="FailedAuthentication" element="xrx:FailedAuthentication"/>
-    </message>
-    <message name="FailedNoAuthenticationProvided">
-        <part name="FailedNoAuthenticationProvided" element="xrx:FailedNoAuthenticationProvided"/>
-    </message>
-    <message name="IPLockoutException">
-        <part name="IPLockoutException" element="xrx:IPLockoutException"/>
-    </message>
-    <message name="InternalServerError">
-        <part name="InternalServerError" element="xrx:InternalServerError"/>
-    </message>
-    <message name="RequestMustBeMTOM">
-        <part name="RequestMustBeMTOM" element="xrx:RequestMustBeMTOM"/>
-    </message>
-    <portType name="CUIRegistrationPort">
-        <operation name="GetInterfaceVersion">
-            <input name="GetInterfaceVersionRequest" message="xrx:GetInterfaceVersionRequest"/>
-            <output name="InterfaceVersionResponse" message="xrx:InterfaceVersionResponse"/>
-            <!-- no (application level) faults -->
-        </operation>
-        <operation name="PutRegistration">
-            <input name="PutRegistrationRequest" message="xrx:PutRegistrationRequest"/>
-            <output name="ChecksumResponse" message="xrx:ChecksumResponse"/>
-            <fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
-            <fault name="RegistrationExistsException" message="xrx:RegistrationExistsException"/>
-            <fault name="RegistryFullException" message="xrx:RegistryFullException"/>
-            <fault name="UnsupportedArgumentException" message="xrx:UnsupportedArgumentException"/>
-            <fault name="BrowserNotSupportedException" message="xrx:BrowserNotSupportedException"/>
-            <fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
-            <fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
-            <fault name="IPLockoutException" message="xrx:IPLockoutException"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-        </operation>
-        <operation name="DeleteRegistration">
-            <input name="DeleteRegistrationRequest" message="xrx:DeleteRegistrationRequest"/>
-            <output name="VoidResponse" message="xrx:VoidResponse"/>
-            <fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
-            <fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
-            <fault name="InvalidChecksumException" message="xrx:InvalidChecksumException"/>
-            <fault name="InvalidStateException" message="xrx:InvalidStateException"/>
-            <fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
-            <fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
-            <fault name="IPLockoutException" message="xrx:IPLockoutException"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-        </operation>
-        <operation name="UpdateRegistration">
-            <input name="UpdateRegistrationRequest" message="xrx:UpdateRegistrationRequest"/>
-            <output name="UpdateChecksumResponse" message="xrx:UpdateChecksumResponse"/>
-            <fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
-            <fault name="InvalidChecksumException" message="xrx:InvalidChecksumException"/>
-            <fault name="InvalidStateException" message="xrx:InvalidStateException"/>
-            <fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
-            <fault name="UnsupportedArgumentException" message="xrx:UnsupportedArgumentException"/>
-            <fault name="BrowserNotSupportedException" message="xrx:BrowserNotSupportedException"/>
-            <fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
-            <fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
-            <fault name="IPLockoutException" message="xrx:IPLockoutException"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-        </operation>
-        <operation name="GetRegistration">
-            <input name="GetRegistrationRequest" message="xrx:GetRegistrationRequest"/>
-            <output name="GetRegistrationResponse" message="xrx:GetRegistrationResponse"/>
-            <fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-        </operation>
-        <operation name="ListRegistrations">
-            <input name="ListRegistrationsRequest" message="xrx:ListRegistrationsRequest"/>
-            <output name="ListRegistrationsResponse" message="xrx:ListRegistrationsResponse"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-        </operation>
-        <operation name="PutWeblet">
-            <input name="PutWebletRequest" message="xrx:PutWebletRequestMsg"/>
-            <output name="PutWebletResponse" message="xrx:PutWebletResponseMsg"/>
-            <fault name="RegistryFullException" message="xrx:RegistryFullException"/>
-            <fault name="WebletModificationDisabledException" message="xrx:WebletModificationDisabledException"/>
-            <fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
-            <fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
-            <fault name="IPLockoutException" message="xrx:IPLockoutException"/>
-            <fault name="InternalServerError" message="xrx:InternalServerError"/>
-            <fault name="RequestMustBeMTOM" message="xrx:RequestMustBeMTOM"/>
-        </operation>
-    </portType>
-    <binding name="CUIRegistration" type="xrx:CUIRegistrationPort">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="GetInterfaceVersion">
-            <soap:operation
-                    soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/GetInterfaceVersion"/>
-            <input name="GetInterfaceVersionRequest">
-                <soap:body use="literal"/>
-            </input>
-            <output name="InterfaceVersionResponse">
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="PutRegistration">
-            <soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/PutRegistration"/>
-            <input name="PutRegistrationRequest">
-                <soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
-                <soap:body use="literal"/>
-            </input>
-            <output name="ChecksumResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="InvalidArgumentException">
-                <soap:fault name="InvalidArgumentException" use="literal"/>
-            </fault>
-            <fault name="RegistrationExistsException">
-                <soap:fault name="RegistrationExistsException" use="literal"/>
-            </fault>
-            <fault name="RegistryFullException">
-                <soap:fault name="RegistryFullException" use="literal"/>
-            </fault>
-            <fault name="UnsupportedArgumentException">
-                <soap:fault name="UnsupportedArgumentException" use="literal"/>
-            </fault>
-            <fault name="BrowserNotSupportedException">
-                <soap:fault name="BrowserNotSupportedException" use="literal"/>
-            </fault>
-            <fault name="FailedAuthentication">
-                <soap:fault name="FailedAuthentication" use="literal"/>
-            </fault>
-            <fault name="FailedNoAuthenticationProvided">
-                <soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
-            </fault>
-            <fault name="IPLockoutException">
-                <soap:fault name="IPLockoutException" use="literal"/>
-            </fault>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="DeleteRegistration">
-            <soap:operation
-                    soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/DeleteRegistration"/>
-            <input name="DeleteRegistrationRequest">
-                <soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
-                <soap:body use="literal"/>
-            </input>
-            <output name="VoidResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="RegistrationNotFoundException">
-                <soap:fault name="RegistrationNotFoundException" use="literal"/>
-            </fault>
-            <fault name="InvalidArgumentException">
-                <soap:fault name="InvalidArgumentException" use="literal"/>
-            </fault>
-            <fault name="InvalidChecksumException">
-                <soap:fault name="InvalidChecksumException" use="literal"/>
-            </fault>
-            <fault name="InvalidStateException">
-                <soap:fault name="InvalidStateException" use="literal"/>
-            </fault>
-            <fault name="FailedAuthentication">
-                <soap:fault name="FailedAuthentication" use="literal"/>
-            </fault>
-            <fault name="FailedNoAuthenticationProvided">
-                <soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
-            </fault>
-            <fault name="IPLockoutException">
-                <soap:fault name="IPLockoutException" use="literal"/>
-            </fault>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="UpdateRegistration">
-            <soap:operation
-                    soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/UpdateRegistration"/>
-            <input name="UpdateRegistrationRequest">
-                <soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
-                <soap:body use="literal"/>
-            </input>
-            <output name="UpdateChecksumResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="RegistrationNotFoundException">
-                <soap:fault name="RegistrationNotFoundException" use="literal"/>
-            </fault>
-            <fault name="InvalidChecksumException">
-                <soap:fault name="InvalidChecksumException" use="literal"/>
-            </fault>
-            <fault name="InvalidStateException">
-                <soap:fault name="InvalidStateException" use="literal"/>
-            </fault>
-            <fault name="InvalidArgumentException">
-                <soap:fault name="InvalidArgumentException" use="literal"/>
-            </fault>
-            <fault name="UnsupportedArgumentException">
-                <soap:fault name="UnsupportedArgumentException" use="literal"/>
-            </fault>
-            <fault name="BrowserNotSupportedException">
-                <soap:fault name="BrowserNotSupportedException" use="literal"/>
-            </fault>
-            <fault name="FailedAuthentication">
-                <soap:fault name="FailedAuthentication" use="literal"/>
-            </fault>
-            <fault name="FailedNoAuthenticationProvided">
-                <soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
-            </fault>
-            <fault name="IPLockoutException">
-                <soap:fault name="IPLockoutException" use="literal"/>
-            </fault>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="GetRegistration">
-            <soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/GetRegistration"/>
-            <input name="GetRegistrationRequest">
-                <soap:body use="literal"/>
-            </input>
-            <output name="GetRegistrationResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="RegistrationNotFoundException">
-                <soap:fault name="RegistrationNotFoundException" use="literal"/>
-            </fault>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="ListRegistrations">
-            <soap:operation
-                    soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/ListRegistrations"/>
-            <input name="ListRegistrationsRequest">
-                <soap:body use="literal"/>
-            </input>
-            <output name="ListRegistrationsResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="PutWeblet">
-            <soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/PutWeblet"/>
-            <input name="PutWebletRequest">
-                <soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
-                <soap:body use="literal"/>
-            </input>
-            <output name="PutWebletResponse">
-                <soap:body use="literal"/>
-            </output>
-            <fault name="RegistryFullException">
-                <soap:fault name="RegistryFullException" use="literal"/>
-            </fault>
-            <fault name="WebletModificationDisabledException">
-                <soap:fault name="WebletModificationDisabledException" use="literal"/>
-            </fault>
-            <fault name="FailedAuthentication">
-                <soap:fault name="FailedAuthentication" use="literal"/>
-            </fault>
-            <fault name="FailedNoAuthenticationProvided">
-                <soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
-            </fault>
-            <fault name="IPLockoutException">
-                <soap:fault name="IPLockoutException" use="literal"/>
-            </fault>
-            <fault name="InternalServerError">
-                <soap:fault name="InternalServerError" use="literal"/>
-            </fault>
-            <fault name="RequestMustBeMTOM">
-                <soap:fault name="RequestMustBeMTOM" use="literal"/>
-            </fault>
-        </operation>
-    </binding>
-    <service name="CUIRegistrationService">
-        <port name="CUIRegistration" binding="xrx:CUIRegistration">
-            <soap:address location="http://localhost/webservices/office/cuiregistration/1"/>
-        </port>
-    </service>
+<!--  10-23-15     1.7.0      C. Zehr          Added AllowSoftKeypad -->
+<!--  11-02-15     1.7.1      C. Zehr          Added fault AllowSoftKeypadValueError -->
+<!--  02-04-16     1.7.2      S. Owens          Added new attribute RegistrationUses -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xrx="http://www.xerox.com/webservices/office/cuiregistration/1" xmlns:ns="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.xerox.com/webservices/office/cuiregistration/1">
+	<documentation>
+	  Version 1.7.2
+	  This provides the CUI Registration API 
+     Copyright 2011 Xerox Corp. All rights reserved
+	</documentation>
+	<types>
+		<xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xs:include schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+		</xs:schema>
+		<xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+			<xs:include schemaLocation="oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+		</xs:schema>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://www.xerox.com/webservices/office/cuiregistration/1">
+			<xs:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="include.xsd"/>
+			<!-- Simple types -->
+			<xs:simpleType name="limitedString">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="2047"/>
+					<xs:whiteSpace value="preserve"/>
+					<xs:minLength value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="Checksum">
+				<xs:restriction base="xs:int"/>
+			</xs:simpleType>
+			<xs:simpleType name="ApplicationType">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="255"/>
+					<xs:enumeration value="xeSERVICE"/>
+					<xs:enumeration value="xeACCOUNTING"/>
+					<xs:enumeration value="xeAUTHORIZATION"/>
+					<xs:enumeration value="xeAUTHENTICATION"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<!-- complex types: structures -->
+			<xs:complexType name="InterfaceVersion">
+				<xs:sequence>
+					<xs:element name="MajorVersion" type="xs:short"/>
+					<xs:element name="MinorVersion" type="xs:short"/>
+					<xs:element name="Revision" type="xs:short"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RegistrationProvides">
+				<xs:sequence>
+					<xs:element name="Type" type="xrx:ApplicationType"/>
+					<xs:element name="MustProvide" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="STRegistrationType">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="255"/>
+					<!-- Valid values for the Registration Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="standard"/>
+						<xs:enumeration value="weblet"/>
+					-->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="STRegistrationUses">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="512"/>
+					<xs:pattern value="[a-zA-Z]+"/>
+					<!-- Valid values for the Registration Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="USB"/>
+					-->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="RegistrationUses">
+				<xs:sequence>
+					<xs:element name="Use" type="xrx:STRegistrationUses" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:simpleType name="STBrowserType">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="255"/>
+					<!-- Valid values for theBrowser Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="nativeBrowser"/>
+						<xs:enumeration value="firstGenEIPBrowser"/>
+						<xs:enumeration value="secondGenEIPBrowser"/>
+					-->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="Registration">
+				<xs:sequence>
+					<xs:element name="Name" type="xrx:limitedString"/>
+					<xs:element name="Description" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="VendorName" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="IsNative" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="SmallIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<!-- LargeIconUrl is deprecated DO NOT USE -->
+					<xs:element name="LargeIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ToolsIconUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Url" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="DescriptionUrl" type="xrx:limitedString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="IsDisabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Provides" type="xrx:RegistrationProvides" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="Uses" type="xrx:RegistrationUses" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="AllowSoftKeypad" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<!-- Complex types (method parameters and results) -->
+			<xs:complexType name="VoidResponse">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- because Checksum is a simpletype, we need a complex type for proper serialization.
+			     This is named 'ChecksumResponse' because it's used in multiple methods. -->
+			<xs:complexType name="ChecksumResponse">
+				<xs:sequence>
+					<xs:element name="Checksum" type="xrx:Checksum"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetInterfaceVersionRequest">
+				<!-- no parameters -->
+			</xs:complexType>
+			<xs:complexType name="PutRegistrationRequest">
+				<xs:sequence>
+					<xs:element name="entry" type="xrx:Registration"/>
+					<xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="DeleteRegistrationRequest">
+				<xs:sequence>
+					<xs:element name="name" type="xrx:limitedString"/>
+					<xs:element name="checksum" type="xrx:Checksum"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="UpdateRegistrationRequest">
+				<xs:sequence>
+					<xs:element name="entry" type="xrx:Registration"/>
+					<xs:element name="checksum" type="xrx:Checksum"/>
+					<xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetRegistrationResponse">
+				<xs:sequence>
+					<xs:element name="entry" type="xrx:Registration"/>
+					<xs:element name="checksum" type="xrx:Checksum"/>
+					<xs:element name="RegistrationType" type="xrx:STRegistrationType" minOccurs="0" maxOccurs="1"/>
+					<!-- DeviceRestriction minOccurs=1 -->
+					<xs:element name="BrowserType" type="xrx:STBrowserType" minOccurs="0" maxOccurs="1"/>
+					<!-- DeviceRestriction minOccurs=1 -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetRegistrationRequest">
+				<xs:sequence>
+					<xs:element name="name" type="xrx:limitedString"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ListRegistrationsResponseElement">
+				<xs:sequence>
+					<xs:element name="name" type="xrx:limitedString"/>
+					<xs:element name="checksum" type="xrx:Checksum"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ListRegistrationsResponse">
+				<xs:sequence>
+					<xs:element name="element" type="xrx:ListRegistrationsResponseElement" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ListRegistrationsRequest">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- PutWeblet request -->
+			<xs:complexType name="PutWebletRequestType">
+				<xs:all>
+					<xs:element name="WebletFile" type="xs:base64Binary"/>
+				</xs:all>
+			</xs:complexType>
+			<!-- HLD says SetLoginService and SetAccountingService aren't supported -->
+			<!-- complex types:  exceptions -->
+			<xs:complexType name="InvalidArgumentException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InvalidChecksumException">
+				<xs:sequence>
+					<xs:element name="Checksum" type="xrx:Checksum"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RegistrationExistsException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RegistryFullException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RegistrationNotFoundException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="OperationNotSupportedException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InvalidStateException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="UnsupportedArgumentException">
+				<xs:sequence>
+					<xs:element name="UnsupportedTypes" type="xrx:ApplicationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="BrowserNotSupportedException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="WebletModificationDisabledException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="FailedAuthentication">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="FailedNoAuthenticationProvided">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="IPLockoutException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InternalServerError">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="RequestMustBeMTOM">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="AllowSoftKeypadValueError">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- elements -->
+			<xs:element name="InterfaceVersion" type="xrx:InterfaceVersion"/>
+			<xs:element name="Registration" type="xrx:Registration"/>
+			<xs:element name="VoidResponse" type="xrx:VoidResponse"/>
+			<xs:element name="ChecksumResponse" type="xrx:ChecksumResponse"/>
+			<xs:element name="GetInterfaceVersionRequest" type="xrx:GetInterfaceVersionRequest"/>
+			<xs:element name="PutRegistrationRequest" type="xrx:PutRegistrationRequest"/>
+			<xs:element name="DeleteRegistrationRequest" type="xrx:DeleteRegistrationRequest"/>
+			<xs:element name="UpdateRegistrationRequest" type="xrx:UpdateRegistrationRequest"/>
+			<xs:element name="GetRegistrationResponse" type="xrx:GetRegistrationResponse"/>
+			<xs:element name="GetRegistrationRequest" type="xrx:GetRegistrationRequest"/>
+			<xs:element name="ListRegistrationsResponse" type="xrx:ListRegistrationsResponse"/>
+			<xs:element name="ListRegistrationsRequest" type="xrx:ListRegistrationsRequest"/>
+			<xs:element name="PutWebletRequest" type="xrx:PutWebletRequestType"/>
+			<xs:element name="InvalidArgumentException" type="xrx:InvalidArgumentException"/>
+			<xs:element name="InvalidChecksumException" type="xrx:InvalidChecksumException"/>
+			<xs:element name="RegistrationExistsException" type="xrx:RegistrationExistsException"/>
+			<xs:element name="RegistryFullException" type="xrx:RegistryFullException"/>
+			<xs:element name="RegistrationNotFoundException" type="xrx:RegistrationNotFoundException"/>
+			<xs:element name="OperationNotSupportedException" type="xrx:OperationNotSupportedException"/>
+			<xs:element name="InvalidStateException" type="xrx:InvalidStateException"/>
+			<xs:element name="UnsupportedArgumentException" type="xrx:UnsupportedArgumentException"/>
+			<xs:element name="BrowserNotSupportedException" type="xrx:BrowserNotSupportedException"/>
+			<xs:element name="WebletModificationDisabledException" type="xrx:WebletModificationDisabledException"/>
+			<xs:element name="FailedAuthentication" type="xrx:FailedAuthentication"/>
+			<xs:element name="FailedNoAuthenticationProvided" type="xrx:FailedNoAuthenticationProvided"/>
+			<xs:element name="IPLockoutException" type="xrx:IPLockoutException"/>
+			<xs:element name="InternalServerError" type="xrx:InternalServerError"/>
+			<xs:element name="RequestMustBeMTOM" type="xrx:RequestMustBeMTOM"/>
+			<xs:element name="AllowSoftKeypadValueError" type="xrx:AllowSoftKeypadValueError"/>
+		</xs:schema>
+	</types>
+	<message name="SecurityHeader">
+		<part name="Security" element="wsse:Security"/>
+	</message>
+	<message name="GetInterfaceVersionRequest">
+		<part name="request" element="xrx:GetInterfaceVersionRequest"/>
+	</message>
+	<message name="InterfaceVersionResponse">
+		<part name="response" element="xrx:InterfaceVersion"/>
+	</message>
+	<message name="PutRegistrationRequest">
+		<part name="request" element="xrx:PutRegistrationRequest"/>
+	</message>
+	<message name="ChecksumResponse">
+		<part name="response" element="xrx:ChecksumResponse"/>
+	</message>
+	<message name="UpdateChecksumResponse">
+		<part name="response" element="xrx:ChecksumResponse"/>
+	</message>
+	<message name="DeleteRegistrationRequest">
+		<part name="request" element="xrx:DeleteRegistrationRequest"/>
+	</message>
+	<message name="VoidResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+	<message name="UpdateRegistrationRequest">
+		<part name="request" element="xrx:UpdateRegistrationRequest"/>
+	</message>
+	<message name="GetRegistrationRequest">
+		<part name="request" element="xrx:GetRegistrationRequest"/>
+	</message>
+	<message name="GetRegistrationResponse">
+		<part name="response" element="xrx:GetRegistrationResponse"/>
+	</message>
+	<message name="ListRegistrationsRequest">
+		<part name="request" element="xrx:ListRegistrationsRequest"/>
+	</message>
+	<message name="ListRegistrationsResponse">
+		<part name="response" element="xrx:ListRegistrationsResponse"/>
+	</message>
+	<message name="PutWebletRequestMsg">
+		<part name="request" element="xrx:PutWebletRequest"/>
+	</message>
+	<message name="PutWebletResponseMsg">
+		<part name="request" element="xrx:VoidResponse"/>
+	</message>
+	<message name="InvalidArgumentException">
+		<part name="InvalidArgumentException" element="xrx:InvalidArgumentException"/>
+	</message>
+	<message name="InvalidChecksumException">
+		<part name="InvalidChecksumException" element="xrx:InvalidChecksumException"/>
+	</message>
+	<message name="RegistrationExistsException">
+		<part name="RegistrationExistsException" element="xrx:RegistrationExistsException"/>
+	</message>
+	<message name="RegistryFullException">
+		<part name="RegistryFullException" element="xrx:RegistryFullException"/>
+	</message>
+	<message name="RegistrationNotFoundException">
+		<part name="RegistrationNotFoundException" element="xrx:RegistrationNotFoundException"/>
+	</message>
+	<message name="OperationNotSupportedException">
+		<part name="OperationNotSupportedException" element="xrx:OperationNotSupportedException"/>
+	</message>
+	<message name="UnsupportedArgumentException">
+		<part name="UnsupportedArgumentException" element="xrx:UnsupportedArgumentException"/>
+	</message>
+	<message name="InvalidStateException">
+		<part name="InvalidStateException" element="xrx:InvalidStateException"/>
+	</message>
+	<message name="BrowserNotSupportedException">
+		<part name="BrowserNotSupportedException" element="xrx:BrowserNotSupportedException"/>
+	</message>
+	<message name="WebletModificationDisabledException">
+		<part name="WebletModificationDisabledException" element="xrx:WebletModificationDisabledException"/>
+	</message>
+	<message name="FailedAuthentication">
+		<part name="FailedAuthentication" element="xrx:FailedAuthentication"/>
+	</message>
+	<message name="FailedNoAuthenticationProvided">
+		<part name="FailedNoAuthenticationProvided" element="xrx:FailedNoAuthenticationProvided"/>
+	</message>
+	<message name="IPLockoutException">
+		<part name="IPLockoutException" element="xrx:IPLockoutException"/>
+	</message>
+	<message name="InternalServerError">
+		<part name="InternalServerError" element="xrx:InternalServerError"/>
+	</message>
+	<message name="RequestMustBeMTOM">
+		<part name="RequestMustBeMTOM" element="xrx:RequestMustBeMTOM"/>
+	</message>
+	<message name="AllowSoftKeypadValueError">
+		<part name="AllowSoftKeypadValueError" element="xrx:AllowSoftKeypadValueError"/>
+	</message>
+	<portType name="CUIRegistrationPort">
+		<operation name="GetInterfaceVersion">
+			<input name="GetInterfaceVersionRequest" message="xrx:GetInterfaceVersionRequest"/>
+			<output name="InterfaceVersionResponse" message="xrx:InterfaceVersionResponse"/>
+			<!-- no (application level) faults -->
+		</operation>
+		<operation name="PutRegistration">
+			<input name="PutRegistrationRequest" message="xrx:PutRegistrationRequest"/>
+			<output name="ChecksumResponse" message="xrx:ChecksumResponse"/>
+			<fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
+			<fault name="RegistrationExistsException" message="xrx:RegistrationExistsException"/>
+			<fault name="RegistryFullException" message="xrx:RegistryFullException"/>
+			<fault name="UnsupportedArgumentException" message="xrx:UnsupportedArgumentException"/>
+			<fault name="BrowserNotSupportedException" message="xrx:BrowserNotSupportedException"/>
+			<fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
+			<fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
+			<fault name="IPLockoutException" message="xrx:IPLockoutException"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="AllowSoftKeypadValueError" message="xrx:AllowSoftKeypadValueError"/>
+		</operation>
+		<operation name="DeleteRegistration">
+			<input name="DeleteRegistrationRequest" message="xrx:DeleteRegistrationRequest"/>
+			<output name="VoidResponse" message="xrx:VoidResponse"/>
+			<fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
+			<fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
+			<fault name="InvalidChecksumException" message="xrx:InvalidChecksumException"/>
+			<fault name="InvalidStateException" message="xrx:InvalidStateException"/>
+			<fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
+			<fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
+			<fault name="IPLockoutException" message="xrx:IPLockoutException"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+		</operation>
+		<operation name="UpdateRegistration">
+			<input name="UpdateRegistrationRequest" message="xrx:UpdateRegistrationRequest"/>
+			<output name="UpdateChecksumResponse" message="xrx:UpdateChecksumResponse"/>
+			<fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
+			<fault name="InvalidChecksumException" message="xrx:InvalidChecksumException"/>
+			<fault name="InvalidStateException" message="xrx:InvalidStateException"/>
+			<fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
+			<fault name="UnsupportedArgumentException" message="xrx:UnsupportedArgumentException"/>
+			<fault name="BrowserNotSupportedException" message="xrx:BrowserNotSupportedException"/>
+			<fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
+			<fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
+			<fault name="IPLockoutException" message="xrx:IPLockoutException"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="AllowSoftKeypadValueError" message="xrx:AllowSoftKeypadValueError"/>
+		</operation>
+		<operation name="GetRegistration">
+			<input name="GetRegistrationRequest" message="xrx:GetRegistrationRequest"/>
+			<output name="GetRegistrationResponse" message="xrx:GetRegistrationResponse"/>
+			<fault name="RegistrationNotFoundException" message="xrx:RegistrationNotFoundException"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+		</operation>
+		<operation name="ListRegistrations">
+			<input name="ListRegistrationsRequest" message="xrx:ListRegistrationsRequest"/>
+			<output name="ListRegistrationsResponse" message="xrx:ListRegistrationsResponse"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+		</operation>
+		<operation name="PutWeblet">
+			<input name="PutWebletRequest" message="xrx:PutWebletRequestMsg"/>
+			<output name="PutWebletResponse" message="xrx:PutWebletResponseMsg"/>
+			<fault name="RegistryFullException" message="xrx:RegistryFullException"/>
+			<fault name="WebletModificationDisabledException" message="xrx:WebletModificationDisabledException"/>
+			<fault name="FailedAuthentication" message="xrx:FailedAuthentication"/>
+			<fault name="FailedNoAuthenticationProvided" message="xrx:FailedNoAuthenticationProvided"/>
+			<fault name="IPLockoutException" message="xrx:IPLockoutException"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="RequestMustBeMTOM" message="xrx:RequestMustBeMTOM"/>
+		</operation>
+	</portType>
+	<binding name="CUIRegistration" type="xrx:CUIRegistrationPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="GetInterfaceVersion">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/GetInterfaceVersion"/>
+			<input name="GetInterfaceVersionRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="InterfaceVersionResponse">
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="PutRegistration">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/PutRegistration"/>
+			<input name="PutRegistrationRequest">
+				<soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="ChecksumResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InvalidArgumentException">
+				<soap:fault name="InvalidArgumentException" use="literal"/>
+			</fault>
+			<fault name="RegistrationExistsException">
+				<soap:fault name="RegistrationExistsException" use="literal"/>
+			</fault>
+			<fault name="RegistryFullException">
+				<soap:fault name="RegistryFullException" use="literal"/>
+			</fault>
+			<fault name="UnsupportedArgumentException">
+				<soap:fault name="UnsupportedArgumentException" use="literal"/>
+			</fault>
+			<fault name="BrowserNotSupportedException">
+				<soap:fault name="BrowserNotSupportedException" use="literal"/>
+			</fault>
+			<fault name="FailedAuthentication">
+				<soap:fault name="FailedAuthentication" use="literal"/>
+			</fault>
+			<fault name="FailedNoAuthenticationProvided">
+				<soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
+			</fault>
+			<fault name="IPLockoutException">
+				<soap:fault name="IPLockoutException" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="AllowSoftKeypadValueError">
+				<soap:fault name="AllowSoftKeypadValueError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="DeleteRegistration">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/DeleteRegistration"/>
+			<input name="DeleteRegistrationRequest">
+				<soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="VoidResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="RegistrationNotFoundException">
+				<soap:fault name="RegistrationNotFoundException" use="literal"/>
+			</fault>
+			<fault name="InvalidArgumentException">
+				<soap:fault name="InvalidArgumentException" use="literal"/>
+			</fault>
+			<fault name="InvalidChecksumException">
+				<soap:fault name="InvalidChecksumException" use="literal"/>
+			</fault>
+			<fault name="InvalidStateException">
+				<soap:fault name="InvalidStateException" use="literal"/>
+			</fault>
+			<fault name="FailedAuthentication">
+				<soap:fault name="FailedAuthentication" use="literal"/>
+			</fault>
+			<fault name="FailedNoAuthenticationProvided">
+				<soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
+			</fault>
+			<fault name="IPLockoutException">
+				<soap:fault name="IPLockoutException" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="UpdateRegistration">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/UpdateRegistration"/>
+			<input name="UpdateRegistrationRequest">
+				<soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="UpdateChecksumResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="RegistrationNotFoundException">
+				<soap:fault name="RegistrationNotFoundException" use="literal"/>
+			</fault>
+			<fault name="InvalidChecksumException">
+				<soap:fault name="InvalidChecksumException" use="literal"/>
+			</fault>
+			<fault name="InvalidStateException">
+				<soap:fault name="InvalidStateException" use="literal"/>
+			</fault>
+			<fault name="InvalidArgumentException">
+				<soap:fault name="InvalidArgumentException" use="literal"/>
+			</fault>
+			<fault name="UnsupportedArgumentException">
+				<soap:fault name="UnsupportedArgumentException" use="literal"/>
+			</fault>
+			<fault name="BrowserNotSupportedException">
+				<soap:fault name="BrowserNotSupportedException" use="literal"/>
+			</fault>
+			<fault name="FailedAuthentication">
+				<soap:fault name="FailedAuthentication" use="literal"/>
+			</fault>
+			<fault name="FailedNoAuthenticationProvided">
+				<soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
+			</fault>
+			<fault name="IPLockoutException">
+				<soap:fault name="IPLockoutException" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="AllowSoftKeypadValueError">
+				<soap:fault name="AllowSoftKeypadValueError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetRegistration">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/GetRegistration"/>
+			<input name="GetRegistrationRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="GetRegistrationResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="RegistrationNotFoundException">
+				<soap:fault name="RegistrationNotFoundException" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="ListRegistrations">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/ListRegistrations"/>
+			<input name="ListRegistrationsRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="ListRegistrationsResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="PutWeblet">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUIRegistration/1/PutWeblet"/>
+			<input name="PutWebletRequest">
+				<soap:header message="xrx:SecurityHeader" part="Security" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="PutWebletResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="RegistryFullException">
+				<soap:fault name="RegistryFullException" use="literal"/>
+			</fault>
+			<fault name="WebletModificationDisabledException">
+				<soap:fault name="WebletModificationDisabledException" use="literal"/>
+			</fault>
+			<fault name="FailedAuthentication">
+				<soap:fault name="FailedAuthentication" use="literal"/>
+			</fault>
+			<fault name="FailedNoAuthenticationProvided">
+				<soap:fault name="FailedNoAuthenticationProvided" use="literal"/>
+			</fault>
+			<fault name="IPLockoutException">
+				<soap:fault name="IPLockoutException" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="RequestMustBeMTOM">
+				<soap:fault name="RequestMustBeMTOM" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="CUIRegistrationService">
+		<port name="CUIRegistration" binding="xrx:CUIRegistration">
+			<soap:address location="http://localhost/webservices/office/cuiregistration/1"/>
+		</port>
+	</service>
 </definitions>
