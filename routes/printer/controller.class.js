@@ -179,7 +179,7 @@ class Controller {
                         });
                         r.push(result);
                     } catch (e) {
-                        r.push(null);
+                        r.push(e.message);
                     }
                 }
             res.json(r);

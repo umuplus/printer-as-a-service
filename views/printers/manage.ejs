@@ -102,28 +102,34 @@
     async function removeApp(name, checksum, pid, msg) {
         try {
             if (confirm(msg)) {
-                const r = await ajax(`/printers/${ pid }/apps/${ name }/${ checksum }`, {
+                container.empty();
+                container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+                container.closest('table').removeClass('d-none');
+                await ajax(`/printers/${ pid }/apps/${ name }/${ checksum }`, {
                     username: $('#field-username').val(), password: $('#field-password').val(),
                 });
-                $('#list-apps').trigger('click');
             }
+            $('#list-apps').trigger('click');
         } catch (e) {
-            console.log(e.message);
+            $('#list-apps').trigger('click');
         }
     }
 
     async function registerApp(pid) {
         try {
+            container.empty();
+            container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+            container.closest('table').removeClass('d-none');
             const apps = [];
             for (let app of [ 'print', 'scan', 'custom' ])
                 if ($(`#field-${ app }:checked`).length) apps.push(app);
             const r = await ajax(`/printers/${ pid }/register`, {
                 apps, username: $('#field-username').val(), password: $('#field-password').val(),
             });
-            console.log(r);
+            // TODO: show errors!
             $('#list-apps').trigger('click');
         } catch (e) {
-            console.log(e.message);
+            $('#list-apps').trigger('click');
         }
     }
 
@@ -159,11 +165,11 @@
                             container.append(row);
                         }
                 } catch (e) {
-                    console.log(e.message);
+                    console.log(e);
                 }
             });
         } catch (e) {
-            console.log(e.message);
+            console.log(e);
         }
     }, 500);
 </script>
