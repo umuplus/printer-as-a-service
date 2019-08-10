@@ -171,18 +171,14 @@ class Controller {
                         if (!validApps.includes(app)) throw new Error('invalid app');
 
                         const result = await register.put({
-                            Name: res.__(`reg.${ app }.name`),
-                            Description:  res.__(`reg.${ app }.description`),
+                            Name: res.__(`reg.${ app }`),
                             VendorName: system.vendor || 'DVS',
-                            SmallIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }.png`,
-                            LargeIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }_large.png`,
-                            ToolsIconUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/images/${ app }_tools.png`,
-                            Url: `http://${ ip.address() }:${ process.env.UI_PORT }/start?module=${ app }`,
-                            DescriptionUrl: `http://${ ip.address() }:${ process.env.UI_PORT }/description/${ app }`
+                            SmallIconUrl: `http://${ ip.address() }:${ process.env.APP_PORT }/images/icons/${ app }.png`,
+                            ToolsIconUrl: `http://${ ip.address() }:${ process.env.APP_PORT }/images/icons/${ app }_tools.png`,
+                            Url: `http://${ ip.address() }:${ process.env.UI_PORT }/start?module=${ app }`
                         });
                         r.push(result);
                     } catch (e) {
-                        console.log(e);
                         r.push(null);
                     }
                 }

@@ -72,7 +72,7 @@
         <% for (let app of [ 'print', 'scan', 'custom' ]) { %>
         <div class="form-group mx-sm-3 mb-2">
             <input type="checkbox" value="<%- app %>" id="field-<%- app %>">
-            <label for="field-<%- app %>"><%= __(`reg.${ app }.name`) %></label>
+            <label for="field-<%- app %>"><%= __(`reg.${ app }`) %></label>
         </div>
         <% }; %>
 
@@ -108,7 +108,7 @@
                 $('#list-apps').trigger('click');
             }
         } catch (e) {
-            console.log(e);
+            console.log(e.message);
         }
     }
 
@@ -123,7 +123,7 @@
             console.log(r);
             $('#list-apps').trigger('click');
         } catch (e) {
-            console.log(e);
+            console.log(e.message);
         }
     }
 
@@ -159,7 +159,7 @@
                             container.append(row);
                         }
                 } catch (e) {
-                    console.log(e);
+                    console.log(e.message);
                 }
             });
         } catch (e) {
