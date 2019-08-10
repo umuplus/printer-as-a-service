@@ -85,18 +85,9 @@
         "yes": "Evet"
     },
     "reg": {
-        "custom": {
-            "name": "ÖzelFotokopi",
-            "description": "Arşiv destekli fotokopi"
-        },
-        "print": {
-            "name": "KolayYazdır",
-            "description": "Arşiv destekli doküman yazdırma"
-        },
-        "scan": {
-            "name": "ÖzelTarama",
-            "description": "Dokümanlarınızı paylaşımlı dizine tarayın"
-        }
+        "custom": "ÖzelFotokopi",
+        "print": "KolayYazdır",
+        "scan": "ÖzelTarama"
     },
     "settings": {
         "ad": "Active Directory",

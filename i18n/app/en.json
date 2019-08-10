@@ -85,18 +85,9 @@
         "yes": "Yes"
     },
     "reg": {
-        "custom": {
-            "name": "CustomCopy",
-            "description": "Photocopy with archive feature"
-        },
-        "print": {
-            "name": "EasyPrint",
-            "description": "Print with archive feature"
-        },
-        "scan": {
-            "name": "Scan2Home",
-            "description": "Scan documents into your shared folder"
-        }
+        "custom": "CustomCopy",
+        "print": "EasyPrint",
+        "scan": "Scan2Home"
     },
     "settings": {
         "ad": "Active Directory",
