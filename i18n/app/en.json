@@ -110,6 +110,7 @@
         "login": "Please check your credentials and try again.",
         "name": "Please check name field.",
         "password": "Please check password fields.",
+        "printer": "You're on an unknown (%s) device.",
         "seen": "Seen at %s",
         "sure": "Are you sure?",
         "username": "Please check username field."

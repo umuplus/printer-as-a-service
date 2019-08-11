@@ -110,6 +110,7 @@
         "login": "Lütfen bilgilerinizi kontrol ettikten sonra tekrar deneyiniz.",
         "name": "Lütfen isim alanını kontrol ediniz.",
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
+        "printer": "Tanımsız (%s) bir cihaz üzerindesiniz.",
         "seen": "%s tarihinde görüldü.",
         "sure": "Emin misiniz?",
         "username": "Lütfen kullanıcı adı alanını kontrol ediniz."
