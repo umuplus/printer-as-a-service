@@ -1,0 +1,296 @@
+<!-- edited with XMLSpy v2011 rel. 3 (http://www.altova.com) by James Howell (XEROX CORPORATION) -->
+<!-- Change history: -->
+<!--  ..date..      ..vers..    ..name..            ..changes..                  -->
+<!--  08-24-11	   1.1.0    James Howell      Created from the 1.0.x version of the WSDL   -->
+<!--  09-07-11	   1.1.1    James Howell      Added the AccountingMethodDisabledException and AccountingMethodNotFoundException faults   -->
+<!--  04-13-12	   1.1.2    James Howell      CQGbl00376684 - Fixed problem with payload size limitation   -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xrx="http://www.xerox.com/webservices/office/cuisession/1" targetNamespace="http://www.xerox.com/webservices/office/cuisession/1">
+	<documentation>
+	   Version 1.1.2
+	   This provides the CUI registration web service API
+	</documentation>
+	<types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://www.xerox.com/webservices/office/cuisession/1">
+			<!-- Simple types -->
+			<xs:simpleType name="SessionInformation">
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+			<xs:simpleType name="SessionInfoSchema_SetSessionParametersPayloadType">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="5000"/>
+					<xs:whiteSpace value="preserve"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<!-- complex types: structures -->
+			<xs:complexType name="InterfaceVersion">
+				<xs:sequence>
+					<xs:element name="MajorVersion" type="xs:short"/>
+					<xs:element name="MinorVersion" type="xs:short"/>
+					<xs:element name="Revision" type="xs:short"/>
+				</xs:sequence>
+			</xs:complexType>
+			<!-- Complex types (method parameters and results) -->
+			<xs:complexType name="VoidResponse">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- because SessionInformation is a simpletype, we need a complex type for proper
+			     serialization. -->
+			<xs:complexType name="SessionInformationResponse">
+				<xs:sequence>
+					<xs:element name="Information" type="xrx:SessionInformation"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetInterfaceVersionRequest">
+				<!-- no parameters -->
+			</xs:complexType>
+			<xs:complexType name="SetSessionParameterRequest">
+				<xs:sequence>
+					<xs:element name="SessionInfoSchema_SetSessionParametersPayload" type="xrx:SessionInfoSchema_SetSessionParametersPayloadType"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetSessionInformationRequest">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ExitApplicationRequest">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- complex types:  exceptions -->
+			<xs:complexType name="InvalidXML">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ValidationFailed">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InternalServerError">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="OperationNotAllowedForRemoteClients">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InvalidArgumentException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InvalidStateException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="AccountingMethodDisabledException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="AccountingMethodNotFoundException">
+				<xs:sequence>
+					<!-- no members -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- elements -->
+			<xs:element name="InterfaceVersion" type="xrx:InterfaceVersion"/>
+			<xs:element name="GetInterfaceVersionRequest" type="xrx:GetInterfaceVersionRequest"/>
+			<xs:element name="VoidResponse" type="xrx:VoidResponse"/>
+			<xs:element name="SessionInformationResponse" type="xrx:SessionInformationResponse"/>
+			<xs:element name="SetSessionParametersRequest" type="xrx:SetSessionParameterRequest"/>
+			<xs:element name="GetSessionInformationRequest" type="xrx:GetSessionInformationRequest"/>
+			<xs:element name="ExitApplicationRequest" type="xrx:ExitApplicationRequest"/>
+			<xs:element name="InvalidXML" type="xrx:InvalidXML"/>
+			<xs:element name="ValidationFailed" type="xrx:ValidationFailed"/>
+			<xs:element name="InternalServerError" type="xrx:InternalServerError"/>
+			<xs:element name="OperationNotAllowedForRemoteClients" type="xrx:OperationNotAllowedForRemoteClients"/>
+			<xs:element name="InvalidArgumentException" type="xrx:InvalidArgumentException"/>
+			<xs:element name="InvalidStateException" type="xrx:InvalidStateException"/>
+			<xs:element name="AccountingMethodDisabledException" type="xrx:AccountingMethodDisabledException"/>
+			<xs:element name="AccountingMethodNotFoundException" type="xrx:AccountingMethodNotFoundException"/>
+		</xs:schema>
+	</types>
+	<message name="GetInterfaceVersionRequest">
+		<part name="request" element="xrx:GetInterfaceVersionRequest"/>
+	</message>
+	<message name="InterfaceVersionResponse">
+		<part name="response" element="xrx:InterfaceVersion"/>
+	</message>
+	<message name="VoidResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+	<message name="SetSessionParametersRequest">
+		<part name="request" element="xrx:SetSessionParametersRequest"/>
+	</message>
+	<message name="GetSessionInformationRequest">
+		<part name="request" element="xrx:GetSessionInformationRequest"/>
+	</message>
+	<message name="SessionInformationResponse">
+		<part name="response" element="xrx:SessionInformationResponse"/>
+	</message>
+	<message name="ExitApplicationRequest">
+		<part name="request" element="xrx:ExitApplicationRequest"/>
+	</message>
+	<message name="InvalidXML">
+		<part name="request" element="xrx:InvalidXML"/>
+	</message>
+	<message name="ValidationFailed">
+		<part name="request" element="xrx:ValidationFailed"/>
+	</message>
+	<message name="InternalServerError">
+		<part name="request" element="xrx:InternalServerError"/>
+	</message>
+	<message name="OperationNotAllowedForRemoteClients">
+		<part name="request" element="xrx:OperationNotAllowedForRemoteClients"/>
+	</message>
+	<message name="InvalidArgumentException">
+		<part name="request" element="xrx:InvalidArgumentException"/>
+	</message>
+	<message name="InvalidStateException">
+		<part name="request" element="xrx:InvalidStateException"/>
+	</message>
+	<message name="AccountingMethodDisabledException">
+		<part name="request" element="xrx:AccountingMethodDisabledException"/>
+	</message>
+	<message name="AccountingMethodNotFoundException">
+		<part name="request" element="xrx:AccountingMethodNotFoundException"/>
+	</message>
+	<portType name="CUIInterfaceVersionPort">
+		<operation name="GetInterfaceVersion">
+			<input name="GetInterfaceVersionRequest" message="xrx:GetInterfaceVersionRequest"/>
+			<output name="InterfaceVersionResponse" message="xrx:InterfaceVersionResponse"/>
+			<!-- no (application level) faults -->
+		</operation>
+	</portType>
+	<portType name="CUISessionInformationPort">
+		<operation name="SetSessionParameters">
+			<input name="SetSessionParametersRequest" message="xrx:SetSessionParametersRequest"/>
+			<output name="VoidResponse" message="xrx:VoidResponse"/>
+			<fault name="InvalidXML" message="xrx:InvalidXML"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="OperationNotAllowedForRemoteClients" message="xrx:OperationNotAllowedForRemoteClients"/>
+			<fault name="ValidationFailed" message="xrx:ValidationFailed"/>
+			<fault name="InvalidArgumentException" message="xrx:InvalidArgumentException"/>
+			<fault name="InvalidStateException" message="xrx:InvalidStateException"/>
+			<fault name="AccountingMethodDisabledException" message="xrx:AccountingMethodDisabledException"/>
+			<fault name="AccountingMethodNotFoundException" message="xrx:AccountingMethodNotFoundException"/>
+		</operation>
+		<operation name="GetSessionInformation">
+			<input name="GetSessionInformationRequest" message="xrx:GetSessionInformationRequest"/>
+			<output name="SessionInformationResponse" message="xrx:SessionInformationResponse"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="OperationNotAllowedForRemoteClients" message="xrx:OperationNotAllowedForRemoteClients"/>
+		</operation>
+	</portType>
+	<portType name="CUISessionControlPort">
+		<operation name="ExitApplication">
+			<input name="ExitApplicationRequest" message="xrx:ExitApplicationRequest"/>
+			<output name="VoidResponse" message="xrx:VoidResponse"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+			<fault name="OperationNotAllowedForRemoteClients" message="xrx:OperationNotAllowedForRemoteClients"/>
+		</operation>
+	</portType>
+	<binding name="CUIInterfaceVersion" type="xrx:CUIInterfaceVersionPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="GetInterfaceVersion">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUISession/1/GetInterfaceVersion"/>
+			<input name="GetInterfaceVersionRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="InterfaceVersionResponse">
+				<soap:body use="literal"/>
+			</output>
+			<!-- no (application level) faults -->
+		</operation>
+	</binding>
+	<binding name="CUISessionInformation" type="xrx:CUISessionInformationPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="SetSessionParameters">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUISession/1/SetSessionParameters"/>
+			<input name="SetSessionParametersRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="VoidResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InvalidXML">
+				<soap:fault name="InvalidXML" use="literal"/>
+			</fault>
+			<fault name="ValidationFailed">
+				<soap:fault name="ValidationFailed" use="literal"/>
+			</fault>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="OperationNotAllowedForRemoteClients">
+				<soap:fault name="OperationNotAllowedForRemoteClients" use="literal"/>
+			</fault>
+			<fault name="InvalidArgumentException">
+				<soap:fault name="InvalidArgumentException" use="literal"/>
+			</fault>
+			<fault name="InvalidStateException">
+				<soap:fault name="InvalidStateException" use="literal"/>
+			</fault>
+			<fault name="AccountingMethodDisabledException">
+				<soap:fault name="AccountingMethodDisabledException" use="literal"/>
+			</fault>
+			<fault name="AccountingMethodNotFoundException">
+				<soap:fault name="AccountingMethodNotFoundException" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="GetSessionInformation">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUISession/1/GetSessionInformation"/>
+			<input name="GetSessionInformationRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="SessionInformationResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="OperationNotAllowedForRemoteClients">
+				<soap:fault name="OperationNotAllowedForRemoteClients" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<binding name="CUISessionControl" type="xrx:CUISessionControlPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="ExitApplication">
+			<soap:operation soapAction="http://xml.namespaces.xerox.com/enterprise/CUISession/1/ExitApplication"/>
+			<input name="ExitApplicationRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="VoidResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+			<fault name="OperationNotAllowedForRemoteClients">
+				<soap:fault name="OperationNotAllowedForRemoteClients" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="CUISessionService">
+		<port name="CUIInterfaceVersion" binding="xrx:CUIInterfaceVersion">
+			<soap:address location="http://localhost/webservices/office/cuisession/1"/>
+		</port>
+		<port name="CUISessionInformation" binding="xrx:CUISessionInformation">
+			<soap:address location="http://localhost/webservices/office/cuisession/1"/>
+		</port>
+		<port name="CUISessionControl" binding="xrx:CUISessionControl">
+			<soap:address location="http://localhost/webservices/office/cuisession/1"/>
+		</port>
+	</service>
+</definitions>

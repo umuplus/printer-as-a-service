@@ -1,0 +1,1970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (http://www.altova.com) by Steve Owens (Xerox Corporation) -->
+<!-- Copyright (C) 2016 Xerox Corporation.  All rights reserved. -->
+<!-- Change history: -->
+<!--  ..date..  ..vers..    ..name..            ..changes..                  -->
+<!--  01-16-10	   1.0.x    Chris Miyachi         Created                      -->
+<!--  01-26-10	   1.0.2    Chris Miyachi        Revised the versioning-->
+<!--  01-26-10	   1.0.3  Chris Miyachi        Revised finishings, make copy-job an element                      -->
+<!--  04-21-10	   1.0.4  Chris Miyachi        Added size restriction to job name string                 -->
+<!--  04-30-10	   1.0.5  Chris Miyachi        Maded a fixed string for CopyJobTicketVersion per request of A. Beck-->
+<!--  05-08-10	   1.0.6 Chris Miyachi        Added processContents "lax" to all the any attributes to maintain forward and backward compatability-->
+<!--  05-13-10	   1.0.7 Chris Miyachi        Job create time was made to be optional-->
+<!--  05-26-10	   1.0.8 James Howell        modified for support of Job Limits-->
+<!--  06-03-10	   1.0.9 Chris Miyachi Addd trays to copy job ticket in support of Job Limits feature; separated out types-->
+<!--  06-18-10	   1.0.10 James Howell/Chris Miyachi      change CTFinishing to a sequence with only one of each item; changed scaling to have an x and y value. -->
+<!--  06-24-10	   1.0.11 James Howell      Updated scaling to support the "auto" modes. -->
+<!--  08-11-10	   1.0.12 James Howell      Using a single shcema with all enums commented out. Changed JobIdFromClient to ClientId -->
+<!--  08-23-10	   1.0.13 Chris Miyachi      Add new enums (as comments) for Media Type (more custom numbers and Photographic) and Media Color (more custom numbers);  removed schemaVersion as an attribute of a payload and added in element-->
+<!--  09-1-10	                   1.0.14    Chris Miyachi       Added tray level definitions-->
+<!--  09-08-10	                   1.0.15    James Howell       removed choice elements-->
+<!--  09-17-10	                   1.0.16    James Howell       added new staple finishing values in comments -->
+<!--  10-14-10	                   1.1.0    James Howell       adding JobSaveDisposition and ImageCol -->
+<!--  12-3-10	                   1.1.1    James Howell       removed JobSaveDisposition -->
+<!--  12-14-10	                   1.1.2    James Howell       renamed file so version number is not in the name -->
+<!--  12-15-10	                   1.1.3    Chris Miyachi Made Job State Reasons an unbound element in JobInfo-->
+<!--03-11-11	                   1.1.4    Chris Miyachi Made DateTimeAtCompleted optional-->
+<!--03-25-11	                   1.1.5    James Howell       CQGbl00304183 Updated the list of valid media types -->
+<!--04-15-11                   1.2.0   Chris Miyachi               CQGbl00305904 Remove xs:any for attributes and elements.  Aslo added in all scan attributes and removed enum block CQGbl00313582.  Added minInclusive for MediaSize (set to 1) CQGbl00312696;  changes to support scanning-->
+<!--04-15-11                   1.2.1   Chris Miyachi               Add Print Ticket items-->
+<!-- 07-12-11                  1.2.2  Chris Miyachi               CQGbl00325672:  Added new job state reason "OutOfAccountingResources"  -->
+<!-- 08-7-11                  1.2.3  Chris Miyachi              Updating accounting elements for cloud printing-->
+<!-- 09-10-11                  1.2.4  Chris Miyachi              Updating accounting elements for cloud printing-->
+<!-- 09-10-11                  1.2.5  Chris Miyachi              Updating accounting elements-->
+<!-- 09-28-11                  1.2.6  Chris Miyachi              Added job state reasons for scanning-->
+<!-- 10-19-11                  1.2.7  James Howell              Added NotImplemented value to many enums-->
+<!-- 10-28-11                  1.2.8  James Howell              Added Added email options to support cloud scan to email -->
+<!-- 11-09-11                  1.2.9  James Howell              increases size of To, Cc, abd Bcc email strings in email options -->
+<!-- 11-16-11                  1.2.10  James Howell            Adding smtp server authentication elements to the email options -->
+<!-- 11-16-11                  1.2.10  Chris Miyachi             Added the enums in all CAPS for Compression and DocumentFormat to match the scan template definition -->
+<!-- 11-20-11                  1.2.11  Chris Miyachi             Added Txt as a PDL type -->
+<!-- 12-6-11                  1.2.12  Chris Miyachi            Added new InputMediaSize keywords -->
+<!-- 01-16-12                  1.2.13  Chris Miyachi            Added new destination type called WebDav; CQGbl00357955:  changed STBitsPerPixelType to be minInclusive and maxInclusive-->
+<!-- 		                                                          CQGbl00358610:  Added new job state reason: NetworkControllerError, CQGbl00358212: added mustUnderstand to required attributes, CQGbl00359273:  Media size takes precedent over dimensions;  -->
+<!-- 02-18-12	                1.2.14  Chris Miyachi CQGbl00358610:  Added more job state reasons to be in sync with all reasons on the system that can occur -->
+<!-- 03-08-12	                1.2.15  Chris Miyachi Added missing "value" attribute to fake enums for job state reasons. -->
+<!-- 03-21-12	                1.2.16  James Howell Added WebDavS "value"  to fake enums for estination type. -->
+<!-- 03-28-12	                1.2.17  Chris Miyachi  Added SFtp "value"  to fake enums for destination type. -->
+<!-- 04-28-12            1.3.0  Chris Miyachi  Changed WebService destination type to XrxScanWebService-->
+<!-- 07-25-12            1.3.1  James Howell CQGbl00389899: Changed STAttachmentName size. Also added CTEmail -->
+<!-- 11-14-12            1.3.2  James Howell CQGbl00389899: Changed STAttachmentName size to 173. -->
+<!-- 07/17/13            1.3.3  Chris Miyachi CQGbl00459131.: Added DocumentName to destination data -->
+<!-- 09/28/13            1.3.4  Chris Miyachi Removed fake enum PromptatUserInterface for LoginSourceType; removed other types and added StoreInTicket;  added hundreths documentation of an inch unit for edge erase -->
+<!-- 09/09/14          1.4.0 Chris Miyachi Added items in for using keys to access the USB drive for scan to USB -->
+<!-- 09/09/14          1.4.1 Chris Miyachi Gathered the USB items into one structure called UsbOptions-->
+<!-- 03/25/15          1.4.2 Steve Owens Created DocumentSecurity structure for PDF password-->
+<!-- 05/19/15          1.5.0 Chris Miyachi Added additional enumerations for folding -->
+<!--  07/06/15  1.5.1  Steve Owens  Added PartitionLocation to support using print from URL for print from USB -->
+<!--  07/06/15  1.5.2  Chris Miyachi  Added more media input size types for Next Wave EIP (Hybrid) 0009072 -->
+<!--  08/04/15  1.5.3  Steve Owens  Added new job state reasons for fax -->
+<!--  08/28/15  1.5.4  Steve Owens  Added new job state and job state reason to support 2-sided platen copy -->
+<!--  09/23/15  1.5.5  Steve Owens  Clean up of fax job state reasons -->
+<!--  09/25/15  1.5.7  Chris Miyachi Clarified which job types should not be used in the future-->
+<!-- 03/04/16 1.5.8  Chris Miyachi Added two new PDL types for NextWave: JPEG and HPGL-->
+<!-- 03/28/16 1.5.9  Steve Owens Added option to generate XST file and media type as an option instead of tray selection-->
+<!-- 03/28/16 1.5.10  Chris Miyachi Removed unused Compression element and added CompressionQualitySettings under ImageSettings for Scan Ticket-->
+<!-- 06/10/16 1.5.11  Steve Owens Added Darkness element to the copy job ticket and receipt -->
+<!-- 06/16/16 1.5.12  Steve Owens Added new job state and job state reason for external processing -->
+<!-- 06/17/16 1.5.13  Poulabi Patra CQGbl00937386: Added new job state reasons "PSPrintNotEnabled", "XPSPrintNotEnabled"-->
+<!-- 06/17/16 1.5.14  Steve Owens Use InputMediaType in MediaCol in order to allow defined media size names -->
+<!-- 06/16/16 1.5.15 Chris Miyachi Updated fake enum of InputMediaSize from NA_3.5X5.5SEF to NA_3.5x5.5SEF, but device will accept both upper and lower cases -->
+<!-- 07/07/16 1.5.16 Steve Owens Added ExternalScanProcessing job state reason for external scan processing. -->
+<!-- 07/10/16 1.5.17 Steve Owens Removed ExternalScanProcessing job state. Added ImageSendTimeout job state reason. -->
+<xs:schema xmlns:eipjobmodel="http://schemas.xerox.com/enterprise/eipjobmodel/1" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.xerox.com/enterprise/eipjobmodel/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.5.17">
+	<!--If enum value is not recognized or left out, the device default will be used.  -->
+	<!--The Job Queue-->
+	<xs:complexType name="schemaVersionType">
+		<xs:sequence>
+			<xs:element name="MajorVersion" type="xs:short" default="1"/>
+			<xs:element name="MinorVersion" type="xs:short" default="5"/>
+			<xs:element name="Revision" type="xs:short" default="17"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="JobQueue">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:JobInfo" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--The Copy Job (used for getting details)-->
+	<xs:element name="CopyJob">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:JobInfo"/>
+				<xs:element ref="eipjobmodel:CopyJobTicket" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:CopyJobReceipt" minOccurs="0"/>
+			</xs:sequence>
+			<!--Job - object -->
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ScanJob">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:JobInfo"/>
+				<xs:element ref="eipjobmodel:ScanJobTicket" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:ScanJobReceipt" minOccurs="0"/>
+			</xs:sequence>
+			<!--Job - object -->
+		</xs:complexType>
+	</xs:element>
+	<!--Parts of a job-->
+	<xs:element name="JobInfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:JobId"/>
+				<xs:element ref="eipjobmodel:ClientId" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:JobName"/>
+				<xs:element ref="eipjobmodel:JobType"/>
+				<xs:element ref="eipjobmodel:JobState"/>
+				<xs:element ref="eipjobmodel:JobOriginatingUserName"/>
+				<xs:element ref="eipjobmodel:JobStateReasons" maxOccurs="unbounded"/>
+				<xs:element ref="eipjobmodel:DateTimeAtCompleted" minOccurs="0"/>
+				<xs:element ref="eipjobmodel:DateTimeAtCreation"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PrintJobTicket">
+		<!--Xerox Common Job Ticket-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element name="JobDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+							<xs:element ref="eipjobmodel:JobOriginatingUserName" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobProcessing" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Input" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="Accounting" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Jba" minOccurs="0">
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="eipjobmodel:JobAccountingUserId"/>
+																<xs:element ref="eipjobmodel:JobAccountId"/>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Xsa" type="eipjobmodel:CTJobAccountingInfo" minOccurs="0"/>
+												</xs:all>
+												<!--DeviceRestriction = choice-->
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+									<!--Accounting can only be xsa or jba but not both-->
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Output" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:Finishings" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:ColorEffectsType" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:SheetCollate" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:Copies" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+										<xs:choice minOccurs="0">
+											<xs:element ref="eipjobmodel:InputTraysCol"/>
+											<xs:element ref="eipjobmodel:MediaCol"/>
+										</xs:choice>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CopyJobTicket">
+		<!--Xerox Common Job Ticket-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element name="JobDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobProcessing" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Input" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:Scaling" minOccurs="0"/>
+										<xs:element name="Darkness" type="eipjobmodel:STDarkness" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Output" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:Finishings" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:ColorEffectsType" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:SheetCollate" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:Copies" minOccurs="0"/>
+										<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+										<xs:choice minOccurs="0">
+											<xs:element ref="eipjobmodel:InputTraysCol"/>
+											<xs:element ref="eipjobmodel:MediaCol"/>
+										</xs:choice>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CopyJobReceipt">
+		<!--Xerox Common Job Ticket-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="JobDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobProcessing">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Input">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:Sides"/>
+										<xs:element ref="eipjobmodel:Scaling"/>
+										<xs:element name="Darkness" type="eipjobmodel:STDarkness" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Output">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:Finishings"/>
+										<xs:element ref="eipjobmodel:ColorEffectsType"/>
+										<xs:element ref="eipjobmodel:SheetCollate"/>
+										<xs:element ref="eipjobmodel:Copies"/>
+										<xs:element ref="eipjobmodel:Sides"/>
+										<xs:element ref="eipjobmodel:InputTraysCol"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ScanJobTicket">
+		<!--Xerox Common Job Ticket-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+				<xs:element name="JobDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobProcessing" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Input" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:ColorMode" minOccurs="0">
+											<!--DeviceRestriction=mustUnderstand -->
+										</xs:element>
+										<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+										<xs:element name="OriginalType" type="eipjobmodel:CTOriginalType" minOccurs="0"/>
+										<xs:element name="ImageOptions" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Darkness" type="eipjobmodel:STDarkness" minOccurs="0"/>
+													<xs:element name="Sharpness" type="eipjobmodel:STSharpness" minOccurs="0"/>
+													<xs:element name="Contrast" type="eipjobmodel:CTContrast" minOccurs="0"/>
+													<xs:element name="AutoExposure" type="eipjobmodel:STAutoExposure" minOccurs="0"/>
+													<xs:element name="Resolution" type="eipjobmodel:STResolutionType" minOccurs="0">
+														<!--DeviceRestriction=mustUnderstand -->
+													</xs:element>
+													<xs:element name="Saturation" type="eipjobmodel:STSaturation" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="LayoutAdjustment" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="InputOrientation" type="eipjobmodel:STInputOrientationType" minOccurs="0"/>
+													<xs:element name="InputMediaSize" type="eipjobmodel:CTInputMediaSize" minOccurs="0"/>
+													<xs:element name="InputEdgeErase" type="eipjobmodel:CTEdgeErase" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ImageSettings" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="BitsPerPixel" type="eipjobmodel:STBitsPerPixelType" minOccurs="0"/>
+													<xs:element name="OptimizedForFastWebView" type="xs:boolean" minOccurs="0"/>
+													<xs:element name="SearchableText" type="eipjobmodel:STSearchableText" minOccurs="0"/>
+													<xs:element name="SourceDocumentLanguages" type="eipjobmodel:STSourceDocumentLanguages" minOccurs="0"/>
+													<xs:element name="CompressionQualitySetting" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="CompressionQuality" type="eipjobmodel:STCompressionQuality" minOccurs="0">
+																	<!--Default value is HighCompression-->
+																</xs:element>
+																<xs:element name="CompressionCompatability" type="eipjobmodel:STCompressionCompatability" minOccurs="0">
+																	<!--Default value is HighCompatibility-->
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Accounting" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Jba" minOccurs="0">
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="eipjobmodel:JobAccountingUserId"/>
+																<xs:element ref="eipjobmodel:JobAccountId"/>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Xsa" type="eipjobmodel:CTJobAccountingInfo" minOccurs="0"/>
+												</xs:all>
+												<!--DeviceRestriction = choice-->
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Output" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Destination" type="eipjobmodel:CTDestination" minOccurs="0"/>
+										<xs:element name="MetaData" type="eipjobmodel:CTMetaData" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ScanJobReceipt">
+		<!--Xerox Common Job Ticket-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="JobDescription" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobProcessing" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Input">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobmodel:ColorMode"/>
+										<xs:element ref="eipjobmodel:Sides"/>
+										<xs:element name="OriginalType" type="eipjobmodel:CTOriginalType"/>
+										<xs:element name="ImageOptions">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Darkness" type="eipjobmodel:STDarkness"/>
+													<xs:element name="Sharpness" type="eipjobmodel:STSharpness"/>
+													<xs:element name="Contrast" type="eipjobmodel:CTContrast"/>
+													<xs:element name="AutoExposure" type="eipjobmodel:STAutoExposure"/>
+													<xs:element name="Resolution" type="eipjobmodel:STResolutionType"/>
+													<xs:element name="Saturation" type="eipjobmodel:STSaturation"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="LayoutAdjustment">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="InputOrientation" type="eipjobmodel:STInputOrientationType"/>
+													<xs:element name="InputMediaSize" type="eipjobmodel:CTInputMediaSize"/>
+													<xs:element name="InputEdgeErase" type="eipjobmodel:CTEdgeErase"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ImageSettings" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="BitsPerPixel" type="eipjobmodel:STBitsPerPixelType"/>
+													<xs:element name="OptimizedForFastWebView" type="xs:boolean"/>
+													<xs:element name="SearchableText" type="eipjobmodel:STSearchableText"/>
+													<xs:element name="SourceDocumentLanguages" type="eipjobmodel:STSourceDocumentLanguages"/>
+													<xs:element name="CompressionQualitySetting" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="CompressionQuality" type="eipjobmodel:STCompressionQuality" minOccurs="0">
+																	<!--Default value is MediumCompression-->
+																</xs:element>
+																<xs:element name="CompressionCompatability" type="eipjobmodel:STCompressionCompatability" minOccurs="0">
+																	<!--Default value is HighCompatibility-->
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Accounting" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="Jba" minOccurs="0">
+														<xs:complexType>
+															<xs:all>
+																<xs:element ref="eipjobmodel:JobAccountingUserId"/>
+																<xs:element ref="eipjobmodel:JobAccountId"/>
+															</xs:all>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Xsa" type="eipjobmodel:CTJobAccountingInfo" minOccurs="0"/>
+												</xs:all>
+												<!--DeviceRestriction = choice-->
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Output" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Destination" type="eipjobmodel:CTDestination"/>
+										<xs:element name="MetaData" type="eipjobmodel:CTMetaData"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--Job Ticket attributes-->
+	<xs:element name="JobAccountingType" type="eipjobmodel:STJobAccountingType"/>
+	<xs:element name="JobAccountingUserId" type="eipjobmodel:STJobAccountingUserId"/>
+	<xs:element name="JobAccountId" type="eipjobmodel:STJobAccountId"/>
+	<xs:element name="Copies" type="eipjobmodel:STCopies"/>
+	<xs:simpleType name="STCopies">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+		<!--Vernacular Name:  Copies, Quantity-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:element name="Sides" type="eipjobmodel:STSides"/>
+	<xs:simpleType name="STSides">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Sides
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="OneSided"/>
+			<xs:enumeration value="TwoSidedLongEdge"/>
+			<xs:enumeration value="TwoSidedShortEdge"/>
+			<xs:enumeration value="TwoSided"/>
+			<xs:enumeration value="SecondSideRotation"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  	Sides Imaged-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="SheetCollate" type="eipjobmodel:STSheetCollate"/>
+	<xs:simpleType name="STSheetCollate">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for collation
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Uncollated"/>
+			<xs:enumeration value="Collated"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  	Collated-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="ColorEffectsType" type="eipjobmodel:STColorEffectsType"/>
+	<xs:simpleType name="STColorEffectsType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Color Effects Type
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Color"/>
+			<xs:enumeration value="MonochromeGrayscale"/>
+			<xs:enumeration value="Auto"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  	Output Color-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="Scaling" type="eipjobmodel:CTScaling"/>
+	<xs:complexType name="CTScaling">
+		<xs:sequence>
+			<xs:element name="ScalingType" type="eipjobmodel:STScalingType"/>
+			<xs:element name="ScaleProportional" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ScalingValue" type="eipjobmodel:STScaling"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ScaleIndependent" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="XScaling" type="eipjobmodel:STScaling"/>
+						<xs:element name="YScaling" type="eipjobmodel:STScaling"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="STScalingType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for scaling type
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="AutoProportional"/>
+			<xs:enumeration value="AutoIndependent"/>
+			<xs:enumeration value="Proportional"/>
+			<xs:enumeration value="Independent"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STScaling">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="25"/>
+			<xs:maxInclusive value="400"/>
+		</xs:restriction>
+		<!--same as magnification in NSA-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="StapleFinishing" type="eipjobmodel:STStapleFinishing"/>
+	<xs:simpleType name="STStapleFinishing">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Staple Finishings
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Staple"/>
+			<xs:enumeration value="OneStaple"/>
+			<xs:enumeration value="TwoStaple"/>
+			<xs:enumeration value="ThreeStaple"/>
+			<xs:enumeration value="FourStaple"/>
+			<xs:enumeration value="StapleTopLeft"/>
+			<xs:enumeration value="StapleBottomLeft"/>
+			<xs:enumeration value="StapleTopRight"/>
+			<xs:enumeration value="StapleBottomRight"/>
+			<xs:enumeration value="EdgeStitchLeft"/>
+			<xs:enumeration value="EdgeStitchTop"/>
+			<xs:enumeration value="EdgeStitchRight"/>
+			<xs:enumeration value="EdgeStitchBottom"/>
+			<xs:enumeration value="StapleDualLeft"/>
+			<xs:enumeration value="StapleDualTop"/>
+			<xs:enumeration value="StapleDualRight"/>
+			<xs:enumeration value="StapleDualBottom"/>
+			<xs:enumeration value="Staple3Left"/>
+			<xs:enumeration value="Staple3Top"/>
+			<xs:enumeration value="Staple3Right"/>
+			<xs:enumeration value="Staple3Bottom"/>
+			<xs:enumeration value="Staple4Left"/>
+			<xs:enumeration value="Staple4Top"/>
+			<xs:enumeration value="Staple4Right"/>
+			<xs:enumeration value="Staple4Bottom"/>
+			<xs:enumeration value="StapleMultipleLeft"/>
+			<xs:enumeration value="StapleMultipleTop"/>
+			<xs:enumeration value="StapleMultipleRight"/>
+			<xs:enumeration value="StapleMultipleBottom"/>
+			<xs:enumeration value="StapleInboard"/>
+			<xs:enumeration value="StapleOutboard"/>
+			<xs:enumeration value="StaplePortrait"/>
+			<xs:enumeration value="StapleLandscape"/>
+			<xs:enumeration value="StapleDualBooklet"/>
+			<xs:enumeration value="StapleDualPortrait"/>
+			<xs:enumeration value="StapleDualLandscape"/>
+			<xs:enumeration value="StapleMultiplePortrait"/>
+			<xs:enumeration value="StapleMultipleLandscape"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  Staple Finishings-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:simpleType name="STDimension">
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="PunchFinishing" type="eipjobmodel:STPunchFinishing"/>
+	<xs:simpleType name="STPunchFinishing">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Punch Finishings
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Punch"/>
+			<xs:enumeration value="Punch2Hole"/>
+			<xs:enumeration value="Punch3Hole"/>
+			<xs:enumeration value="Punch4Hole"/>
+			<xs:enumeration value="PunchLeft"/>
+			<xs:enumeration value="PunchTop"/>
+			<xs:enumeration value="PunchRight"/>
+			<xs:enumeration value="PunchBottom"/>
+			<xs:enumeration value="Punch2HoleLeft"/>
+			<xs:enumeration value="Punch2HoleTop"/>
+			<xs:enumeration value="Punch2HoleRight"/>
+			<xs:enumeration value="Punch2HoleBottom"/>
+			<xs:enumeration value="Punch3HoleLeft"/>
+			<xs:enumeration value="Punch3HoleTop"/>
+			<xs:enumeration value="Punch3HoleRight"/>
+			<xs:enumeration value="Punch3HoleBottom"/>
+			<xs:enumeration value="Punch4HoleLeft"/>
+			<xs:enumeration value="Punch4HoleTop"/>
+			<xs:enumeration value="Punch4HoleRight"/>
+			<xs:enumeration value="Punch4HoleBottom"/>
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  Punch Finishings-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="Finishings" type="eipjobmodel:CTFinishings"/>
+	<xs:complexType name="CTFinishings">
+		<xs:sequence>
+			<xs:element ref="eipjobmodel:StapleFinishing" minOccurs="0"/>
+			<xs:element ref="eipjobmodel:PunchFinishing" minOccurs="0"/>
+			<xs:element ref="eipjobmodel:FoldFinishing" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="JobName" type="eipjobmodel:STJobName"/>
+	<xs:simpleType name="STJobName">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="JobPassword" type="eipjobmodel:STJobPassword"/>
+	<xs:simpleType name="STJobPassword">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="9"/>
+			<xs:pattern value="(\d{4})|(\d{5})|(\d{6})|(\d{7})|(\d{8})|(\d{9})"/>
+		</xs:restriction>
+		<!--Vernacular Name:  Job Password, PIN-->
+		<!--syntax = octetString-->
+	</xs:simpleType>
+	<xs:simpleType name="STJobOriginatingUserName">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="JobOriginatingUserName" type="eipjobmodel:STJobOriginatingUserName"/>
+	<xs:element name="MediaColor" type="eipjobmodel:STMediaColor"/>
+	<xs:simpleType name="STMediaColor">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+			<!-- Valid values for media color
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="White"/>
+			<xs:enumeration value="Blue"/>
+			<xs:enumeration value="Yellow"/>
+			<xs:enumeration value="Green"/>
+			<xs:enumeration value="Pink"/>
+			<xs:enumeration value="NoColor"/>
+			<xs:enumeration value="Ivory"/>
+			<xs:enumeration value="Gray"/>
+			<xs:enumeration value="Buff"/>
+			<xs:enumeration value="Goldenrod"/>
+			<xs:enumeration value="Red"/>
+			<xs:enumeration value="Orange"/>
+			<xs:enumeration value="Custom1"/>
+			<xs:enumeration value="Custom2"/>
+			<xs:enumeration value="Custom3"/>
+			<xs:enumeration value="Custom4"/>
+			<xs:enumeration value="Custom5"/>
+			<xs:enumeration value="Custom6"/>
+			<xs:enumeration value="Custom7"/>
+			<xs:enumeration value="Custom8"/>
+			<xs:enumeration value="Custom9"/>
+			<xs:enumeration value="Custom10"/>
+			<xs:enumeration value="Custom11"/>
+			<xs:enumeration value="Custom12"/>
+			<xs:enumeration value="Custom13"/>
+			<xs:enumeration value="Custom14"/>
+			<xs:enumeration value="Custom15"/>
+			<xs:enumeration value="Custom16"/>
+			<xs:enumeration value="Custom17"/>
+			<xs:enumeration value="Custom18"/>
+			<xs:enumeration value="Custom19"/>
+			<xs:enumeration value="Custom20"/>
+			<xs:enumeration value="UseAny"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="SystemDefault"/>
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="MediaType" type="eipjobmodel:STMediaType"/>
+	<xs:simpleType name="STMediaType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="128"/>
+			<!-- Valid values for media type
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Stationery"/>
+			<xs:enumeration value="StationeryReloaded"/>
+			<xs:enumeration value="Drilled"/>
+			<xs:enumeration value="Bond"/>
+			<xs:enumeration value="Transparency"/>
+			<xs:enumeration value="PaperBackedTransparency"/>
+			<xs:enumeration value="StationeryPrePrinted"/>
+			<xs:enumeration value="Labels"/>
+			<xs:enumeration value="StationeryRecycled"/>
+			<xs:enumeration value="StationeryLetterhead"/>
+			<xs:enumeration value="Cardstock"/>
+			<xs:enumeration value="CardstockReloaded"/>
+			<xs:enumeration value="Coverstock"/>
+			<xs:enumeration value="Envelope"/>
+			<xs:enumeration value="Custom1"/>
+			<xs:enumeration value="Custom2"/>
+			<xs:enumeration value="Custom3"/>
+			<xs:enumeration value="Custom4"/>
+			<xs:enumeration value="Custom5"/>
+			<xs:enumeration value="Custom6"/>
+			<xs:enumeration value="Custom7"/>
+			<xs:enumeration value="Custom8"/>
+			<xs:enumeration value="Custom9"/>
+			<xs:enumeration value="Custom10"/>
+			<xs:enumeration value="Custom11"/>
+			<xs:enumeration value="Custom12"/>
+			<xs:enumeration value="Custom13"/>
+			<xs:enumeration value="Custom14"/>
+			<xs:enumeration value="Custom15"/>
+			<xs:enumeration value="Custom16"/>
+			<xs:enumeration value="Custom17"/>
+			<xs:enumeration value="Custom18"/>
+			<xs:enumeration value="Custom19"/>
+			<xs:enumeration value="Custom20"/>
+			<xs:enumeration value="UseAny"/>
+			<xs:enumeration value="SystemDefault"/>
+			<xs:enumeration value="PreCutTabs"/>
+			<xs:enumeration value="PreCutTabsHeavyweight"/>
+			<xs:enumeration value="StationeryHeavyweight"/>
+			<xs:enumeration value="CardstockLightweight"/>
+			<xs:enumeration value="CardstockLightweightReloaded"/>
+			<xs:enumeration value="StationeryLightweight"/>
+			<xs:enumeration value="StationeryLightweightReloaded"/>
+			<xs:enumeration value="StationeryLightweightGlossy"/>
+			<xs:enumeration value="StationeryLightweightGlossyReloaded"/>
+			<xs:enumeration value="StationeryHeavyweightGlossy"/>
+			<xs:enumeration value="StationeryHeavyweightGlossyReloaded"/>
+			<xs:enumeration value="LabelsHeavyweight"/>
+			<xs:enumeration value="LabelsExtraHeavyweight"/>
+			<xs:enumeration value="CardstockHeavyweight"/>
+			<xs:enumeration value="CardstockHeavyweightReloaded"/>
+			<xs:enumeration value="CardstockExtraHeavyweight"/>
+			<xs:enumeration value="CardstockHeavyweightGlossy"/>
+			<xs:enumeration value="CardstockHeavyweightGlossyReloaded"/>
+			<xs:enumeration value="CardstockExtraHeavyweightGlossy"/>
+			<xs:enumeration value="CardstockExtraHeavyweightGlossyReloaded"/>
+			<xs:enumeration value="StationeryRoughSurface"/>
+			<xs:enumeration value="CardstockPostcard"/>
+			<xs:enumeration value="Photographic"/>
+			<xs:enumeration value="TabStock"/>
+			<xs:enumeration value="Other"/>
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="FeedOrientation" type="eipjobmodel:STFeedOrientation"/>
+	<xs:simpleType name="STFeedOrientation">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Feed Orientation
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="LongEdgeFirst"/>
+			<xs:enumeration value="ShortEdgeFirst"/>
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="XDimension" type="eipjobmodel:STDimension">
+		<xs:annotation>
+			<xs:documentation>The value is specified in hundredths of millimeters.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="YDimension" type="eipjobmodel:STDimension">
+		<xs:annotation>
+			<xs:documentation>The value is specified in hundredths of millimeters.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="MediaSize" type="eipjobmodel:CTMediaSize"/>
+	<xs:complexType name="CTMediaSize">
+		<xs:sequence>
+			<xs:element ref="eipjobmodel:XDimension">
+				<xs:annotation>
+					<xs:documentation>The value is specified in hundredths of millimeters. XDimension is the short edge of the media.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="eipjobmodel:YDimension">
+				<xs:annotation>
+					<xs:documentation>The value is specified in hundredths of millimeters. YDimension is the long edge of the media.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTMediaCol">
+		<xs:sequence>
+			<xs:element ref="eipjobmodel:MediaType" minOccurs="0"/>
+			<xs:element ref="eipjobmodel:MediaColor" minOccurs="0"/>
+			<xs:element name="MediaSize" type="eipjobmodel:CTInputMediaSize" minOccurs="0"/>
+			<xs:element ref="eipjobmodel:FeedOrientation" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="MediaCol" type="eipjobmodel:CTMediaCol"/>
+	<xs:element name="ImageSize" type="eipjobmodel:CTMediaSize"/>
+	<xs:element name="ImageOrientation" type="eipjobmodel:STFeedOrientation"/>
+	<xs:complexType name="CTImageCol">
+		<xs:sequence>
+			<xs:element ref="eipjobmodel:ImageSize" minOccurs="0"/>
+			<xs:element ref="eipjobmodel:ImageOrientation" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ImageCol" type="eipjobmodel:CTImageCol"/>
+	<xs:element name="InputTrayName" type="eipjobmodel:STInputTrayName"/>
+	<xs:simpleType name="STInputTrayName">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Input Tray Name
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Automatic"/>
+			<xs:enumeration value="Bottom"/>
+			<xs:enumeration value="BypassTray"/>
+			<xs:enumeration value="EnvelopeTray"/>
+			<xs:enumeration value="LargeCapacity"/>
+			<xs:enumeration value="Main"/>
+			<xs:enumeration value="Manual"/>
+			<xs:enumeration value="Middle"/>
+			<xs:enumeration value="PostFuserInserter"/>
+			<xs:enumeration value="Side"/>
+			<xs:enumeration value="Tray1"/>
+			<xs:enumeration value="Tray2"/>
+			<xs:enumeration value="Tray3"/>
+			<xs:enumeration value="Tray4"/>
+			<xs:enumeration value="Tray5"/>
+			<xs:enumeration value="Tray6"/>
+			<xs:enumeration value="Tray7"/>
+			<xs:enumeration value="Tray8"/>
+			<xs:enumeration value="Tray9"/>
+			<xs:enumeration value="Tray10"/>
+			<xs:enumeration value="Tray11"/>
+			<xs:enumeration value="Tray12"/>
+			<xs:enumeration value="Tray13"/>
+			<xs:enumeration value="Tray14"/>
+			<xs:enumeration value="Tray15"/>
+			<xs:enumeration value="Tray16"/>
+			<xs:enumeration value="Tray17"/>
+			<xs:enumeration value="Tray18"/>
+			<xs:enumeration value="Tray19"/>
+			<xs:enumeration value="Tray20"/>
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="InputTraysCol" type="eipjobmodel:CTInputTraysCol"/>
+	<xs:complexType name="CTInputTraysCol">
+		<xs:sequence>
+			<xs:element ref="eipjobmodel:InputTrayName" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="FoldFinishing" type="eipjobmodel:STFoldFinishing"/>
+	<xs:simpleType name="STFoldFinishing">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for Fold Finishings
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Fold"/>
+			<xs:enumeration value="NotImplemented"/>
+			<xs:enumeration value="Concave"/>
+			<xs:enumeration value="Convex"/>
+			<xs:enumeration value="BiFold"/>
+			<xs:enumeration value="Trifold-C"/>
+			<xs:enumeration value="C-Fold"/>
+			<xs:enumeration value="Trifold-Z"/>
+			<xs:enumeration value="Z-Fold"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  Punch Finishings-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<!--Job Capabilities attributes-->
+	<!--TrayLevel is a percentage of media in the tray.  -1 means the value cannot be determined.  0 means the tray is no media (or very little) and 100 is completely full tray.  -->
+	<xs:element name="TrayLevel" type="eipjobmodel:STTrayLevel"/>
+	<xs:simpleType name="STTrayLevel">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-1"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--Job Status attribrutes-->
+	<xs:simpleType name="IdString">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IdforJob">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="JobIdentifier" type="eipjobmodel:CTJobIdentifier"/>
+	<xs:complexType name="CTJobIdentifier">
+		<xs:sequence>
+			<!--IdType can be "ClientId" or "JobId"-->
+			<xs:element name="JobIdentifierType" type="eipjobmodel:IdString"/>
+			<!--String wihich identifies the job-->
+			<xs:element name="JobIdentifierString" type="eipjobmodel:IdforJob"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="JobId" type="eipjobmodel:STJobId"/>
+	<xs:simpleType name="STJobId">
+		<xs:restriction base="xs:string"/>
+		<!--Vernacular Names  Job Id-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:element name="ClientId" type="eipjobmodel:STClientId"/>
+	<xs:simpleType name="STClientId">
+		<xs:restriction base="xs:string"/>
+		<!--Vernacular Names  Job Id from Client-->
+		<!--syntax = name-->
+	</xs:simpleType>
+	<xs:element name="JobType" type="eipjobmodel:STJobType"/>
+	<xs:simpleType name="STJobType">
+		<xs:restriction base="xs:string">
+			<!-- valid values for the JobType
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Copy"/>
+			<xs:enumeration value="Print"/>
+			<xs:enumeration value="WorkflowScanning"/>
+			<xs:enumeration value="IncomingFax"/>
+			<xs:enumeration value="FaxSend"/>
+			<xs:enumeration value="Email"/>
+			<xs:enumeration value="InternetFaxReceive"/>
+			<xs:enumeration value="InternetFaxSend"/>
+			<xs:enumeration value="ReportJob"/>
+			<xs:enumeration value="FaxSendFromPc"/>
+			<xs:enumeration value="EmbeddedFaxReceive"/>
+			<xs:enumeration value="EmbeddedFaxSend"/>
+			<xs:enumeration value="SecurePrint"/>
+			<xs:enumeration value="PrintFiles"/>
+
+These job types are not supported by all platforms and should NOT be used in the future:
+			<xs:enumeration value="StoreFiles"/>
+			<xs:enumeration value="ProofPrint"/>
+			<xs:enumeration value="ScanToFax"/>
+			<xs:enumeration value="ScanToIfax"/>
+			<xs:enumeration value="ScanToPrint"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="DelayedPrint"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  Job Type-->
+		<!--syntax = name-->
+	</xs:simpleType>
+	<xs:element name="DateTimeAtCompleted" type="xs:dateTime"/>
+	<xs:element name="DateTimeAtCreation" type="xs:dateTime"/>
+	<xs:element name="JobState" type="eipjobmodel:STJobState"/>
+	<xs:simpleType name="STJobState">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job State
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Pending"/>
+			<xs:enumeration value="PendingHeld"/>
+			<xs:enumeration value="Processing"/>
+			<xs:enumeration value="Paused"/>
+			<xs:enumeration value="ProcessingStopped"/>
+			<xs:enumeration value="Canceled"/>
+			<xs:enumeration value="Aborted"/>
+			<xs:enumeration value="Completed"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  Job State-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="JobStateReasons" type="eipjobmodel:STJobStateReasons"/>
+	<xs:simpleType name="STJobStateReasons">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job State Reasons
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="JobHoldUntilSpecified"/>
+			<xs:enumeration value="JobHeldOnCreate"/>
+			<xs:enumeration value="JobPasswordWait"/>
+			<xs:enumeration value="ProofPrintWait"/>
+			<xs:enumeration value="ResourcesAreNotSupported"/>
+			<xs:enumeration value="ContextBasedRestrictionsViolated"/>
+			<xs:enumeration value="JobIncoming"/>
+			<xs:enumeration value="ResourcesAreNotReady"/>
+			<xs:enumeration value="JobSpooling"/>
+			<xs:enumeration value="JobStreaming"/>
+			<xs:enumeration value="JobDataInsufficient"/>
+			<xs:enumeration value="UnsupportedCompression"/>
+			<xs:enumeration value="CompressionError"/>
+			<xs:enumeration value="DocumentAccessError"/>
+			<xs:enumeration value="UnsupportedDocumentFormat"/>
+			<xs:enumeration value="DocumentFormatError"/>
+			<xs:enumeration value="SavePasswordMismatch"/>
+			<xs:enumeration value="SavePasswordNotSupplied"/>
+			<xs:enumeration value="DigitalSignatureTypeNotSupported"/>
+			<xs:enumeration value="JobDigitalSignatureWait"/>
+			<xs:enumeration value="DigitalSignatureDidNotVerify"/>
+			<xs:enumeration value="SubmissionInterrupted"/>
+			<xs:enumeration value="JobOutgoing"/>
+			<xs:enumeration value="JobScheduling"/>
+			<xs:enumeration value="JobQueued"/>
+			<xs:enumeration value="JobTransforming"/>
+			<xs:enumeration value="ManualCheckRequested"/>
+			<xs:enumeration value="JobInterpreting"/>
+			<xs:enumeration value="JobQueuedForMarker"/>
+			<xs:enumeration value="JobPrinting"/>
+			<xs:enumeration value="PrinterStoppedPartly"/>
+			<xs:enumeration value="PrinterStopped"/>
+			<xs:enumeration value="JobSuspending"/>
+			<xs:enumeration value="JobSuspended"/>
+			<xs:enumeration value="JobSuspendedByOperator"/>
+			<xs:enumeration value="JobSuspendedByUser"/>
+			<xs:enumeration value="JobSuspendedBySystem"/>
+			<xs:enumeration value="JobResuming"/>
+			<xs:enumeration value="JobCanceledByUser"/>
+			<xs:enumeration value="JobCanceledByOperator"/>
+			<xs:enumeration value="JobCanceledAtDevice"/>
+			<xs:enumeration value="AbortedBySystem"/>
+			<xs:enumeration value="ProcessingToStopPoint"/>
+			<xs:enumeration value="ServiceOffLine"/>
+			<xs:enumeration value="WarningsDetected"/>
+			<xs:enumeration value="JobCompletedSuccessfully"/>
+			<xs:enumeration value="JobCompletedWithWarnings"/>
+			<xs:enumeration value="JobCompletedWithErrors"/>
+			<xs:enumeration value="JobSaving"/>
+			<xs:enumeration value="JobSaveError"/>
+			<xs:enumeration value="JobRestartable"/>
+			<xs:enumeration value="QueuedInDevice"/>
+			<xs:enumeration value="JobHeldForAuthorization"/>
+			<xs:enumeration value="OutOfAccountingResources"/> 
+			<xs:enumeration value="NetworkControllerError"/> 
+		-->
+			<!-- scanning job state reasons
+			<xs:enumeration value="InputScanSizeNotDetermined"/>
+			<xs:enumeration value="StockTypeCannotBeFolded"/>
+			<xs:enumeration value="StockSizeCannotBeFolded"/>
+			<xs:enumeration value="StockSizeCannotBeStapled"/>
+			<xs:enumeration value="StockTypeCannotBePunched"/>
+			<xs:enumeration value="StockSizeCannotBePunched"/>
+			<xs:enumeration value="FolderNotAvailable"/>
+			<xs:enumeration value="ExactStandardMediumNotLoadedForAPS"/>
+			<xs:enumeration value="LargerStandardMediumNotLoadedForAPS"/>
+			<xs:enumeration value="MediumNotAvailableForAPS"/>
+			<xs:enumeration value="MSORequiredMediumNotLoadedForAPS"/>
+			<xs:enumeration value="InvalidAccountingIDs"/>
+			<xs:enumeration value="ProhibitedOriginal"/>
+			<xs:enumeration value="DocumentTooShort"/>
+			<xs:enumeration value="NoToAddress"/>
+			<xs:enumeration value="NoFromAddress"/>
+			<xs:enumeration value="NoReplyToAddress"/>
+			<xs:enumeration value="CannotConnectToServer"/>
+			<xs:enumeration value="CannotTransferToServer"/>
+			<xs:enumeration value="RemoteDiskFull"/>
+			<xs:enumeration value="UncollatedTabs"/>
+			<xs:enumeration value="InvalidFinisherConfig"/>
+			<xs:enumeration value="InvalidPathSpecified"/>
+			<xs:enumeration value="NoRoomOnServer"/>
+			<xs:enumeration value="RepositoryNotResponding"/>
+			<xs:enumeration value="DocumentTooLarge"/>
+			<xs:enumeration value="InvalidAccountID"/>
+			<xs:enumeration value="InvalidUserID"/>
+			<xs:enumeration value="InvalidAccountandUserID"/>
+			<xs:enumeration value="UserCannotAccessAccount"/>
+			<xs:enumeration value="RepositoryLoginError"/>
+			<xs:enumeration value="RepositoryTransferInterrupted"/>
+			<xs:enumeration value="ForeignInterfaceNoAuthorization"/>
+			<xs:enumeration value="InputScanSizeNotDetermined"/>
+			<xs:enumeration value="IotCapabilityNotExist"/>
+			<xs:enumeration value="FinishingNotExist"/>
+			<xs:enumeration value="AccountDeleted"/>
+			<xs:enumeration value="ImpressionAllocationExceeded"/>
+			<xs:enumeration value="ScanImageExceedsMemory"/>
+			<xs:enumeration value="ValidationTimeOut"/>
+			<xs:enumeration value="ValidationServerError"/>
+		-->
+			<!-- Updated reasons from 02/18/12
+				<xs:enumeration value="AccountDeleted"/> 
+				<xs:enumeration value="AllPagesBlankAndRemoved"/>
+				<xs:enumeration value="AlternateDestination"/> 
+				<xs:enumeration value="AnnotationError"/> 
+				<xs:enumeration value="ApplicationColorMarkingOverridden"/>
+				<xs:enumeration value="ApplicationPlexAndColorOveridden"/>
+				<xs:enumeration value="ApplicationPlexSelectionOverridden"/>
+				<xs:enumeration value="CannotAppendNotDirectory"/>
+				<xs:enumeration value="CannotConnectToServer"/> 
+				<xs:enumeration value="CannotCreateMessageBody"/> 
+				<xs:enumeration value="CannotTransferToServer"/> 
+				<xs:enumeration value="ColorNeverAllowed"/>
+				<xs:enumeration value="DocumentTooLarge"/> 
+				<xs:enumeration value="DocumentTooShort"/> 
+				<xs:enumeration value="DomainNotConfigured"/> 
+				<xs:enumeration value="DuplexTabs"/> 
+				<xs:enumeration value="EFaxOptionNotConfigured"/> 
+				<xs:enumeration value="EFaxOutOfResource"/> 
+				<xs:enumeration value="ExactStandardMediumNotLoadedForAPS"/> 
+				<xs:enumeration value="FacApplicationColorRestrictionDeletion"/>
+				<xs:enumeration value="FacApplicationMarkingRestrictionDeletion"/>
+				<xs:enumeration value="FacApplicationPlexRestrictionDeletion"/>
+				<xs:enumeration value="FacColorNeverAllowed"/>
+				<xs:enumeration value="FaceDownMedia"/> 
+				<xs:enumeration value="FaceUpMedia"/> 
+				<xs:enumeration value="FacJobTypeRestrictionDeletion"/>
+				<xs:enumeration value="FacMultiCauseRestrictionDeletion"/>
+				<xs:enumeration value="FacPrintNeverAllowed"/>
+				<xs:enumeration value="FacSimplexOverridden"/>
+				<xs:enumeration value="FacTimeColorSelectionOverridden"/>
+				<xs:enumeration value="FacTimeMarkingRestrictionDeletion"/>
+				<xs:enumeration value="FacTrayUsageRestrictionDeletion"/>
+				<xs:enumeration value="FinishingNotExist"/> 
+				<xs:enumeration value="FolderNotAvailable"/> 
+				<xs:enumeration value="ForeignInterfaceNoAuthorization"/> 
+				<xs:enumeration value="HoldForMediaOverridden"/> 
+				<xs:enumeration value="HoldJobTimeout"/> 
+				<xs:enumeration value="HostNameNotAvailable"/> 
+				<xs:enumeration value="IFaxTimeout"/> 
+				<xs:enumeration value="IllegalMediaCannotDuplex"/>
+				<xs:enumeration value="IllegalMediaCannotFold"/> 
+				<xs:enumeration value="IllegalMediaCannotPunch"/> 
+				<xs:enumeration value="IllegalOutputCombination"/> 
+				<xs:enumeration value="ImageCompressionError"/>
+				<xs:enumeration value="imageTooLargeForPaperSize"/> 
+				<xs:enumeration value="ImpressionAllocationExceeded"/> 
+				<xs:enumeration value="InputScanSizeNotDetermined"/> 
+				<xs:enumeration value="InsufficientAccountingAllocation"/> 
+				<xs:enumeration value="InternalServerError"/>
+				<xs:enumeration value="InvalidID"/>
+				<xs:enumeration value="InvalidPathSpecified"/> 
+				<xs:enumeration value="JobAborted"/> 
+				<xs:enumeration value="JobCompletedWithErrors"/> 
+				<xs:enumeration value="JobCompletedWithErrors"/> 
+				<xs:enumeration value="JobCompletedWithErrors"/> 
+				<xs:enumeration value="JobDeliveredToMultipleDestinations"/> 
+				<xs:enumeration value="JobNameExists"/> 
+				<xs:enumeration value="JobOverwriteFailed"/> 
+				<xs:enumeration value="LargerStandardMediumNotLoadedForAPS"/> 
+				<xs:enumeration value="MaxFragmentsExceeded"/> 
+				<xs:enumeration value="MediumNotAvailableForAPS"/> 
+				<xs:enumeration value="MSORequiredMediumNotLoadedForAPS"/> 
+				<xs:enumeration value="MultipleRestrictions"/>
+				<xs:enumeration value="MultiStapleNotPossibleWithStockSizedUsed"/> 
+				<xs:enumeration value="NegativeDSNReceived"/> 
+				<xs:enumeration value="NegativeMDNReceived"/> 
+				<xs:enumeration value="NetworkControllerError"/> 
+				<xs:enumeration value="NoFromAddress"/> 
+				<xs:enumeration value="NonPrintableInternetReceiveAttachment"/> 
+				<xs:enumeration value="NoReplyToAddress"/> 
+				<xs:enumeration value="NoRoomOnServer"/> 
+				<xs:enumeration value="NoSMTPServerAddress"/> 
+				<xs:enumeration value="NotBookletTooManySheets"/> 
+				<xs:enumeration value="NoToAddress"/> 
+				<xs:enumeration value="NotSentToAllDestinations"/> 
+				<xs:enumeration value="NotStapledBookletOneSheet"/> 
+				<xs:enumeration value="NotStapledBookletTooManySheets"/> 
+				<xs:enumeration value="NotStapledDimensionsDifferent"/> 
+				<xs:enumeration value="NotStapledMediaConstraints"/> 
+				<xs:enumeration value="NotStapledOneSheet"/> 
+				<xs:enumeration value="NotStapledOutOfStaples"/> 
+				<xs:enumeration value="NotStapledTooManySheets"/> 
+				<xs:enumeration value="OutOfAccountingResources"/> 
+				<xs:enumeration value="OutputContainsPurgedSheets"/> 
+				<xs:enumeration value="PaperTrayNotExist"/> 
+				<xs:enumeration value="PartitionFull"/> 
+				<xs:enumeration value="ProhibitedOriginal"/> 
+				<xs:enumeration value="PunchRequestIllegal"/> 
+				<xs:enumeration value="RemoteDirectoryExists"/>
+				<xs:enumeration value="RemoteDiskFull"/> 
+				<xs:enumeration value="RemoteFileExists"/>
+				<xs:enumeration value="RepositoryLoginError"/> 
+				<xs:enumeration value="RepositoryNotResponding"/> 
+				<xs:enumeration value="RepositoryTransferInterrupted"/> 
+				<xs:enumeration value="ResourcesAreNotReady"/> 
+				<xs:enumeration value="SavePasswordMismatch"/> 
+				<xs:enumeration value="ScanCancelJobTimer"/> 
+				<xs:enumeration value="ScanImageExceedsMemory"/> 
+				<xs:enumeration value="ScanJobRecovery"/> 
+				<xs:enumeration value="ScanJobTooLarge"/> 
+				<xs:enumeration value="SendRetriesExceeded"/> 
+				<xs:enumeration value="SessionEnded"/>
+				<xs:enumeration value="SimplexOverridden"/>
+				<xs:enumeration value="SmtpAuthenticationFailed"/>
+				<xs:enumeration value="SmtpKerberosNotSupported"/>
+				<xs:enumeration value="StandardAccountingServiceError"/> 
+				<xs:enumeration value="StaplePositionIllegal"/> 
+				<xs:enumeration value="StockSizeCannotBeFolded"/> 
+				<xs:enumeration value="StockSizeCannotBePunched"/> 
+				<xs:enumeration value="StockSizeCannotBeStapled"/> 
+				<xs:enumeration value="StockTypeCannotBeFolded"/> 
+				<xs:enumeration value="StockTypeCannotBePunched"/> 
+				<xs:enumeration value="StoreToDiskError"/>
+				<xs:enumeration value="TimeColorSelectionOverridden"/>
+				<xs:enumeration value="TraySelectionOverridden"/> 
+				<xs:enumeration value="UnableToStore"/> 
+				<xs:enumeration value="UncollatedTabs"/> 
+				<xs:enumeration value="UnexpectedEndOfFaxJob"/> 
+				<xs:enumeration value="UsbDeviceNotFound"/>
+				<xs:enumeration value="UsbRemoved"/>
+				<xs:enumeration value="UsbStorageFull"/>
+				<xs:enumeration value="UserCannotAccessAccount"/> 
+				<xs:enumeration value="ValidationServerError"/> 
+				<xs:enumeration value="ValidationTimeOut"/> 
+				<xs:enumeration value="WaitingForLine"/>
+				<xs:enumeration value="Building"/>
+				<xs:enumeration value="Dialing"/>
+				<xs:enumeration value="Sending"/>
+				<xs:enumeration value="Connecting"/>
+				<xs:enumeration value="DeliveryConfirmed"/>
+				<xs:enumeration value="DelayedJob"/>
+				<xs:enumeration value="TerminatedNoAnswer"/>
+				<xs:enumeration value="TerminatedLineBusy"/>
+				<xs:enumeration value="WaitingForSide2"/>
+				<xs:enumeration value="ExternalProcessingError"/>
+				<xs:enumeration value="PSPrintNotEnabled"/>
+                <xs:enumeration value="XPSPrintNotEnabled"/>
+				<xs:enumeration value="ExternalScanProcessing"/>
+				<xs:enumeration value="ImageSendTimeout"/>
+	-->
+		</xs:restriction>
+		<!--Vernacular Names  Job State Reasons-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:simpleType name="Version">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(([1-9]?[0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){2}([1-9]?[0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Scan Types-->
+	<xs:simpleType name="STResolutionType">
+		<xs:restriction base="xs:string">
+			<!---
+			<xs:enumeration value="72x72"/>
+			<xs:enumeration value="100x100"/>
+			<xs:enumeration value="150x150"/>
+			<xs:enumeration value="200x100"/>
+			<xs:enumeration value="200x200"/>
+			<xs:enumeration value="200x400"/>
+			<xs:enumeration value="300x300"/>
+			<xs:enumeration value="400x400"/>
+			<xs:enumeration value="600x600"/>
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STBitsPerPixelType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="48"/>
+			<!--
+			The model supports a number between 1 and 48 but our current implementation on supports the nubmer 1, 8, and 24.  If another number is passed in, it will be ignored and the machine default will be used.  
+		-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STInputOrientationType">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--
+			<xs:enumeration value="Portrait"/>
+			<xs:enumeration value="Landscape"/>
+			<xs:enumeration value="HeadToTop"/>
+			<xs:enumeration value="HeadToFeed"/>
+
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STOriginalSubType">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!---
+			<xs:enumeration value="PrintedOrig"/>
+			<xs:enumeration value="PhotocopiedOrig"/>
+			<xs:enumeration value="InkjetOrig"/>
+			<xs:enumeration value="SolidInkOrig"/>
+			<xs:enumeration value="PhotographOrig"/>
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STDocumentImageMode">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!---
+			Valid values for image content
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Photo"/>
+			<xs:enumeration value="Text"/>
+			<xs:enumeration value="PhotoAndText"/>
+			<xs:enumeration value="Map"/>
+			<xs:enumeration value="NewspaperOrMagazine"/>
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STOriginType">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--
+			<xs:enumeration value="TopLeft"/>
+			<xs:enumeration value="TopRight"/>
+			<xs:enumeration value="Center"/>
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STFilingPolicy">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--
+				<xs:enumeration value=" NewAutoGenerate"/>
+<xs:enumeration value=" DateTime"/>
+<xs:enumeration value=" DoNotSave"/>
+<xs:enumeration value=" Overwrite"/>
+																			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STAutoExposure">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--
+<xs:enumeration value="Off"/>
+<xs:enumeration value="Auto"/>	-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CTInputMediaSize">
+		<xs:sequence>
+			<xs:element name="MediaSizeType" type="eipjobmodel:STJobModelEnumString" minOccurs="0">
+				<!-- These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+<xs:enumeration value="Mixed"/>
+<xs:enumeration value="Auto"/>
+<xs:enumeration value="Value"/>  NOTE:  Only when the keyword is this value will Dimensions be used.  In all other cases Dimensions are to be ignored	
+These values are taken from Network Scanning Architecture version 2.5
+<xs:enumeration value="NA_5x7SEF
+<xs:enumeration value="NA_5.5x7SEF
+<xs:enumeration value="NA_5.5x7LEF
+<xs:enumeration value="NA_5.5x8.5SEF"/>
+<xs:enumeration value="NA_5.5x8.5LEF"/>
+<xs:enumeration value="NA_6x9SEF"/>
+<xs:enumeration value="NA_7.25x10.5SEF"/>
+<xs:enumeration value="NA_7.25x10.5LEF"/>
+<xs:enumeration value="NA_7.63x10.51SEF"/>  (Taiwan-16K)
+<xs:enumeration value="NA_7.63x10.51LEF"/>
+<xs:enumeration value="NA_8x10SEF"/>
+<xs:enumeration value="NA_8x10LEF"/>
+<xs:enumeration value="NA_8x10.5SEF"/>
+<xs:enumeration value="NA_8x10.5LEF"/>
+<xs:enumeration value="NA_8x13SEF"/>
+<xs:enumeration value="NA_8.27x10.63SEF"/>
+<xs:enumeration value="NA_8.27x13SEF"/>
+<xs:enumeration value="NA_8.46x10.7SEF"/>
+<xs:enumeration value="NA_8.46x10.83SEF"/>
+<xs:enumeration value="NA_8.46x12.4SEF"/>
+<xs:enumeration value="NA_8.5x11SEF"/>
+<xs:enumeration value="NA_8.5x11LEF"/>
+<xs:enumeration value="NA_8.5x13SEF"/>
+<xs:enumeration value="NA_8.5x14SEF"/>
+<xs:enumeration value="NA_8.66x13SEF"/>
+<xs:enumeration value="NA_8.78x11.69SEF"/>
+<xs:enumeration value="NA_8.78x11.69LEF"/>
+<xs:enumeration value="NA_9x11SEF"/>
+<xs:enumeration value="NA_9x11LEF"/>
+<xs:enumeration value="NA_9x12SEF"/>
+<xs:enumeration value="NA_10.5x8LEF"/>  (incorrect label, use NA_8x10.5LEF)
+<xs:enumeration value="NA_10x8LEF"/>  (incorrect label,  use NA_8x10LEF)
+<xs:enumeration value="NA_10.5x7.25LEF"/>  ( incorrect label,  use NA_7.25x10.5LEF )
+<xs:enumeration value="NA_10.5x8LEF"/>  ( incorrect label,  use NA_8x10.5LEF )
+<xs:enumeration value="NA_10.51x15.28SEF"/>  (Taiwan-8K)
+<xs:enumeration value="NA_11x9LEF"/>  (incorrect label,  use NA_9x11LEF
+<xs:enumeration value="NA_11x15SEF"/>
+<xs:enumeration value="NA_11x17SEF"/>
+<xs:enumeration value="NA_12x18SEF"/>
+<xs:enumeration value="NA_140x326SEF"/>
+<xs:enumeration value="NA_229x234LEF"/>
+<xs:enumeration value="NA_229x288LEF"/>
+<xs:enumeration value="NA_234x229LEF"/>  (incorrect label,  use NA_229x234LEF)
+<xs:enumeration value="NA_252x358SEF (SB4)"/>
+<xs:enumeration value="NA_288x229LEF"/>  (incorrect label,  use NA_229x288LEF)
+<xs:enumeration value="NA_A6SEF"/>  (incorrect label, use ISO_A6SEF)
+<xs:enumeration value="NA_ENVELOPES"/>
+<xs:enumeration value="ISO_A3SEF"/>
+<xs:enumeration value="ISO_A4LEF"/>
+<xs:enumeration value="ISO_A4SEF"/>
+<xs:enumeration value="ISO_A5LEF"/>
+<xs:enumeration value="ISO_A5SEF"/>
+<xs:enumeration value="ISO_A6LEF"/>
+<xs:enumeration value="ISO_A6SEF"/>
+<xs:enumeration value="ISO_B4SEF"/>
+<xs:enumeration value="ISO_B5SEF"/>
+<xs:enumeration value="ISO_B5LEF"/>
+<xs:enumeration value="ISO_216x315SEF"/>
+<xs:enumeration value="ISO_216x335SEF"/>
+<xs:enumeration value="JIS_B4SEF"/>
+<xs:enumeration value="JIS_B5SEF"/>
+<xs:enumeration value="JIS_B5LEF"/>
+<xs:enumeration value="JIS_B6SEF"/>
+<xs:enumeration value="JIS_B6LEF"/>
+<xs:enumeration value="JP_89x127SEF"/>
+<xs:enumeration value="JP_100x148SEF"/>
+<xs:enumeration value="JP_102x152SEF"/>
+<xs:enumeration value="JP_120x235SEF"/>
+<xs:enumeration value="JP_279x378SEF"/>
+<xs:enumeration value="JP_COMMERCIAL10LE"/>(Commercial 10 LEF)
+<xs:enumeration value="JP_POSTCARDSEF"/>
+<xs:enumeration value="TW_267x389SEF"/>
+<xs:enumeration value="TW_8KAISEF"/>
+<xs:enumeration value="CN_270x390SEF (GCO 8KAI)"/>
+<xs:enumeration value="CN_195x270SEF (GCO 16KAI SEF)"/>
+<xs:enumeration value="CN_195x270LEF (GCO 16KAI LEF)"/>
+<xs:enumeration value="NA_3x5SEF"/>
+<xs:enumeration value="NA_3.5x5.5SEF"/>
+<xs:enumeration value="NA_4x6SEF"/>
+<xs:enumeration value="NA_4x6LEF"/>
+<xs:enumeration value="NA_215x315SEF"/>
+<xs:enumeration value="NA_216x343SEF"/>
+<xs:enumeration value="ISO_B6SEF"/>
+-->
+			</xs:element>
+			<xs:element name="Dimensions" type="eipjobmodel:CTMediaSize" minOccurs="0"/>
+			<!--Note:  The dimension values are ignored in all cases except when the keyword “Value” is used or if MediaSizeType is missing-->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="STSearchableText">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+<xs:enumeration value="ImageOnly"/>
+<xs:enumeration value="SearchableImage"/>	-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STCompressionQuality">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+<xs:enumeration value="LowCompression"/>
+<xs:enumeration value="MediumCompression"/>	
+<xs:enumeration value="HighCompression"/>
+-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STCompressionCompatability">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+xs:enumeration value="LowCompatibility"/>
+<xs:enumeration value="HighCompatibility"/>
+-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STSourceDocumentLanguages">
+		<xs:restriction base="eipjobmodel:STJobModelScanString"/>
+	</xs:simpleType>
+	<xs:complexType name="CTLoginSource">
+		<xs:sequence>
+			<xs:element name="LoginSourceType" type="eipjobmodel:STJobModelEnumString" minOccurs="0">
+				<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+<xs:enumeration value="StoreInTicket"/> this is similar to "TEMPLATE" setting in NSA 
+<xs:enumeration value="None"/>-->
+			</xs:element>
+			<xs:element name="AuthenticatedUser" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="UserName" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+						<xs:element name="Password" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="STHost">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--
+<xs:enumeration value="HostName"/>
+<xs:enumeration value="HostIP"/>	
+-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STDestinationType">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+<xs:enumeration value="Ftp"/>
+<xs:enumeration value="SFtp"/>
+<xs:enumeration value="Smb"/>	
+<xs:enumeration value="Http"/>	
+<xs:enumeration value="Https"/>	
+<xs:enumeration value="Smtp"/>	
+<xs:enumeration value="Fax"/>	
+<xs:enumeration value="XrxScanWebService"/>		
+<xs:enumeration value="Mailbox"/>	
+<xs:enumeration value="Usb"/>	
+<xs:enumeration value="WebDav"/>	
+<xs:enumeration value="WebDavS"/>	
+-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STDocumentFormat">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!--These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+
+<xs:enumeration value="XsmTiffV6"/>	
+<xs:enumeration value="XSMTIFFV6"/>	
+<xs:enumeration value="TiffV6"/>	
+<xs:enumeration value="TIFFV6"/>
+<xs:enumeration value="Pdf"/>	
+<xs:enumeration value="PDF"/>	
+<xs:enumeration value="JfifJpeg"/>
+<xs:enumeration value="JFIFJPEG"/>
+<xs:enumeration value="Xps"/>
+<xs:enumeration value="XPS"/>
+<xs:enumeration value="PDFA1b"/>
+<xs:enumeration value="PDFA1B"/>
+-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CTDestinationDetails">
+		<xs:sequence>
+			<xs:element name="FriendlyName" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="DocumentName" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="LoginSource" type="eipjobmodel:CTLoginSource" minOccurs="0"/>
+			<xs:element name="FilingPolicy" type="eipjobmodel:STFilingPolicy" minOccurs="0"/>
+			<xs:element name="Host" type="eipjobmodel:STHost" minOccurs="0"/>
+			<xs:element name="Path" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="Share" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="ValidateCertificate" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="PhoneNumber" type="eipjobmodel:STJobModelScanString" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ScriptPath" type="xs:string" minOccurs="0"/>
+			<xs:element name="DocumentFormat" type="eipjobmodel:STDocumentFormat" minOccurs="0">
+				<!--DeviceRestriction=mustUnderstand -->
+			</xs:element>
+			<xs:element name="GenerateJobLog" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="EmailOptions" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Recipients">
+							<xs:annotation>
+								<xs:documentation>
+									DeviceRestriction: Each To, Cc, and
+									Bcc email addresses string is long
+									enough to hold 500 ";" seperated
+									e-mail addresses. The device config
+									will specify the maximum total
+									e-mail addresses, one of which must
+									be a To address, supported by the
+									device.
+								</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="To" type="eipjobmodel:STEmailAddressList">
+										<xs:annotation>
+											<xs:documentation>
+												The To field is a list
+												of ; seperated email
+												addresses. There must be
+												a least 1 email address
+												specified in this field.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="Cc" type="eipjobmodel:STEmailAddressList" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												The Cc field is a list
+												of ; seperated email
+												addresses.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="Bcc" type="eipjobmodel:STEmailAddressList" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>
+												The Bcc field is a list
+												of ; seperated email
+												addresses.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="From" type="eipjobmodel:STEmailAddress"/>
+						<xs:element name="ReplyTo" type="eipjobmodel:STEmailAddress" minOccurs="0"/>
+						<xs:element name="SubjectLine" type="eipjobmodel:STEmailSubject" minOccurs="0"/>
+						<xs:element name="MessageBody" type="eipjobmodel:STEmailBody" minOccurs="0"/>
+						<xs:element name="AttachmentName" type="eipjobmodel:STAttachmentName" minOccurs="0"/>
+						<xs:element name="SMTPAccountUserId" type="eipjobmodel:STsmtpAccountUserId" minOccurs="0"/>
+						<xs:element name="SMTPAccountId" type="eipjobmodel:STsmtpAccountId" minOccurs="0"/>
+						<xs:element name="DigitalSignature" type="eipjobmodel:STDigitalSignatureType" minOccurs="0" maxOccurs="1"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="UsbOptions" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Key" type="eipjobmodel:STJobModelScanString" minOccurs="0" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>
+									DeviceRestriction minOccurs=1
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DeviceNumber" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="PartitionNumber" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="PartitionLocation" type="eipjobmodel:STJobModelScanString" minOccurs="0" maxOccurs="1"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="FaxOptions" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PhoneNumber" type="eipjobmodel:STJobModelScanString" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element name="FaxAfterTime" type="xs:time" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="LowCostSend" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="AutoRetry" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="CoverSheet" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="RecipientName" type="eipjobmodel:STJobModelScanString" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DocumentSecurity" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="MasterPassword" type="eipjobmodel:STPasswordStringType" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ColorMode" type="eipjobmodel:STColorMode"/>
+	<xs:simpleType name="STColorMode">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!-- Valid values for Color Mode
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="Auto"/>
+			<xs:enumeration value="FullColor"/>
+			<xs:enumeration value="Grayscale"/>
+			<xs:enumeration value="BlackAndWhite"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  	Color Mode-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:element name="PDL" type="eipjobmodel:STPDL"/>
+	<xs:simpleType name="STPDL">
+		<xs:restriction base="eipjobmodel:STJobModelEnumString">
+			<!-- Valid values for PDL
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="PCL"/>
+			<xs:enumeration value="PS"/>
+			<xs:enumeration value="PDF"/>
+			<xs:enumeration value="XPS"/>
+			<xs:enumeration value="TIFF"/>
+			<xs:enumeration value="Txt" />
+			<xs:enumeration value="JPEG" />
+			<xs:enumeration value="HPGL" />
+			<xs:enumeration value="NotImplemented"/>
+		-->
+		</xs:restriction>
+		<!--Vernacular Names  	PDL-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:simpleType name="STDarkness">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-100"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Darkness-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:simpleType name="STSharpness">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-100"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Sharpness-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:simpleType name="STContrastValue">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-100"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Contrast-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:simpleType name="STJobModelScanString">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2047"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STJobModelEnumString">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STEmailAddress">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STEmailAddressList">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="128500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STEmailSubject">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STAttachmentName">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="173"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STEmailBody">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1023"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STsmtpAccountUserId">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STsmtpAccountId">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CTOriginalType">
+		<xs:sequence>
+			<xs:element name="OriginalSubType" type="eipjobmodel:STOriginalSubType" minOccurs="0"/>
+			<xs:element name="DocumentImageMode" type="eipjobmodel:STDocumentImageMode" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="STInputEdgeEraseSettingsType">
+		<xs:sequence>
+			<xs:element name="Top" type="xs:nonNegativeInteger" minOccurs="0"/>
+			<xs:element name="Bottom" type="xs:nonNegativeInteger" minOccurs="0"/>
+			<xs:element name="Left" type="xs:nonNegativeInteger" minOccurs="0"/>
+			<xs:element name="Right" type="xs:nonNegativeInteger" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTInputEdgeErase">
+		<xs:sequence>
+			<xs:element name="SideEdgeEraseUnits" type="eipjobmodel:STJobModelEnumString" minOccurs="0">
+				<!--
+
+<xs:enumeration value="inches"/> // 1/100th of inches
+<xs:enumeration value="mm"/>	-->
+			</xs:element>
+			<xs:element name="ManualValue" type="eipjobmodel:STInputEdgeEraseSettingsType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTEdgeErase">
+		<xs:sequence>
+			<xs:element name="Side1" type="eipjobmodel:CTInputEdgeErase" minOccurs="0"/>
+			<xs:element name="Side2" type="eipjobmodel:CTInputEdgeErase" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTEmail">
+		<xs:all>
+			<xs:element name="Recipients">
+				<xs:annotation>
+					<xs:documentation>DeviceRestriction: Each To, Cc, and Bcc email addresses string is long enough to hold 500 ";" seperated e-mail addresses. The device config will specify the maximum total e-mail addresses, one of which must be a To address, supported by the device.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="To" type="eipjobmodel:STEmailAddressList">
+							<xs:annotation>
+								<xs:documentation>The To field is a list of ; seperated email addresses. There must be a least 1 email address specified in this field.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Cc" type="eipjobmodel:STEmailAddressList" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The Cc field is a list of ; seperated email addresses.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Bcc" type="eipjobmodel:STEmailAddressList" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The Bcc field is a list of ; seperated email addresses.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="From" type="eipjobmodel:STEmailAddress"/>
+			<xs:element name="ReplyTo" type="eipjobmodel:STEmailAddress" minOccurs="0"/>
+			<xs:element name="SubjectLine" type="eipjobmodel:STEmailSubject" minOccurs="0"/>
+			<xs:element name="MessageBody" type="eipjobmodel:STEmailBody" minOccurs="0"/>
+			<xs:element name="SMTPAccountUserId" type="eipjobmodel:STsmtpAccountUserId" minOccurs="0"/>
+			<xs:element name="SMTPAccountId" type="eipjobmodel:STsmtpAccountId" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="CTDestination">
+		<xs:sequence>
+			<xs:element name="DestinationType" type="eipjobmodel:STDestinationType" minOccurs="0"/>
+			<xs:element name="ManualValue" type="eipjobmodel:CTDestinationDetails" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTMetaData">
+		<xs:sequence>
+			<xs:element name="MetaDataPrompt" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="MetaDataFieldName" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="MetaDataRequiredEntry" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="MetaDataType" type="eipjobmodel:STJobModelScanString" minOccurs="0"/>
+			<xs:element name="MetaDataMaskingRequired" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="25"/>
+						<!--
+						<xs:enumeration value="MaskOnly"/>
+						<xs:enumeration value="MaskAndOmit"/>
+						<xs:enumeration value="None"/>
+					-->
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CTContrast">
+		<xs:sequence>
+			<xs:element name="ContrastType" type="eipjobmodel:STJobModelEnumString" minOccurs="0">
+				<!--
+<xs:enumeration value="Manual"/>
+<xs:enumeration value="Auto"/>	-->
+			</xs:element>
+			<xs:element name="ManualValue" type="eipjobmodel:STContrastValue" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="STSaturation">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-100"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Saturation-->
+		<!--syntax = integer-->
+	</xs:simpleType>
+	<xs:simpleType name="STJobAccountingType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+		<!-- Valid values for STJobAccountingType
+			These values are listed for reference only. Do not uncomment.
+			Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="General"/>
+			<xs:enumeration value="Default"/>
+			<xs:enumeration value="Group"/>
+		-->
+		<!--Vernacular Names  	Job Accounting Types-->
+		<!--syntax = keyword-->
+	</xs:simpleType>
+	<xs:simpleType name="STJobAccountingUserId">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Job Accounting User Id-->
+		<!--syntax = name-->
+	</xs:simpleType>
+	<xs:simpleType name="STJobAccountId">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Job Account ID-->
+		<!--syntax = name-->
+	</xs:simpleType>
+	<xs:simpleType name="STXsaAccountId">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+		<!--Vernacular Names  	Job Account ID-->
+		<!--syntax = name-->
+	</xs:simpleType>
+	<xs:complexType name="CTJobAccountingInfo">
+		<xs:all>
+			<xs:element name="AccountUserId" type="eipjobmodel:STJobAccountingUserId" minOccurs="1"/>
+			<xs:element name="AccountTypeInfo" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="AccountType" type="eipjobmodel:STJobAccountingType" minOccurs="1"/>
+						<xs:element name="AccountID" type="eipjobmodel:STXsaAccountId" minOccurs="0">
+							<!--Device Restriction=Account Name is only optional when Account Type is equal to "Default"-->
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AccountBillingId" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:all>
+	</xs:complexType>
+	<xs:simpleType name="STDigitalSignatureType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for STJobAccountingType
+				These values are listed for reference only. Do not uncomment.
+				Un-commenting these values will break compatibility when new values are added.
+			<xs:enumeration value="On"/>
+			<xs:enumeration value="Off"/>
+			<xs:enumeration value="SystemDefined"/>
+			-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STPasswordStringType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

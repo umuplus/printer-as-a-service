@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 3 (http://www.altova.com) by James Howell (XEROX CORPORATION) -->
+<!-- CUI Session Information schema -->
+<!-- Copyright (C) 2006 Xerox Corporation.  All rights reserved. -->
+<!-- Change history: -->
+<!--  ..date..   	..vers..	..name..			..changes..		-->
+<!--    07-13-06    0.0.1    Shawn Hurley      Created -->
+<!--    07-14-06    1.0.0    Shawn Hurley      Extended LDAP type -->
+<!--                    1.1.0    Michael Alexander Changes for Lexington -->
+<!--    11-29-10   1.1.1    Chris Miyachi		   Schema did not validate / schema Version definition incorrect -->
+<!--    08-18-11   1.2.0    James Howell	   Modified to add a payload for the Get/SetSessionParameters methods -->
+<!--    09-15-11   1.2.1    James Howell	   updated XSA account ID type -->
+<xs:schema xmlns:si="http://schemas.xerox.com/office/cui/sessioninformation/1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="eipjobmodel" xmlns:eipjobmodel="http://schemas.xerox.com/enterprise/eipjobmodel/1" targetNamespace="http://schemas.xerox.com/office/cui/sessioninformation/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.1">
+	<xs:import namespace="http://schemas.xerox.com/enterprise/eipjobmodel/1" schemaLocation="JobModelSchemaCommon.xsd"/>
+	<xs:element name="schemaVersion">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="MajorVersion" type="xs:short" default="1"/>
+				<xs:element name="MinorVersion" type="xs:short" default="2"/>
+				<xs:element name="Revision" type="xs:short" default="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="STAccountType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Account Types
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="group"/>
+						<xs:enumeration value="general"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="SetSessionParametersPayload">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="accounting">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="jba" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="userID" type="xs:string" minOccurs="0"/>
+										<xs:element name="accountID" type="xs:string" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="xsa" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="userID" type="xs:string" minOccurs="0"/>
+										<xs:element name="AccountTypeInfo" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="AccountType" type="eipjobmodel:STJobAccountingType" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>See JobModelSchemaCommon for details</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="AccountID" type="eipjobmodel:STXsaAccountId" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="AccountBillingID" minOccurs="0">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SessionInformation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="si:schemaVersion" minOccurs="0"/>
+				<xs:element name="otherSchemaVersions" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="schema" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>DeviceRestriction AllowedValues=JobModelSchemaCommon</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="version">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="MajorVersion" type="xs:short"/>
+													<xs:element name="MinorVersion" type="xs:short"/>
+													<xs:element name="Revision" type="xs:short"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="qualifiedUsername" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="username">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="password" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:choice minOccurs="0">
+								<xs:element name="smb">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="domain">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="kerberos">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="realm">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="nds">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="tree">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="context">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ldap">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="server">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="searchRoot">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="useSSL">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:boolean">
+															<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="accounting" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="jba" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="userID">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="accountID">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="xsa" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="userID">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="AccountTypeInfo" minOccurs="0">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="AccountType" type="eipjobmodel:STJobAccountingType" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>See JobModelSchemaCommon for details</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="AccountID" type="eipjobmodel:STXsaAccountId" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="AccountBillingID" minOccurs="0">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="email" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="from" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="defaultTo" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="displayName" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="authorization" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="pathways" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="authorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="pathway" type="si:pathwaysType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="unauthorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="pathway" type="si:pathwaysType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="features" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="authorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="feature" type="si:featuresType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="unauthorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="feature" type="si:featuresType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="roles" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="authorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="role" type="si:rolesType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="unauthorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="role" type="si:rolesType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="services" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="authorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="service" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="unauthorized" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="service" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="visibility" type="xs:string" use="optional" fixed="public"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:any namespace="##other" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="pathwaysType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="xeJobStatus"/>
+			<xs:enumeration value="xeMachineStatus"/>
+			<xs:enumeration value="xeServices"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="featuresType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="xeColorCopy"/>
+			<xs:enumeration value="xeSimplexCopy"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rolesType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="xeUser"/>
+			<xs:enumeration value="xeAccountAdministrator"/>
+			<xs:enumeration value="xeSystemAdministrator"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
