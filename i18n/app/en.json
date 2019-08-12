@@ -112,7 +112,9 @@
         "password": "Please check password fields.",
         "printer": "You're on an unknown (%s) device.",
         "seen": "Seen at %s",
+        "session": "Fetching session info has been failed!",
         "sure": "Are you sure?",
-        "username": "Please check username field."
+        "username": "Please check username field.",
+        "welcome": "Welcome %s!"
     }
 }
