@@ -1,0 +1,56 @@
+<div class="h-100 bg-dark text-white">
+    <div id="app-container" class="container-fluid d-flex justify-content-center">
+    </div>
+</div>
+<script type="text/javascript">
+    var $container, $loading, $message, $username;
+    function getSessionInformation() {
+        setTimeout(() => $message.html("<%- __('txt.welcome', 'umut') %>".replace('%s', $username)), 1000);
+        try {
+            xrxSessionGetSessionInfo('https://localhost', function (req, res) {
+                var sessInfoObj = xrxSessionParseGetSessionInfo(sessResponse);
+                if (sessInfoObj) {
+                    try {
+                        $username = xrxGetElementValue(sessInfoObj, 'username');
+                        $message.html("<%- __('txt.welcome') %>".replace('%s', $username));
+                        var $list = $('<ul></ul>');
+                        $list.append("<li><%- __('field.username') %> : " + $username + '</li>');
+                        $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfoObj, 'password') + '</li>');
+                        $list.append("<li><%- __('field.email') %> : " + xrxGetElementValue(sessInfoObj, 'from') + '</li>');
+                        if (xrxFindFirstElement(sessInfoObj, 'jba')) {
+                            $list.append("<li>JBA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfoObj, 'userID') + '</li>');
+                            $list.append("<li>JBA: ACC : " + xrxGetElementValue(sessInfoObj, 'accountID') + '</li>');
+                        } else if (xrxFindFirstElement(sessInfoObj, 'xsa')) {
+                            $list.append("<li>XSA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfoObj, 'userID') + '</li>');
+                            $list.append("<li>XSA: TYPE : " + xrxGetElementValue(sessInfoObj, 'AccountType') + '</li>');
+                            $list.append("<li>XSA: ACC : " + xrxGetElementValue(sessInfoObj, 'AccountID') + '</li>');
+                        }
+                        // TODO: keep going
+                    } catch (e) {
+                        $message.html(e.message);
+                    }
+                } else $message.html("<%- __('txt.session') %>");
+            }, function () {
+                $message.html("<%- __('txt.session') %>");
+            });
+        } catch (e) {
+            $message.html(e.message);
+        }
+    }
+    $(document).ready(function() {
+        $container = $('#app-container');
+        $loading = $('#loading');
+        $message = $loading.find('div.modal-footer b');
+        $loading.modal({ keyboard: false, backdrop: 'static' });
+        <% if ($printer && $license) { %>
+        getSessionInformation();
+        <% } else { %>
+        <% if (flash && flash.length) { %>
+            $message.empty();
+            <% while(alert = flash.shift()) { %>
+                $message.append("<div><%- alert.message %></div>");
+            <% }; %>
+        <% }; %>
+        <% }; %>
+    });
+</script>

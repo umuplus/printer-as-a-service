@@ -1,6 +1,7 @@
 'use strict';
 
 const auth = require('../../lib/auth');
+const Configuration = require('../../lib/config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const formatDate = require('date-fns/format');
@@ -20,7 +21,6 @@ const hardware = machineId();
 const ConnectRedis = require('connect-redis')(session);
 const PrinterModel = mongoose.model('Printer');
 const SettingModel = mongoose.model('Setting');
-const UserModel = mongoose.model('User');
 
 const locales = [ 'tr', 'en' ];
 i18n.configure({
@@ -55,11 +55,10 @@ app.use(function (req, res, next) {
     res.locals.$date = formatDate;
     res.locals.$hardware = hardware;
     res.locals.$license = {};
-    res.locals.$module = 'home';
     res.locals.$printer = {};
     res.locals.$qs = new QueryString();
     res.locals.$qs.overwrite(req.query);
-    res.locals.$user = {};
+    res.locals.$sys = {};
     if (!req.url.includes('?')) res.locals.$url = req.url.substr(1);
     else res.locals.$url = req.url.substr(1, req.url.indexOf('?') - 1) || '';
     if (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].length) {
@@ -72,33 +71,20 @@ app.use(function (req, res, next) {
         req.realIP = req.headers['x-real-ip'] || req.headers['x-forwarded-for'];
     }
     if (!req.realIP) req.realIP = req.connection.remoteAddress;
-    if (req.realIP.substr(0, 7) === '::ffff:') req.realIP = req.realIP.substr(7);
+    if (req.realIP && req.realIP.substr(0, 7) === '::ffff:') req.realIP = req.realIP.substr(7);
     if (req.realIP === '::1') req.realIP = '127.0.0.1';
-    // TODO get default language from user and printer
-    if (locales.includes(req.session.lang)) res.setLocale(req.session.lang);
-    res.locals.$lang = res.getLocale();
     next();
 });
 
 app.use(async function (req, res, next) {
     try {
-        if (res.locals.$module === 'home') next();
-        else {
-            const setting = await SettingModel.single({ name: 'license' });
-            if (setting && is.string(setting.value) && is.not.empty(setting.value))
-                res.locals.$license = auth.verify(setting.value);
-            if (!res.locals.$license || res.locals.$license.hardware !== hardware) {
-                req.flash('danger', res.__('txt.license.hardware'));
-                res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
-            } else if ((new Date(res.locals.$license.date)).getTime() < (new Date()).getTime()) {
-                req.flash('danger', res.__('txt.license.date'));
-                res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
-            } else next();
-        }
+        const system = await Configuration.system();
+        if (is.not.object(system) && is.empty(system)) throw new Error('invalid system');
+
+        if (locales.includes(system.language)) res.setLocale(system.language);
+        res.locals.$sys = system;
+        next();
     } catch (e) {
-        req.flash('danger', res.__('txt.license.hardware'));
-        req.flash('danger', res.__('txt.license.date'));
-        res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
         next();
     }
 });
@@ -107,25 +93,38 @@ app.use(async function (req, res, next) {
     try {
         const printer = await PrinterModel.single({ ip: req.realIP });
         if (printer && !printer.deleted) {
+            if (printer.options && locales.includes(printer.options.language)) res.setLocale(printer.options.language);
+            printer.seen = Date.now();
+            await printer.save();
             res.locals.$printer = printer;
             next();
         } else {
             req.flash('danger', res.__('txt.printer', req.realIP));
-            if (res.locals.$module === 'home') next();
-            else res.redirect(`/?ts=${ res.locals.$qs.val('ts') }`);
+            res.locals.$printer = undefined;
+            next();
         }
     } catch (e) {
+        res.locals.$printer = undefined;
         next();
     }
 });
 
 app.use(async function (req, res, next) {
     try {
-        const data = auth.verify(req.session.token);
-        const user = await UserModel.single({ username: data.username });
-        if (user && !user.deleted) res.locals.$user = user;
+        const setting = await SettingModel.single({ name: 'license' });
+        if (setting && is.string(setting.value) && is.not.empty(setting.value))
+            res.locals.$license = auth.verify(setting.value);
+        if (!res.locals.$license || res.locals.$license.hardware !== hardware) {
+            req.flash('danger', res.__('txt.license.hardware'));
+            res.locals.$license = undefined;
+        } else if ((new Date(res.locals.$license.date)).getTime() < (new Date()).getTime()) {
+            req.flash('danger', res.__('txt.license.date'));
+            res.locals.$license = undefined;
+        }
         next();
     } catch (e) {
+        req.flash('danger', res.__('txt.license.date'));
+        res.locals.$license = undefined;
         next();
     }
 });

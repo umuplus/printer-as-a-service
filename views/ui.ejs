@@ -16,12 +16,12 @@
         <script src="/js/bootstrap.min.js"></script>
         <script src="/js/moment-with-locales.min.js"></script>
 
-        <% if (!$printer || ($printer.model && $printer.model.options && $printer.model.code.startsWith('xrx'))) { %>
+        <% /* if (!$printer || ($printer.model && $printer.model.options && $printer.model.code.startsWith('xrx'))) { */ %>
         <script src="/xrx/XRXSession.js" type="text/javascript"></script>
         <script src="/xrx/XRXUtilities.js" type="text/javascript"></script>
         <script src="/xrx/XRXWebservices.js" type="text/javascript"></script>
         <script src="/xrx/XRXXmlHandler.js" type="text/javascript"></script>
-        <% }; %>
+        <% /* }; */ %>
     </head>
     <body>
         <%- body %>
@@ -29,12 +29,12 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body text-center">
-                        <img alt="logo" src="/images/favicon.png" height="96" class="mb-3">
-                        <div class="spinner">
+                        <img alt="logo" src="/images/favicon.png" height="128" class="mb-3">
+                        <!--<div class="spinner">
                             <div class="bounce1"></div>
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="modal-footer"><b><%- __('field.loading') %></b></div>
                 </div>
