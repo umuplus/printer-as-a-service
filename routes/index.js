@@ -1,6 +1,7 @@
 'use strict';
 
 const auth = require('../lib/auth');
+const Configuration = require('../lib/config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const formatDate = require('date-fns/format');
@@ -73,9 +74,31 @@ app.use(function (req, res, next) {
     } else {
         req.realIP = req.headers['x-real-ip'] || req.headers['x-forwarded-for'];
     }
-    if (locales.includes(req.session.lang)) res.setLocale(req.session.lang);
-    res.locals.$lang = res.getLocale();
     next();
+});
+
+app.use(async function (req, res, next) {
+    try {
+        const data = auth.verify(req.session.token);
+        const user = await UserModel.single({ username: data.username });
+        if (user && !user.deleted) res.locals.$user = user;
+        next();
+    } catch (e) {
+        next();
+    }
+});
+
+app.use(async function (req, res, next) {
+    try {
+        const system = await Configuration.system();
+        if (is.not.object(system) && is.empty(system)) throw new Error('invalid system');
+
+        if (locales.includes(system.language)) res.setLocale(system.language);
+        res.locals.$sys = system;
+        next();
+    } catch (e) {
+        next();
+    }
 });
 
 app.use(async function (req, res, next) {
@@ -87,13 +110,17 @@ app.use(async function (req, res, next) {
             req.flash('danger', res.__('txt.license.hardware'));
         else if ((new Date(res.locals.$license.date)).getTime() < (new Date()).getTime())
             req.flash('danger', res.__('txt.license.date'));
-        const data = auth.verify(req.session.token);
-        const user = await UserModel.single({ username: data.username });
-        if (user && !user.deleted) res.locals.$user = user;
         next();
     } catch (e) {
+        req.flash('danger', res.__('txt.license.date'));
         next();
     }
+});
+
+app.use(async function (req, res, next) {
+    if (locales.includes(req.session.lang)) res.setLocale(req.session.lang);
+    res.locals.$lang = res.getLocale();
+    next();
 });
 
 app.use('/', require('./home'));

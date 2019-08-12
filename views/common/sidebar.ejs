@@ -3,7 +3,7 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link <%- $module === 'home' ? 'active' : '' %>"
-                    href="/?ts=<%- $qs.val('ts') %>"><i class="fa fa-dashboard"></i> <%= __('app.dashboard') %></a>
+                    href="/?ts=<%- $qs.val('ts') %>"><i class="fa fa-boxes"></i> <%= __('app.dashboard') %></a>
             </li>
             <% if ($user.level >= 20) { %>
             <li class="nav-item">
