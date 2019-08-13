@@ -1,0 +1,41 @@
+<script>
+    $(function() {
+        var $popup, $username, tableHeight = $.screenHeight() < 481 ? 330 : 430;
+        $('#table-jobs').xrxtable({ bordered: true, selectable: true, height: tableHeight, scroll: true });
+        $('.delete').xrxbutton({ icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
+                        borderless: true, text: false, customClass: 'not-checkbox' })
+                    .click(function () {
+                    });
+        document.documentElement.style.overflow = 'hidden';
+
+        function loadUI() {
+            $username = 'umut';
+            $('#title-bar').html("<%- __('app.jobs') %> (" + $username + ")");
+            $popup.html($('<p></p>').html("<%- __('txt.welcome') %>".replace('%s', $username))).xrxpopup('open');
+            $.post('/jobs', { username: $username })
+                .done(function (jobs) {
+                    // TODO: populate table
+                    $popup.xrxpopup('close');
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    $popup.html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $username)))
+                        .xrxpopup({ title: "<%- __('field.error') %>" }).xrxpopup('open');
+                });
+        }
+        <% if ($printer && $license) { %>
+        $popup = buildPopUp("<%- __('field.info') %>", $('<p></p>').html("<%- __('field.loading') %>"), true).xrxpopup('open');
+        getSessionInformation(function (content) {
+        }, function (e) {
+            if (e) console.log(e);
+            loadUI();
+        });
+        <% } else if (flash && flash.length) { %>
+            var $errors = $('<div></div>');
+            <% while(alert = flash.shift()) { %>
+                $errors.append("<div><%- alert.message %></div>");
+            <% }; %>
+            buildPopUp("<%- __('field.error') %>", $errors, true).xrxpopup('open');
+        <% }; %>
+    });
+</script>

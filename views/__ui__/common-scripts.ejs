@@ -1,0 +1,54 @@
+<script>
+    var $username, tableHeight = $.screenHeight() < 481 ? 330 : 430;
+    function buildPopUp(title, content, isStatic) {
+        var $widgetPopUp = $('<div></div>');
+        if (content) $widgetPopUp.append(content);
+        $widgetPopUp.xrxpopup({
+            title: title,
+            open: function(event, ui) {
+                if (isStatic) {
+                    $(this).xrxpopup('selectClose').xrxbutton('option', 'disabled', true);
+                    $(this).xrxpopup('selectCancel').xrxbutton('option', 'disabled', true);
+                }
+            },
+        });
+        return $widgetPopUp;
+    }
+    function getSessionInformation(success, fail) {
+        try {
+            xrxSessionGetSessionInfo('https://localhost', function (req, res) {
+                var sessInfoObj = xrxSessionParseGetSessionInfo(sessResponse);
+                if (sessInfoObj) parseSessionInformation(sessInfoObj, success);
+                else fail();
+            }, fail);
+        } catch (e) {
+            fail(e);
+        }
+    }
+    function parseSessionInformation(sessInfo, success, fail) {
+        try {
+            $username = xrxGetElementValue(sessInfo, 'username');
+            var $list = $('<ul></ul>');
+            $list.append("<li><%- __('field.username') %> : " + $username + '</li>');
+            $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfo, 'password') + '</li>');
+            $list.append("<li><%- __('field.email') %> : " + xrxGetElementValue(sessInfo, 'from') + '</li>');
+            if (xrxFindFirstElement(sessInfo, 'jba')) {
+                $list.append("<li>JBA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
+                $list.append("<li>JBA: ACC : " + xrxGetElementValue(sessInfo, 'accountID') + '</li>');
+            } else if (xrxFindFirstElement(sessInfo, 'xsa')) {
+                $list.append("<li>XSA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
+                $list.append("<li>XSA: TYPE : " + xrxGetElementValue(sessInfo, 'AccountType') + '</li>');
+                $list.append("<li>XSA: ACC : " + xrxGetElementValue(sessInfo, 'AccountID') + '</li>');
+            }
+            success($list);
+        } catch (e) {
+            fail(e);
+        }
+    }
+    $(function() {
+        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: true })
+            .bind('click', function() {
+                console.log('exit');
+            });
+    });
+</script>
