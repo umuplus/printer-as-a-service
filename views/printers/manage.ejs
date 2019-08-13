@@ -69,7 +69,7 @@
         <a href="javascript:" class="btn btn-dark mx-sm-3 mb-2"
             data-printer="<%- printer.id %>" id="list-apps"><%- __('btn.list_apps') %></a>
 
-        <% for (let app of [ 'print', 'scan', 'custom' ]) { %>
+        <% for (let app of [ 'copy', 'print', 'scan', 'custom' ]) { %>
         <div class="form-group mx-sm-3 mb-2">
             <input type="checkbox" value="<%- app %>" id="field-<%- app %>">
             <label for="field-<%- app %>"><%= __(`reg.${ app }`) %></label>
@@ -121,7 +121,7 @@
             container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
             container.closest('table').removeClass('d-none');
             const apps = [];
-            for (let app of [ 'print', 'scan', 'custom' ])
+            for (let app of [ 'copy', 'print', 'scan', 'custom' ])
                 if ($(`#field-${ app }:checked`).length) apps.push(app);
             const r = await ajax(`/printers/${ pid }/register`, {
                 apps, username: $('#field-username').val(), password: $('#field-password').val(),

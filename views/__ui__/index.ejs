@@ -1,43 +1,63 @@
-<div class="h-100 bg-dark text-white">
-    <div id="app-container" class="container-fluid d-flex justify-content-center">
+<div id="body-container" class="h-100 bg-dark text-white">
+    <div id="app-container" class="container-fluid">
+        <% include ./print %>
     </div>
 </div>
 <script type="text/javascript">
-    var $container, $loading, $message, $username;
+    var $validApps = [ 'copy', 'print', 'scan', 'custom' ];
+    var $application = "<%- $qs.val('app') || 'print' %>", $body, $container, $loading, $message, $username;
+    if ($validApps.indexOf($application) < 0) $application = 'print';
+
+    function loadUI() {
+        $username = 'umut';
+        $message.html("<%- __('txt.welcome') %>".replace('%s', $username))
+        setTimeout(function () {
+            $body.removeClass('text-white').removeClass('bg-dark');
+            $loading.modal('hide');
+        }, 1000);
+    }
+
     function getSessionInformation() {
-        setTimeout(() => $message.html("<%- __('txt.welcome', 'umut') %>".replace('%s', $username)), 1000);
         try {
             xrxSessionGetSessionInfo('https://localhost', function (req, res) {
                 var sessInfoObj = xrxSessionParseGetSessionInfo(sessResponse);
-                if (sessInfoObj) {
-                    try {
-                        $username = xrxGetElementValue(sessInfoObj, 'username');
-                        $message.html("<%- __('txt.welcome') %>".replace('%s', $username));
-                        var $list = $('<ul></ul>');
-                        $list.append("<li><%- __('field.username') %> : " + $username + '</li>');
-                        $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfoObj, 'password') + '</li>');
-                        $list.append("<li><%- __('field.email') %> : " + xrxGetElementValue(sessInfoObj, 'from') + '</li>');
-                        if (xrxFindFirstElement(sessInfoObj, 'jba')) {
-                            $list.append("<li>JBA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfoObj, 'userID') + '</li>');
-                            $list.append("<li>JBA: ACC : " + xrxGetElementValue(sessInfoObj, 'accountID') + '</li>');
-                        } else if (xrxFindFirstElement(sessInfoObj, 'xsa')) {
-                            $list.append("<li>XSA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfoObj, 'userID') + '</li>');
-                            $list.append("<li>XSA: TYPE : " + xrxGetElementValue(sessInfoObj, 'AccountType') + '</li>');
-                            $list.append("<li>XSA: ACC : " + xrxGetElementValue(sessInfoObj, 'AccountID') + '</li>');
-                        }
-                        // TODO: keep going
-                    } catch (e) {
-                        $message.html(e.message);
-                    }
-                } else $message.html("<%- __('txt.session') %>");
+                if (sessInfoObj) parseSessionInformation(sessInfoObj);
+                else $message.html("<%- __('txt.session') %>");
             }, function () {
                 $message.html("<%- __('txt.session') %>");
+
+                // TODO: remove dummy procedure
+                loadUI();
             });
         } catch (e) {
             $message.html(e.message);
         }
     }
+
+    function parseSessionInformation(sessInfo) {
+        try {
+            $username = xrxGetElementValue(sessInfo, 'username');
+            $message.html("<%- __('txt.welcome') %>".replace('%s', $username));
+            var $list = $('<ul></ul>');
+            $list.append("<li><%- __('field.username') %> : " + $username + '</li>');
+            $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfo, 'password') + '</li>');
+            $list.append("<li><%- __('field.email') %> : " + xrxGetElementValue(sessInfo, 'from') + '</li>');
+            if (xrxFindFirstElement(sessInfo, 'jba')) {
+                $list.append("<li>JBA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
+                $list.append("<li>JBA: ACC : " + xrxGetElementValue(sessInfo, 'accountID') + '</li>');
+            } else if (xrxFindFirstElement(sessInfo, 'xsa')) {
+                $list.append("<li>XSA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
+                $list.append("<li>XSA: TYPE : " + xrxGetElementValue(sessInfo, 'AccountType') + '</li>');
+                $list.append("<li>XSA: ACC : " + xrxGetElementValue(sessInfo, 'AccountID') + '</li>');
+            }
+            loadUI();
+        } catch (e) {
+            $message.html(e.message);
+        }
+    }
+
     $(document).ready(function() {
+        $body = $('#body-container');
         $container = $('#app-container');
         $loading = $('#loading');
         $message = $loading.find('div.modal-footer b');
