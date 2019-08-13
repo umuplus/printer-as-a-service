@@ -157,7 +157,7 @@ class Controller {
             const system = await Configuration.system();
             if (!system) throw new Error('invalid system configuration');
 
-            const r = [], validApps = [ 'print', 'scan', 'custom' ];
+            const r = [], validApps = [ 'copy', 'print', 'scan', 'custom' ];
             const register = new CUIRegistration(printer.ip, printer.options ? printer.options.https : false);
             await register.create({ password: req.body.password, username: req.body.username });
             if (is.existy(req.body['apps[]'])) {
@@ -175,7 +175,7 @@ class Controller {
                             VendorName: system.vendor || 'DVS',
                             SmallIconUrl: `http://${ ip.address() }:${ process.env.APP_PORT }/images/icons/${ app }.png`,
                             ToolsIconUrl: `http://${ ip.address() }:${ process.env.APP_PORT }/images/icons/${ app }_tools.png`,
-                            Url: `http://${ ip.address() }:${ process.env.UI_PORT }/start?module=${ app }`
+                            Url: `http://${ ip.address() }:${ process.env.UI_PORT }/?app=${ app }`
                         });
                         r.push(result);
                     } catch (e) {
