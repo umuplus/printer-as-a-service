@@ -13,8 +13,10 @@
     "btn": {
         "apply": "Uygula",
         "back": "Geri Dön",
+        "custom_photocopy": "Özel Fotokopi",
         "download": "İndir",
         "edit": "Düzenle",
+        "exit": "Çıkış",
         "filter": "Filtrele",
         "list_apps": "Uygulamaları Yükle",
         "login": "Giriş Yap",
@@ -27,10 +29,13 @@
             "setting": "Yeni Ayar Ekle",
             "user": "Yeni Kullanıcı Ekle"
         },
+        "photocopy": "Fotokopi",
         "prev": "Önceki",
+        "print": "Yazdır",
         "register": "Uygulamaları Kaydet",
         "reset": "Vazgeç",
         "restore": "Çöpten Al",
+        "scan": "Tara",
         "submit": "Değişiklikleri Kaydet",
         "trash": "Çöpe At"
     },

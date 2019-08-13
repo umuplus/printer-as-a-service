@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2012 rel. 2 sp1 (http://www.altova.com) by Xerox Corporation (XEROX CORPORATION) -->
+<!-- Copyright (C) 2010 Xerox Corporation.  All rights reserved. -->
+<!-- Change history: -->
+<!--  ..date..  ..vers..    ..name..            ..changes..                  -->
+<!--  04-16-10	   1.0.0    Chris Miyachi         Created                      -->
+<!--  07-17-10	   1.0.0    Chris Miyachi         Updated after team review -->
+<!--  08-12-10	   1.0.1    James Howell         Changed file name andJobModel reference. Fixed spelling errors. Added InputTrayNameDefault -->
+<!--  08-25-10	   1.0.2    Chris Miyachi        Changed schemaVersion from an attribute to an element; fixed error in Media Type to point to correct type in Job Model-->
+<!--  09-1-10	   1.0.3    Chris Miyachi       Added tray level definitions-->
+<!-- 09-08-10	   1.0.4    James Howell       remove choice elements. -->
+<!-- 10-7-10	   1.0.5    Chris Miyachi   Changed the name of the job model schema file to import. -->
+<!-- 12-10-10	   1.1.0    James Howell   Changed the name of the job model schema file to import. -->
+<!-- 05-04-11  1.1.1 Chris Miyachi Added mininum value for media size supported-->
+<!-- 06-04-11  1.2.0 Chris Miyachi Added section for print capabilities-->
+<!-- 08-04-11  1.2.1 Chris Miyachi Moved elements that are unique per service into the service section-->
+<!-- 09-21-11  1.2.2 James Howell   CQGbl00313657 added otherSchemaVersions element to the DeviceJobProcessingCapabilities payload  -->
+<!-- 10-19-11  1.2.3 James Howell   CQGbl00320628 added ScannerColorEffectsTypeCapabilities element to the DeviceJobProcessingCapabilities payload  -->
+<!-- 11-10-11  1.2.4 James Howell   CQGbl00320628 changed ScannerColorEffectsTypeCapabilities to ScannerColorModeCapabilities  -->
+<!-- 11-16-11  1.2.5 James Howell   CQGbl00320628 changed DefaltValue to DefaultValue for ScannerColorModeCapabilities  -->
+<!-- 05-09-12  1.2.6 James Howell   adding more scan capabilities  -->
+<!-- 06-06-12  1.3.0 James Howell   CQGbl00384706 fix typo of AutomaticDocumentFeeder name  -->
+<!-- 08-07-13  1.3.1 C. Miyachi 	   CQGbl00467926 removed schemaVersion element in two places that shouldn't be there.   -->
+<!-- 06-10-16  1.3.2 Steve Owens 	   Added Darkness capabilities element.   -->
+<xs:schema xmlns:eipjobcap="http://schemas.xerox.com/enterprise/eipjobcap/1" xmlns:eipjobmodel="http://schemas.xerox.com/enterprise/eipjobmodel/1" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.xerox.com/enterprise/eipjobcap/1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2.7">
+	<xs:import namespace="http://schemas.xerox.com/enterprise/eipjobmodel/1" schemaLocation="JobModelSchemaCommon.xsd"/>
+	<xs:element name="DeviceJobProcessingCapabilities">
+		<!--Xerox Common Job Processing Capabilities-->
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MajorVersion" type="xs:short" default="1"/>
+							<xs:element name="MinorVersion" type="xs:short" default="3"/>
+							<xs:element name="Revision" type="xs:short" default="2"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="otherSchemaVersions" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="schema" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="name" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>DeviceRestriction AllowedValues=JobModelSchemaCommon</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="version">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="MajorVersion" type="xs:short"/>
+													<xs:element name="MinorVersion" type="xs:short"/>
+													<xs:element name="Revision" type="xs:short"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="eipjobcap:Input" minOccurs="0"/>
+				<xs:element ref="eipjobcap:Output" minOccurs="0"/>
+				<xs:element name="DefaultJobTickets" minOccurs="0">
+					<!--Xerox Job Ticket with default values-->
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DefaultTicketPerService" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="CopyJobTicket" minOccurs="0">
+											<!--Xerox Common Job Ticket-->
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+													<xs:element name="JobDescription" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="JobProcessing" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Input" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Scaling" minOccurs="0"/>
+																			<xs:element name="Darkness" type="eipjobmodel:STDarkness" minOccurs="0"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Output" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element ref="eipjobmodel:Finishings" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:ColorEffectsType" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:SheetCollate" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Copies" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:InputTraysCol" minOccurs="0"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PrintJobTicket" minOccurs="0">
+											<!--Xerox Common Job Ticket-->
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="schemaVersion" type="eipjobmodel:schemaVersionType" minOccurs="0"/>
+													<xs:element name="JobDescription" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+																<xs:element ref="eipjobmodel:JobOriginatingUserName" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="JobProcessing" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Input" minOccurs="0">
+																	<xs:complexType>
+																		<xs:all>
+																			<xs:element name="Accounting" minOccurs="0">
+																				<xs:complexType>
+																					<xs:all>
+																						<xs:element name="Jba" minOccurs="0">
+																							<xs:complexType>
+																								<xs:all>
+																									<xs:element ref="eipjobmodel:JobAccountingUserId" minOccurs="1"/>
+																									<xs:element ref="eipjobmodel:JobAccountId" minOccurs="1"/>
+																								</xs:all>
+																							</xs:complexType>
+																						</xs:element>
+																						<xs:element name="Xsa" minOccurs="0">
+																							<xs:complexType>
+																								<xs:all>
+																									<xs:element ref="eipjobmodel:JobAccountingType" minOccurs="0"/>
+																									<xs:element ref="eipjobmodel:JobAccountingUserId" minOccurs="1"/>
+																									<xs:element ref="eipjobmodel:JobAccountId" minOccurs="0"/>
+																								</xs:all>
+																							</xs:complexType>
+																						</xs:element>
+																					</xs:all>
+																					<!--DeviceRestriction = choice-->
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:all>
+																		<!--Accounting can only be xsa or jba but not both-->
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Output" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element ref="eipjobmodel:Finishings" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:ColorEffectsType" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:SheetCollate" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Copies" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:InputTraysCol" minOccurs="0"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScanJobTicket" minOccurs="0">
+											<!--Xerox Common Job Ticket-->
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="schemaVersion" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MajorVersion" type="xs:short" default="1"/>
+																<xs:element name="MinorVersion" type="xs:short" default="2"/>
+																<xs:element name="Revision" type="xs:short" default="3"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="JobDescription" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="eipjobmodel:JobName" minOccurs="0"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="JobProcessing" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Input" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element ref="eipjobmodel:ColorMode" minOccurs="0"/>
+																			<xs:element ref="eipjobmodel:Sides" minOccurs="0"/>
+																			<xs:element name="OriginalType" type="eipjobmodel:CTOriginalType" minOccurs="0"/>
+																			<xs:element name="ImageOptions" minOccurs="0">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="Darkness" type="eipjobmodel:STDarkness" minOccurs="0"/>
+																						<xs:element name="Sharpness" type="eipjobmodel:STSharpness" minOccurs="0"/>
+																						<xs:element name="Contrast" type="eipjobmodel:CTContrast" minOccurs="0"/>
+																						<xs:element name="AutoExposure" type="eipjobmodel:STAutoExposure" minOccurs="0"/>
+																						<xs:element name="Resolution" type="eipjobmodel:STResolutionType" minOccurs="0"/>
+																						<xs:element name="Saturation" type="eipjobmodel:STSaturation" minOccurs="0"/>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element name="LayoutAdjustment" minOccurs="0">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="InputOrientation" type="eipjobmodel:STInputOrientationType" minOccurs="0"/>
+																						<xs:element name="InputMediaSize" type="eipjobmodel:CTInputMediaSize" minOccurs="0"/>
+																						<xs:element name="InputEdgeErase" type="eipjobmodel:CTEdgeErase" minOccurs="0"/>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element name="ImageSettings" minOccurs="0">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="Compression" type="eipjobmodel:STImageCompressionType" minOccurs="0"/>
+																						<xs:element name="BitsPerPixel" type="eipjobmodel:STBitsPerPixelType" minOccurs="0"/>
+																						<xs:element name="OptimizedForFastWebView" type="xs:boolean" minOccurs="0"/>
+																						<xs:element name="SearchableText" type="eipjobmodel:STSearchableText" minOccurs="0"/>
+																						<xs:element name="SourceDocumentLanguages" type="eipjobmodel:STSourceDocumentLanguages" minOccurs="0"/>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="Output" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Destination" type="eipjobmodel:CTDestination" minOccurs="0"/>
+																			<xs:element name="MetaData" type="eipjobmodel:CTMetaData" minOccurs="0"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DeviceJobProcessingCapabilitiesByServices" minOccurs="0">
+					<!--Xerox Common Job Processing Capabilities-->
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CapabilitiesByService" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="ServiceType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<!--		These values are listed for reference only. Do not uncomment.
+							Un-commenting these values will break compatibility when new values are added.-->
+													<!---
+					<xs:enumeration value="Copy"/>
+					<xs:enumeration value="Print"/>
+					<xs:enumeration value="WorkflowScanning"/>
+					<xs:enumeration value="IncomingFax"/>
+					<xs:enumeration value="FaxSend"/>
+					<xs:enumeration value="Email"/>
+					<xs:enumeration value="InternetFaxReceive"/>
+					<xs:enumeration value="InternetFaxSend"/>
+					<xs:enumeration value="ReportJob"/>
+					<xs:enumeration value="FaxSendFromPc"/>
+					-->
+												</xs:restriction>
+												<!--This enum is identical to the Job Model (TODO:  include job model schema here?)-->
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="DeviceJobProcessingCapabilities">
+											<!--Xerox Common Job Processing Capabilities-->
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="eipjobcap:Input" minOccurs="0"/>
+													<xs:element ref="eipjobcap:Output" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InputTrayEntry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="InputTrayName" type="eipjobmodel:STInputTrayName" minOccurs="0"/>
+				<xs:element name="TrayLevel" type="eipjobmodel:STTrayLevel" minOccurs="0"/>
+				<xs:element name="MediaCollectionCurrent" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MediaSize" type="eipjobmodel:CTMediaSize" minOccurs="0"/>
+							<xs:element name="MediaColor" type="eipjobmodel:STMediaColor" minOccurs="0"/>
+							<xs:element name="MediaType" type="eipjobmodel:STMediaType" minOccurs="0"/>
+							<xs:element name="FeedOrientation" type="eipjobmodel:STFeedOrientation" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="MediaCollectionSupported" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Note: Up to 2 MediaCollectionSupported elements are supported in the InputTrayEntrySupported element. This would happen when the devise wants to distinguish between the media sizes that it can feed long edge first vs. the media size it can feed short edge first. In this case one MediaCollectionSupported element would contain a FeedOrientationSupported element with a single value of LongEdgeFirst and the other MediaCollectionSupported element would contain a FeedOrientationSupported element with a single value of ShortEdgeFirst.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MediaSizeSupported" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="XDimensionSupported">
+											<xs:annotation>
+												<xs:documentation>The value is specified in hundredths of millimeters. XDimension is the short edge of the media.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:annotation>
+														<xs:documentation>The value is specified in hundredths of millimeters. The minimum value for x will always be less than or equal to the minimum value for y.</xs:documentation>
+													</xs:annotation>
+													<xs:element name="MinimumValue">
+														<xs:simpleType>
+															<xs:restriction base="xs:unsignedInt">
+																<xs:minInclusive value="1"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="MaximumValue" type="xs:unsignedInt">
+														<xs:annotation>
+															<xs:documentation>The value is specified in hundredths of millimeters. The maximum value for x will always be less than or equal to the maximum value for y.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="YDimensionSupported">
+											<xs:annotation>
+												<xs:documentation>The value is specified in hundredths of millimeters. YDimension is the long edge of the media.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:annotation>
+														<xs:documentation>The value is specified in hundredths of millimeters. The minimum value for x will always be less than or equal to the minimum value for y.</xs:documentation>
+													</xs:annotation>
+													<xs:element name="MinimumValue">
+														<xs:simpleType>
+															<xs:restriction base="xs:unsignedInt">
+																<xs:minInclusive value="1"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="MaximumValue" type="xs:unsignedInt">
+														<xs:annotation>
+															<xs:documentation>The value is specified in hundredths of millimeters. The maximum value for x will always be less than or equal to the maximum value for y.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+								<!--<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eipjobcap:MediaSizeSupported" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>-->
+							</xs:element>
+							<xs:element name="MediaColorSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MediaColorKeywordSupported" type="eipjobmodel:STMediaColor" minOccurs="0" maxOccurs="unbounded"/>
+										<xs:element name="MediaColorCustomSupported" type="xs:boolean" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Note: If this element is not included then custom colors are not supported in the tray.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="MediaTypeSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MediaTypeKeywordSupported" type="eipjobmodel:STMediaType" minOccurs="0" maxOccurs="unbounded"/>
+										<xs:element name="MediaTypeCustomSupported" type="xs:boolean" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Note: If this element is not included then custom types are not supported in the tray.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="FeedOrientationSupported" type="eipjobmodel:STFeedOrientation" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Input">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SidesCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SidesDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STSides"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SidesSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STSides" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScalingCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ScalingDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ScalingTypeDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STScalingType"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleProportionalDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleIndependentDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="XScaling">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="YScaling">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScalingSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ScalingTypeSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AllowedValue" type="eipjobmodel:STScalingType" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleProportionalSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="ScalingValueSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleIndependentSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="XScalingSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="YScalingSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="PDLCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="PDLSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STPDL" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScannerColorModeCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="ScannerColorModeDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STColorMode"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScannerColorModeSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STColorMode" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AutomaticDocumentFeeder" type="xs:boolean" minOccurs="0"/>
+				<xs:element name="MaxNumberOfSheets" type="xs:int" minOccurs="0"/>
+				<xs:element name="ScannerMediaSize" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="MinMediaSize" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MediaSizeCol" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="MediaSize" type="eipjobmodel:CTMediaSize" minOccurs="0"/>
+													<xs:element name="FeedOrientation" type="eipjobmodel:STFeedOrientation" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="MaxMediaSize" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MediaSizeCol" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="MediaSize" type="eipjobmodel:CTMediaSize" minOccurs="0"/>
+													<xs:element name="FeedOrientation" type="eipjobmodel:STFeedOrientation" minOccurs="0"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScannerResolution" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="ScannerResolutionDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="DocumentImageMode" type="eipjobmodel:STDocumentImageMode"/>
+													<xs:element name="Value" type="eipjobmodel:STResolutionType"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScannerResolutionSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STResolutionType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScannerBitDepth" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="ScannerBitDepthDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="DocumentImageMode" type="eipjobmodel:STDocumentImageMode"/>
+													<xs:element name="Value" type="eipjobmodel:STBitsPerPixelType"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScannerBitDepthSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STBitsPerPixelType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DarknessSupported" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DarknessDefaultValue">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STDarkness"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="DarknessValueSupported">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MinimumAllowedValue" type="eipjobmodel:STDarkness"/>
+										<xs:element name="MaximumAllowedValue" type="eipjobmodel:STDarkness"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Output">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="FinishingsCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="FinishingsDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="PunchFinishingsDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STPunchFinishing"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="StapleFinishingsDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STStapleFinishing"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="FoldFinishingsDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STFoldFinishing"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="FinishingsSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="PunchFinishingsSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AllowedValue" type="eipjobmodel:STPunchFinishing" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="StapleFinishingsSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AllowedValue" type="eipjobmodel:STStapleFinishing" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="FoldFinishingsSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AllowedValue" type="eipjobmodel:STFoldFinishing" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ColorEffectsTypeCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ColorEffectsTypeDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STColorEffectsType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ColorEffectsTypeSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STColorEffectsType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SheetCollateCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SheetCollateDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STSheetCollate"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SheetCollateSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STSheetCollate" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="CopiesCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CopiesDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="xs:integer"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="CopiesSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="MaximumAllowedValue" type="xs:integer"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SidesCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SidesDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="DefaultValue" type="eipjobmodel:STSides"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SidesSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AllowedValue" type="eipjobmodel:STSides" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ScalingCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ScalingDefault" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ScalingTypeDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STScalingType"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleProportionalDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleIndependentDefault" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="XScaling">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="YScaling">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="DefaultValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScalingSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ScalingTypeSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AllowedValue" type="eipjobmodel:STScalingType" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleProportionalSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="ScalingValueSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ScaleIndependentSupported" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="XScalingSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="YScalingSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="MinimumAllowedValue" type="eipjobmodel:STScaling"/>
+																<xs:element name="MaximumAllowedValue" type="eipjobmodel:STScaling"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="InputTraysCapabilities" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="InputTrayNameDefault" type="eipjobmodel:STInputTrayName" minOccurs="0"/>
+							<xs:element ref="eipjobcap:InputTrayEntry" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

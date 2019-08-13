@@ -13,8 +13,10 @@
     "btn": {
         "apply": "Apply",
         "back": "Back",
+        "custom_photocopy": "Custom Copy",
         "download": "Download",
         "edit": "Edit",
+        "exit": "Exit",
         "filter": "Filter",
         "list_apps": "List Applications",
         "login": "Sign In",
@@ -27,10 +29,13 @@
             "setting": "New Setting",
             "user": "New User"
         },
+        "photocopy": "Photocopy",
         "prev": "Previous",
+        "print": "Print",
         "register": "Register Applications",
         "reset": "Reset",
         "restore": "Restore",
+        "scan": "Scan",
         "submit": "Save Changes",
         "trash": "Delete"
     },

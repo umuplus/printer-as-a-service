@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Christine Miyachi (Xerox Corporation) -->
+<!-- CUI DeviceInformation schema -->
+<!-- Copyright (C) 2014 Xerox Corporation.  All rights reserved. -->
+<!-- Change history: -->
+<!--  ..date..  ..vers..    ..name..            ..changes..                  -->
+<!--  07-13-06    1.0.x    Shawn Hurley         Created                      -->
+<!--  03-09-07    1.1.x    Michael Alexander    Added Access Config versions -->
+<!--  05-21-08    1.2.x    Michael Alexander    Added new attributes for EIP 1.5 -->
+<!--  02-24-09    1.3.x    Michael Alexander    Fixed incorrect types -->
+<!--  03-26-09    1.3.x    Michael Alexander    Corrected fix of textLocation -->
+<!--  10-03-09    1.4.x    A.J. Rittler         1.5 web service additions -->
+<!--  10-03-09    1.4.x    Bernard Heroux       EIP  2.0 web service additions -->
+<!--  09-02-10   1.4.3    Christine Miyachi       Added InformationScreenInfo min lengths-->
+<!--  09-15-10   1.4.4    James Howell       Added versions for missing WSDLs and schemas-->
+<!--  09-30-10   1.4.5    James Howell       changed the eipSoftware element to be an InterfaceVersionType -->
+<!--  09-30-10   1.4.6    Chris Miyachi      changed the schema versions element name to match the file names-->
+<!--  03/18/11   1.4.7    Dave Mensing      Added scanRemoteWS (Scan Extension Web Service - version 2)-->
+<!--  06/21/11   1.5.0    Dave Mensing      Added JBA & XSA PromptByService allowed name & value lists (CQGbl00318406) -->
+<!--  08/10/11   1.5.1    James Howell      Added EIPBrowsers and USB. Updates for CQGbl00318405  -->
+<!--  09/14/11   1.5.2    James Howell      Added RegistrationTypesSupported  -->
+<!--  09/14/11   1.5.3    James Howell      Removed hardware/usb elements  -->
+<!--  11/09/11   1.5.4    James Howell      Added MaxTotalEmailAddresses  -->
+<!--  11/10/11   1.5.5    James Howell      CQGbl00318405 changed InformationalScreenInfo_DeviceSupportedMinLen to InformationalScreenInfo_DeviceSupportedMaxLen  -->
+<!--  02/22/12   1.5.6    James Howell      Added ListJobProtocolsSupported and EipBrowserInfo  -->
+<!--  04/25/12   1.6.0    James Howell      Added printServiceWS to the version list  -->
+<!--  05/02/12   1.6.1    James Howell      Added SecurityEventClientWS, DeviceConfigurationWS, SecurityEventNotifySchema and EmbeddedSecurityConfigSchema to the version list  -->
+<!--  05/11/12   1.6.2    Chris Miyachi     CQGbl00381485:  made the above elements start with a lower case letter -->
+<!--  10/24/12   1.6.3    David Mensing     CQGbl00402135:  Removed webUI -->
+<!--  11/9/12   1.6.4    Chris Miyachi     CQGbl00411263:  put comment in about obsolete option eleemnts for iconSize - tools and large. -->
+<!-- 1/22/13  1.6.5   Chris Miyachi     Added SNMPWS and SNMPVersion. -->
+<!--  03/20/13   1.6.6    David Mensing     (EIP 3.0) CQGbl00387419:  Removed invocationPoints / serviceSelectButton -->
+<!--  03/27/13   1.6.7    James Howell     Added InputsSupported and OutputsSupported for Workflow Management -->
+<!--  02/20/14   1.7.0    Chris Miyachi		Added items for rectanglar pixels in display section -->
+<!--  03/18/14   1.7.1    Gary Pecor		Added items to support Job Limits new Confirmation Prompt Screen -->
+<!--  03/18/14   1.7.2    Chris Miyachi		Removed Workflow Management -->
+<!--  02/27/15   1.7.3    abhayb                Added new element EmbeddedKeyboardSupported -->
+<!-- 06/30/15   1.8.0   Chris Miyachi		Removed ListFilesProtocolsSupported which was also part of Workflow Management-->
+<!-- 08/28/15   1.8.1   Steve Owens		Added FaxJob to authorization names type -->
+<!-- 12/10/15   1.9.0  Gary Pecor		 CQGbl00499765 - Added new element ScanTemplateManagementSecurity, removed the USBAvailabilityType element -->
+<xs:schema xmlns:si="http://schemas.xerox.com/office/cui/deviceinformation/1" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.xerox.com/office/cui/deviceinformation/1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DeviceInformation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="schemaVersion" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MajorVersion" type="xs:short" default="1"/>
+							<xs:element name="MinorVersion" type="xs:short" default="9"/>
+							<xs:element name="Revision" type="xs:short" default="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="device">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="xs:string"/>
+							<xs:element name="mac" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>1.3.6.1.2.1.4.22.1.2.1.???
+Hexadecimal representation of the MAC address, with a colon between each byte.  For example, 00:00:00:00:00:00.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="serial" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>1.3.6.1.4.1.253.8.53.3.2.1.3.1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="model" type="xs:string"/>
+							<xs:element name="SNMPVersion" type="xs:string" minOccurs="0">
+								<!-- Valid values for the SNMP Version
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2c"/>
+						<xs:enumeration value="3"/>
+					-->
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="display">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="canvasSize" type="si:graphicSizeType"/>
+							<xs:element name="touchable">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="offset" type="si:graphicSizeType"/>
+										<xs:element name="region" type="si:graphicSizeType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="iconSize">
+								<xs:annotation>
+									<xs:documentation>The element large and tools are depricated.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="small" type="si:graphicSizeType"/>
+										<xs:element name="large" type="si:graphicSizeType" minOccurs="0"/>
+										<xs:element name="tools" type="si:graphicSizeType" minOccurs="0"/>
+										<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="dpi" type="xs:int"/>
+							<xs:element name="dpiHorizontal" type="xs:double" minOccurs="0"/>
+							<xs:element name="bitdepth" type="xs:int"/>
+							<xs:element name="colorspace" type="si:colorSpaceType"/>
+							<xs:element name="dotPitch" type="xs:string" minOccurs="0"/>
+							<xs:element name="dotPitchHorizontal" type="xs:string" minOccurs="0"/>
+							<xs:element name="physical" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="totalResolution" type="si:graphicSizeType"/>
+										<xs:element name="size" type="xs:string"/>
+										<xs:element name="aspectRatio" type="xs:string"/>
+										<xs:element name="aspectRatioRectangular" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="style" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="generation" type="xs:string"/>
+							<xs:element name="colorPalette">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="name" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="JobLimits" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="InformationalScreenInfo_DeviceSupportedMaxLen" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="InformationalScreenTitleText_DeviceSupportedMaxLen" type="xs:integer"/>
+										<xs:element name="InformationalScreenBodyText_DeviceSupportedMaxLen" type="xs:integer"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ConfirmationScreenInfo_DeviceSupportedMaxLen" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ConfirmationScreenTitleText_DeviceSupportedMaxLen" type="xs:integer"/>
+										<xs:element name="ConfirmationScreenBodyText_DeviceSupportedMaxLen" type="xs:integer"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ProceedStateSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ProceedStateSupportedValue" type="si:ProceedStateSupportedType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="AuthorizationTypeSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="CopyJob" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AuthorizationValuesSupported" type="si:JobLimitsAuthorizationValuesType" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PrintJob" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="AuthorizationValuesSupported" type="si:JobLimitsAuthorizationValuesType" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="AdditionalAuthorizationTypesSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AdditionalAuthorizationType" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element name="AuthorizationName" type="si:JobLimitsAdditionalAuthorizationTypesType"/>
+													<xs:element name="AuthorizationValuesSupported">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="AuthorizationValue" type="si:JobLimitsAuthorizationValuesType" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="JobLimitsMethodSelectedSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="JobLimitsMethodValue" type="si:JobLimitsMethodSelectedValuesType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="PrintErrorHandlingSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="PrintErrorHandlingValue" type="si:PrintErrorHandlingValuesType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Accounting" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="Methods" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="JBA" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="PromptByService" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="ServiceSupported" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="name" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>DeviceRestriction AllowedValues=CopyServicePrompt,PrintServicePrompt,ScanServicePrompt,FaxServicePrompt</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="ValuesSupported">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+																							<xs:annotation>
+																								<xs:documentation>DeviceRestriction minOccurs=1 DeviceRestriction AllowedValues=NoPrompt,Prompt,ColorPromptingOnly</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="XSA" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="PromptByService" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="ServiceSupported" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="name" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>DeviceRestriction AllowedValues=CopyServicePrompt,PrintServicePrompt,ScanServicePrompt,FaxServicePrompt</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="ValuesSupported">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+																							<xs:annotation>
+																								<xs:documentation>DeviceRestriction minOccurs=1 DeviceRestriction AllowedValues=NoPrompt,Prompt,ColorPromptingOnly</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="FDI" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="version">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="systemSoftware" type="xs:string"/>
+							<xs:element name="uiSoftware" type="xs:string" minOccurs="0"/>
+							<xs:element name="netControllerSoftware" type="xs:string"/>
+							<xs:element name="eipSoftware" type="si:InterfaceVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="registrationWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="sessionWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="scanWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="scanRemoteWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="accessConfigWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="uiConfigWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="connectivityConfigWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="securityConfigWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="scanTemplateMgmtWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="convenienceAuthWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="copyWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="massStorageWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="cardReaderWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="jobManagementWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="jobLimitsWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="jobLimitsDeviceClientWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="convenienceAuthClientWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="printServiceWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="offboxValidationClientWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SendCardDataDeviceClientWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="diagnosticsWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="securityEventClientWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="deviceConfigurationWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SNMPWS" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=0</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="si:InterfaceVersionType"/>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="sessionSchema" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="deviceInformationSchema" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="deviceTextSchema" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="accessConfigSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="SendCardDataSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DeviceInfo" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DirectoryListingSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="JobLimitsDeviceClientSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="JobLimitsSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="JobModelSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="JobModelCapabilitiesSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PartitionsInfoSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PeripheralsInfoSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="SessionInfoSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="securityEventNotifySchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="embeddedSecurityConfigSchema" type="si:SchemaVersionType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>DeviceRestriction minOccurs=1</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="EIPBrowserInfo" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="BrowserType" type="si:EIPBrowserType" minOccurs="0"/>
+										<xs:element name="BrowserVersion" minOccurs="0">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:whiteSpace value="preserve"/>
+													<xs:maxLength value="40"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="EipWidgets" minOccurs="0">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="40"/>
+													<xs:whiteSpace value="preserve"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="EmbeddedKeyboardSupported" type="xs:boolean" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="EIP" minOccurs="0">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="EIPBrowsers" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="EIPBrowsersSupported">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="EIPBrowserNameSupport" type="si:EIPBrowserType" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RegistrationTypesSupported" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="RegistrationType" type="si:STRegistrationType" minOccurs="0" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScanToEmail" minOccurs="0">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="MaxTotalEmailAddresses" type="xs:int" minOccurs="0"/>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ScanTemplateManagement" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ScanTemplateManagementSecurity" type="si:ScanTemplateManagementSecurityType" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:any namespace="##other" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="PrintErrorHandlingValuesType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job Limits Print Error Handling
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="None"/>
+						<xs:enumeration value="Print"/>
+						<xs:enumeration value="Screen"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="JobLimitsMethodSelectedValuesType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job Limits Method Selected
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="None"/>
+						<xs:enumeration value="JobBasedAccounting"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProceedStateSupportedType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Proceed State Supported Types
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="Release"/>
+						<xs:enumeration value="Reject"/>
+						<xs:enumeration value="Hold"/>
+						<xs:enumeration value="Prompt"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="JobLimitsAdditionalAuthorizationTypesType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job Limits Additional Authorization Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="ScanJob"/>
+						<xs:enumeration value="EmailJob"/>
+						<xs:enumeration value="FaxJob"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="JobLimitsAuthorizationValuesType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Job Limits Authorization Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="None"/>
+						<xs:enumeration value="PreAuth"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EIPBrowserType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the EIP Browser Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="firstGenEIPBrowser"/>
+						<xs:enumeration value="secondGenEIPBrowser"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="STRegistrationType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+			<!-- Valid values for the Registration Type
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="standard"/>
+						<xs:enumeration value="weblet"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="colorSpaceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="monochrome"/>
+			<xs:enumeration value="color"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="textJustification">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="justified"/>
+			<xs:enumeration value="flushLeft"/>
+			<xs:enumeration value="flushRight"/>
+			<xs:enumeration value="centered"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="textLocation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="offAbove"/>
+			<xs:enumeration value="offBelow"/>
+			<xs:enumeration value="offLeft"/>
+			<xs:enumeration value="offRight"/>
+			<xs:enumeration value="onTop"/>
+			<xs:enumeration value="onBottom"/>
+			<xs:enumeration value="onLeft"/>
+			<xs:enumeration value="onRight"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ScanTemplateManagementSecurityType">
+		<xs:restriction base="xs:string">
+			<!-- Valid values for the Scan Template Management Security
+						These values are listed for reference only. Do not uncomment.
+						Un-commenting these values will break compatibility when new values are added.
+						<xs:enumeration value="enabled"/>
+						<xs:enumeration value="disabled"/>
+					-->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="InterfaceVersionType">
+		<xs:sequence>
+			<xs:element name="majorVersion" type="xs:int"/>
+			<xs:element name="minorVersion" type="xs:int"/>
+			<xs:element name="revision" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SchemaVersionType">
+		<xs:sequence>
+			<xs:element name="MajorVersion" type="xs:short"/>
+			<xs:element name="MinorVersion" type="xs:short"/>
+			<xs:element name="Revision" type="xs:short"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="graphicSizeType">
+		<xs:sequence>
+			<xs:element name="width" type="xs:int"/>
+			<xs:element name="height" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by CHRISTINE MIYACHI (XEROX CORP) -->
+<!-- Change history: -->
+<!--  ..date..      ..vers..    ..name..            ..changes..                  -->
+<!--  06-21-10	   1.1.0    James Howell      Created from 1.0.1 version added the GetDeviceCapabilities and GetCurrentDeviceConfiguration methods   -->
+<!--  07/17/10	   1.1.0    Chris Miyachi  In review, team decided to go with one method ("GetDeviceCapabilities") and defaults, current settings, and capabilties will be returned in a payload from this one function.  -->
+<!--  08/20/10	   1.1.1    Chris Miyachi  Missing name of get capabilities function in input (port section); added comment explaining payload name;  revised payload structure; added faults-->
+<!--  01/13/11	   1.1.2    James Howell  CQGbl00217899 - removed DeviceInPowerSaverMode fault -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xrx="http://www.xerox.com/webservices/office/device_configuration/1" targetNamespace="http://www.xerox.com/webservices/office/device_configuration/1">
+	<documentation>
+	   Version 1.1.2
+	   This provides the Device Configuration web service API
+	</documentation>
+	<types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://www.xerox.com/webservices/office/device_configuration/1">
+			<!-- Simple types -->
+			<xs:simpleType name="DeviceInformation">
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+			<!--The name specifies the file "JobModelCapabilities.xsd" and after the "_", the name of the element/payload in the that schema "DeviceJobProcessingCapabilities".  -->
+			<xs:simpleType name="STJobModelCapabilities_DeviceJobProcessingCapabilities">
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="8000000"/>
+					<xs:whiteSpace value="preserve"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<!-- complex types: structures -->
+			<xs:complexType name="InterfaceVersion">
+				<xs:sequence>
+					<xs:element name="MajorVersion" type="xs:short"/>
+					<xs:element name="MinorVersion" type="xs:short"/>
+					<xs:element name="Revision" type="xs:short"/>
+				</xs:sequence>
+			</xs:complexType>
+			<!-- Complex types (method parameters and results) -->
+			<!-- because DeviceInformation is a simpletype, we need a complex type for proper serialization.
+             -->
+			<xs:complexType name="DeviceInformationResponse">
+				<xs:sequence>
+					<xs:element name="Information" type="xrx:DeviceInformation"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetDeviceCapabilitiesResponseType">
+				<xs:sequence>
+					<!--The name specifies the file "JobModelCapabilities.xsd" and after the "_", the name of the element/payload in the that schema "DeviceJobProcessingCapabilities".  -->
+					<xs:element name="JobModelCapabilities_DeviceJobProcessingCapabilities" type="xrx:STJobModelCapabilities_DeviceJobProcessingCapabilities"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="GetInterfaceVersionRequest">
+				<!-- no parameters -->
+			</xs:complexType>
+			<xs:complexType name="GetDeviceInformationRequest">
+				<!-- no parameters -->
+			</xs:complexType>
+			<xs:complexType name="VoidRequestType">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- elements -->
+			<xs:element name="InterfaceVersion" type="xrx:InterfaceVersion"/>
+			<xs:element name="GetInterfaceVersionRequest" type="xrx:GetInterfaceVersionRequest"/>
+			<xs:element name="GetDeviceInformationRequest" type="xrx:GetDeviceInformationRequest"/>
+			<xs:element name="DeviceInformationResponse" type="xrx:DeviceInformationResponse"/>
+			<xs:element name="VoidRequest" type="xrx:VoidRequestType"/>
+			<xs:element name="GetDeviceCapabilitiesResponse" type="xrx:GetDeviceCapabilitiesResponseType"/>
+			<xs:complexType name="InternalServerError">
+				<xs:sequence>
+					<!-- No members -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="InternalServerError" type="xrx:InternalServerError"/>
+		</xs:schema>
+	</types>
+	<message name="GetInterfaceVersionRequest">
+		<part name="request" element="xrx:GetInterfaceVersionRequest"/>
+	</message>
+	<message name="InterfaceVersionResponse">
+		<part name="response" element="xrx:InterfaceVersion"/>
+	</message>
+	<message name="GetDeviceInformationRequest">
+		<part name="request" element="xrx:GetDeviceInformationRequest"/>
+	</message>
+	<message name="DeviceInformationResponse">
+		<part name="response" element="xrx:DeviceInformationResponse"/>
+	</message>
+	<message name="GetDeviceCapabilitiesRequestMsg">
+		<part name="request" element="xrx:VoidRequest"/>
+	</message>
+	<message name="GetDeviceCapabilitiesResponseMsg">
+		<part name="response" element="xrx:GetDeviceCapabilitiesResponse">
+		</part>
+	</message>
+	<message name="InternalServerError">
+		<part name="InternalServerError" element="xrx:InternalServerError"/>
+	</message>
+	<portType name="DeviceConfigurationPort">
+		<operation name="GetInterfaceVersion">
+			<input name="GetInterfaceVersionRequest" message="xrx:GetInterfaceVersionRequest"/>
+			<output name="InterfaceVersionResponse" message="xrx:InterfaceVersionResponse"/>
+			<!-- no (application level) faults -->
+		</operation>
+		<operation name="GetDeviceInformation">
+			<input name="GetDeviceInformationRequest" message="xrx:GetDeviceInformationRequest"/>
+			<output name="DeviceInformationResponse" message="xrx:DeviceInformationResponse"/>
+			<!-- no (application level) faults -->
+		</operation>
+		<operation name="GetDeviceCapabilities">
+			<input name="GetDeviceCapabilitiesRequest" message="xrx:GetDeviceCapabilitiesRequestMsg"/>
+			<output name="GetDeviceCapabilitiesResponse" message="xrx:GetDeviceCapabilitiesResponseMsg"/>
+			<fault name="InternalServerError" message="xrx:InternalServerError"/>
+		</operation>
+	</portType>
+	<binding name="DeviceConfigurationBinding" type="xrx:DeviceConfigurationPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="GetInterfaceVersion">
+			<soap:operation soapAction="http://www.xerox.com/webservices/office/device_configuration/1/GetInterfaceVersion"/>
+			<input name="GetInterfaceVersionRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="InterfaceVersionResponse">
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GetDeviceInformation">
+			<soap:operation soapAction="http://www.xerox.com/webservices/office/device_configuration/1/GetDeviceInformation"/>
+			<input name="GetDeviceInformationRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="DeviceInformationResponse">
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="GetDeviceCapabilities">
+			<soap:operation soapAction="http://www.xerox.com/webservices/office/device_configuration/1/GetDeviceCapabilities"/>
+			<input name="GetDeviceCapabilitiesRequest">
+				<soap:body use="literal"/>
+			</input>
+			<output name="GetDeviceCapabilitiesResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InternalServerError">
+				<soap:fault name="InternalServerError" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="DeviceConfigurationService">
+		<port name="DeviceConfigurationPort" binding="xrx:DeviceConfigurationBinding">
+			<soap:address location="http://localhost/webservices/office/device_configuration/1"/>
+		</port>
+	</service>
+</definitions>
