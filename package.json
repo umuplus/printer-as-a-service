@@ -37,6 +37,7 @@
     "msgpack5": "^4.2.1",
     "node-authjs": "^0.1.4",
     "node-machine-id": "^1.1.12",
+    "pem": "^1.14.2",
     "qoa": "^0.2.0",
     "rate-limit-redis": "^1.6.0",
     "raw-body": "^2.4.1",
