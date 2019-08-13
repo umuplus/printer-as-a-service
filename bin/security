@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const https = require('https');
+const joinPath = require('path').join;
+const pem = require('pem');
+const { readFileSync: readFile } = require('fs');
+const Service = require('../lib/soap-service');
+const soap = require('soap');
+
+const wsdl = readFile(joinPath(__dirname, '../data/wsdl/auth/conv_auth_server.wsdl'), 'utf8');
+pem.createCertificate({ days: 365, selfSigned: true }, (e, keys) => {
+    if (e) throw e;
+
+    const server = https.createServer({ key: keys.serviceKey, cert: keys.certificate },
+        (req, res) => res.end('404: Not Found: ' + req.url));
+
+    server.listen(443);
+    soap.listen(server, '/wsdl', Service, wsdl, () => console.log('soap server initialized'));
+    server.log = (type, data) => console.log('SOAP', new Date(), type, data);
+});
+
+process.on('unhandledRejection', function (e) {
+    console.error('unhandledRejection', e.message);
+});
