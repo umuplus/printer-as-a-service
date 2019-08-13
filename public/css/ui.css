@@ -1,3 +1,206 @@
-html,body {
-    height: 100%;
+
+.xrx-popup-action-bar {
+	position: absolute;
+	padding: 0px;
+	height: 78px;
+	box-shadow: 0px 10px 10px -5px rgba(29, 29, 29, .35);
+	z-index: 600;
+	width: 100%;
+}
+
+.xrx-action-bar-label-line-one{
+	position: absolute;
+	width: 100%;
+	top: 15%;
+	color: #fff;
+	text-align: center;
+	font-size: 28px;
+	font-weight: 300;
+	text-shadow: #1d1d1d 0px -1px 0px;
+}
+.xrx-action-bar-label-line-two{
+	position: absolute;
+	width: 100%;
+	top: 55%;
+	color: #fff;
+	text-align: center;
+
+	font-weight: 300;
+	text-shadow: #1d1d1d 0px -1px 0px;
+}
+
+.xrx-action-bar-button-left-two {
+  position: absolute;
+  left: 80px;
+}
+.xrx-action-bar-button-right-two {
+  position: absolute;
+  right: 80px;
+}
+
+.code em {
+	font-size:18px;
+}
+
+
+
+.code strong, .code span{
+	font-size: 20px;
+}
+
+.code span {
+	font-size: 22px;
+	font-family: inherit;
+}
+
+pre {
+	font-size:20px;
+	white-space: pre-wrap;
+	line-height: 125%;
+}
+
+.section-label {
+	margin: 0px;
+	left: 10px;
+	width: 100%;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	width: 800px;
+	height: 480px;
+}
+
+
+h2 {
+	color: #0b2e56;
+    text-shadow: #fff 0px 1px 0px;
+}
+
+
+.demoContentContainer,
+#demoContentContainer {
+	position: absolute;
+	top: 78px;
+	left: 0px;
+	height: 403px;
+	width: 800px;
+}
+
+.demoContent {
+	position: relative;
+	top: 5px;
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 760px;
+}
+
+#tableContainer {
+	position: absolute;
+	top: 90px;
+	left: 20px;
+	height: 378px;
+	width: 760px;
+}
+
+@media screen and (min-width: 801px),screen and (min-height: 481px) {
+
+body {
+	margin: 0px;
+	padding: 0px;
+	width: 1024px;
+	height: 600px;
+}
+
+.demoContentContainer,
+#demoContentContainer {
+	position: absolute;
+	top: 78px;
+	left: 0px;
+	height: 523px;
+	width: 1024px;
+}
+
+.demoContent {
+	position: relative;
+	top: 5px;
+	margin-left: 40px;
+	margin-right: 40px;
+	width: 944px;
+}
+
+#tableContainer {
+	position: absolute;
+	top: 90px;
+	left: 40px;
+	height:480px;
+	width: 944px;
+}
+
+}
+
+/* For demo page layout */
+.row {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.row:after {
+	clear:both;
+}
+
+.demoLeftContainer {
+	position:relative;
+	width: 50%;
+	padding-top: 5px;
+	float: left;
+}
+
+.demoRightContainer {
+	position:relative;
+	width: 50%;
+	float: left;
+}
+
+.checkbox {
+	width: 36px;
+	height: 36px;
+	vertical-align: middle;
+}
+
+/* For icons on the Toggle button in button-demo.html */
+.cap_on_48 { background: url("images/Cap_On_48.png") 0 0 no-repeat; }
+.cap_off_48 { background: url("images/Cap_Off_48.png") 0 0 no-repeat; }
+
+
+/* For icons used in the Segmented Controls */
+.ui-icon.white { background: url("images/Paper_Sum_Plain_SEF_48_White.png") 0 0 no-repeat; }
+.ui-icon.blue { background: url("images/Paper_Sum_Plain_SEF_48_Blue.png") 0 0 no-repeat; }
+.ui-icon.buff { background: url("images/Paper_Sum_Plain_SEF_48_Buff.png") 0 0 no-repeat; }
+.ui-icon.clear { background: url("images/Paper_Sum_Plain_SEF_48_Clear.png") 0 0 no-repeat; }
+.ui-icon.goldenrod{ background: url("images/Paper_Sum_Plain_SEF_48_Goldenrod.png") 0 0 no-repeat; }
+.ui-icon.gray { background: url("images/Paper_Sum_Plain_SEF_48_Gray.png") 0 0 no-repeat; }
+.ui-icon.green { background: url("images/Paper_Sum_Plain_SEF_48_Green.png") 0 0 no-repeat; }
+.ui-icon.ivory { background: url("images/Paper_Sum_Plain_SEF_48_Ivory.png") 0 0 no-repeat; }
+.ui-icon.orange { background: url("images/Paper_Sum_Plain_SEF_48_Orange.png") 0 0 no-repeat; }
+.ui-icon.pink { background: url("images/Paper_Sum_Plain_SEF_48_Pink.png") 0 0 no-repeat; }
+.ui-icon.red { background: url("images/Paper_Sum_Plain_SEF_48_Red.png") 0 0 no-repeat; }
+.ui-icon.yellow { background: url("images/Paper_Sum_Plain_SEF_48_Yellow.png") 0 0 no-repeat; }
+
+.ui-icon.finish_1staple_40 { background: url("images/finish_1staple_40.png") 0 0 no-repeat; }
+
+/* Banner Demo */
+h4.section-label{
+font-size: 20px;
+}
+
+/* Spin Box Demo */
+h6 {margin: 3px 0; font-size: 16px;}
+
+
+.xrx-banner-content h2{
+	color: inherit;
+	text-shadow: inherit;
 }
