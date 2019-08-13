@@ -1,0 +1,225 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+  xmlns:xrx="http://www.xerox.com/webservices/office/smart_auth/1" 
+  targetNamespace="http://www.xerox.com/webservices/office/smart_auth/1">
+
+	<documentation>
+		Version 1.0.0
+		This provides the smart authentication device web service API, used for convenience authentication.
+		This file describes the methods offered by the device only.
+	</documentation>
+
+	<types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://www.xerox.com/webservices/office/smart_auth/1">
+			<!-- Simple types -->
+			<xs:simpleType name="SessionIDType">
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+
+
+			<!-- complex types: structures -->
+			<xs:complexType name="InterfaceVersion">
+				<xs:sequence>
+					<xs:element name="MajorVersion" type="xs:short"/>
+					<xs:element name="MinorVersion" type="xs:short"/>
+					<xs:element name="Revision"     type="xs:short"/>
+				</xs:sequence>
+			</xs:complexType>
+
+
+			<!-- Complex types (method parameters and results) -->
+            <xs:complexType name="GetInterfaceVersionRequest">
+                <!-- no parameters -->
+            </xs:complexType>
+
+
+			<xs:complexType name="InitiateLoginRequest">
+				<xs:sequence>
+					<xs:element name="SessionID" type="xrx:SessionIDType"/>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="VoidResponse">
+				<xs:sequence>
+				<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="ForceLogoutRequest">
+				<xs:sequence>
+					<xs:element name="SessionID" type="xrx:SessionIDType"/>
+					<xs:element name="AllowCurrentJobToComplete" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="MessageToUser" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ResidualText" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="LoggedReason" type="xs:string" minOccurs="0" maxOccurs="1"/>  <!-- to be recorded in logs for tracking purposes -->
+				</xs:sequence>
+			</xs:complexType>
+
+
+			<xs:complexType name="UnauthorizedException">
+				<xs:sequence>
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="NotAllowedException">
+				<xs:sequence>
+					<xs:element name="CurrentSession" type="xrx:SessionIDType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Reason" type="xs:string"/>  <!-- informational (not parseable) with state info for logging at server -->
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="NoSuchSessionException">
+				<xs:sequence>
+					<!-- no contents; this is only returned synchronously after giving a bad session id -->
+				</xs:sequence>
+			</xs:complexType>
+
+			<xs:complexType name="CannotAbortStartedJobsException">
+				<xs:sequence>
+					<!-- no contents -->
+					<!-- there's also no guarantee that there was a current job... -->
+				</xs:sequence>
+			</xs:complexType>
+
+
+			<!-- elements -->
+            <xs:element name="InterfaceVersion"            type="xrx:InterfaceVersion"/>
+            <xs:element name="GetInterfaceVersionRequest"  type="xrx:GetInterfaceVersionRequest"/>
+			<xs:element name="InitiateLoginRequest"        type="xrx:InitiateLoginRequest"/>
+			<xs:element name="VoidResponse"                type="xrx:VoidResponse"/>
+			<xs:element name="ForceLogoutRequest"          type="xrx:ForceLogoutRequest"/>
+
+			<xs:element name="UnauthorizedException"       type="xrx:UnauthorizedException"/>
+			<xs:element name="NotAllowedException"         type="xrx:NotAllowedException"/>
+			<xs:element name="NoSuchSessionException"      type="xrx:NoSuchSessionException"/>
+			<xs:element name="CannotAbortStartedJobsException" type="xrx:CannotAbortStartedJobsException"/>
+		</xs:schema>
+	</types>
+
+
+    <message name="GetInterfaceVersionRequest">
+        <part name="request" element="xrx:GetInterfaceVersionRequest"/>
+    </message>
+
+    <message name="GetInterfaceVersionResponse">
+        <part name="response" element="xrx:InterfaceVersion"/>
+    </message>
+
+
+	<message name="ForceLogoutRequest">
+		<part name="request" element="xrx:ForceLogoutRequest"/>
+	</message>
+
+	<message name="ForceLogoutResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+
+
+	<message name="InitiateLoginRequest">
+		<part name="request" element="xrx:InitiateLoginRequest"/>
+	</message>
+
+	<message name="InitiateLoginResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+
+
+	<!-- exception messages -->
+	<message name="UnauthorizedException">
+		<part name="UnauthorizedException" element="xrx:UnauthorizedException"/>
+	</message>
+
+	<message name="NotAllowedException">
+		<part name="NotAllowedException" element="xrx:NotAllowedException"/>
+	</message>
+
+	<message name="NoSuchSessionException">
+		<part name="NoSuchSessionException" element="xrx:NoSuchSessionException"/>
+	</message>
+
+	<message name="CannotAbortStartedJobsException">
+		<part name="CannotAbortStartedJobsException" element="xrx:CannotAbortStartedJobsException"/>
+	</message>
+
+
+	<portType name="SmartAuthenticationDevicePort">
+		<operation name="InitiateLogin">
+			<input name="InitiateLoginRequest" message="xrx:InitiateLoginRequest"/>
+			<output name="InitiateLoginResponse" message="xrx:InitiateLoginResponse"/>
+			<fault name="UnauthorizedException"   message="xrx:UnauthorizedException"/>
+			<fault name="NotAllowedException" message="xrx:NotAllowedException"/>
+		</operation>
+		<operation name="ForceLogout">
+			<input name="ForceLogoutRequest" message="xrx:ForceLogoutRequest"/>
+			<output name="ForceLogoutResponse" message="xrx:ForceLogoutResponse"/>
+			<fault name="UnauthorizedException"   message="xrx:UnauthorizedException"/>
+			<fault name="NoSuchSessionException" message="xrx:NoSuchSessionException"/>
+			<fault name="CannotAbortStartedJobsException" message="xrx:CannotAbortStartedJobsException"/>
+		</operation>
+        <operation name="GetInterfaceVersion">
+            <input  name="GetInterfaceVersionRequest"  message="xrx:GetInterfaceVersionRequest"/>
+            <output name="GetInterfaceVersionResponse" message="xrx:GetInterfaceVersionResponse"/>
+            <!-- no (application level) faults -->
+        </operation>
+	</portType>
+
+	<binding name="SmartAuthDevice" type="xrx:SmartAuthenticationDevicePort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="InitiateLogin">
+			<soap:operation/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="UnauthorizedException">
+				<soap:fault name="UnauthorizedException" use="literal"/>
+			</fault>
+			<fault name="NotAllowedException">
+				<soap:fault name="NotAllowedException" use="literal"/>
+			</fault>
+		</operation>
+
+		<operation name="ForceLogout">
+			<soap:operation/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<!-- fault name="UnauthorizedException">
+				<soap:fault name="UnauthorizedException" use="literal"/>
+			</fault -->
+			<fault name="NoSuchSessionException">
+				<soap:fault name="NoSuchSessionException" use="literal"/>
+			</fault>
+			<fault name="CannotAbortStartedJobsException">
+				<soap:fault name="CannotAbortStartedJobsException" use="literal"/>
+			</fault>
+		</operation>
+
+        <operation name="GetInterfaceVersion">
+            <soap:operation/>
+            <input name="GetInterfaceVersionRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="GetInterfaceVersionResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+	</binding>
+
+
+	<service name="SmartAuthDeviceService">
+		<port name="SmartAuthDevice" binding="xrx:SmartAuthDevice">
+			<soap:address location="http://localhost/webservices/office/smart_auth/1"/>
+		</port>
+	</service>
+
+</definitions>

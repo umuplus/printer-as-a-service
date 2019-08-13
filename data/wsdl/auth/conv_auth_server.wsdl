@@ -1,0 +1,418 @@
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Christine Miyachi (Xerox Corporation) -->
+<!--4-8-14  cmiyachi        	v1.1.14 		Modified after team review-->
+<!--4-6-14  cmiyachi        	v1.1.13 		Added ContinueOrCloseSession-->
+<!--4-2-14  cmiyachi        	v1.1.12 		Updated after ARB team review-->
+<!--3-29-14  cmiyachi        v1.1.11 	Updated support for ContinueAndClose after review-->
+<!--3-26-14  cmiyachi        v1.1.10 	Added support for ContinueAndClose-->
+<!--3-24-14  cmiyachi        v1.1.8  	Added more string lengths and changes to be consistent with Discovery-->
+<!--3-20-14  cmiyachi        v1.1.7  	Changed string lengths to be consistent with Discovery implementation-->
+<!--3-15-14  cmiyachi        v1.1.6  	Changed button list and text box list to be a sequence of 1,6 versus 0,6-->
+<!--3-15-14  cmiyachi        v1.1.5   	Added sequence for buttons and text boxes and other fields from team review-->
+<!--3-13-14  cmiyachi        v1.1.4    	Added mask input for configurable screen -->
+<!--3-5-14  cmiyachi        v1.1.3     	Added support for barcode swipes-->
+<!--3-4-14  cmiyachi        v1.1.2     	Added numeric prompot-->
+<!--2-28-14   cmiyachi        v1.1.1      	Revised buttons and configurable screen after team review -->
+<!--2-27-14   cmiyachi              			Added changes for new screen types -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xrx="http://www.xerox.com/webservices/office/smart_auth/1" targetNamespace="http://www.xerox.com/webservices/office/smart_auth/1">
+	<documentation>
+		Version 1.1.14
+		This provides the smart authentication server web service API, used for convenience authentication.
+		This file describes the third party server interface only.
+	</documentation>
+	<types>
+		<xs:schema elementFormDefault="qualified" targetNamespace="http://www.xerox.com/webservices/office/smart_auth/1">
+			<!-- Simple types -->
+			<xs:simpleType name="SessionIDType">
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+			<xs:simpleType name="FieldIDType">
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+			<xs:simpleType name="CloseSessionReasonType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="xeFailedNetworkLogin"/>
+					<!-- if the device is repeating authorization -->
+					<xs:enumeration value="xeUnusableInformation"/>
+					<xs:enumeration value="xeUserInitiated"/>
+					<xs:enumeration value="xePowerOn"/>
+					<xs:enumeration value="xeOther"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ContinueOrCloseSessionReasonType">
+				<xs:restriction base="xs:string">
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xeFailedNetworkLogin"/>
+					<!-- if the device is repeating authorization -->
+					<xs:enumeration value="xeUnusableInformation"/>
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xeServerInitiated"/>
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xePowerOn"/>
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xeOther"/>
+					<!--Server has the opportunity to add more screens here before final logout-->
+					<xs:enumeration value="xeUserInitiatedLogout"/>
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xeDeviceInitiatedTimeout"/>
+					<!--User is already logged out when this is called-->
+					<xs:enumeration value="xeUserAborted"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ConfigScreenShortString">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ConfigScreenString">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ConfigScreenLongString">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="256"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="ConfigScreenLongerString">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="STButtonState">
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+					<!--		These values are listed for reference only. Do not uncomment.
+							Un-commenting these values will break compatibility when new values are added.-->
+					<!--
+					<xs:enumeration value="Checked"/>	
+					<xs:enumeration value="UnChecked"/>
+					-->
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType name="AuthenticationType">
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="xeNDS"/>
+					<xs:enumeration value="xeKERBEROS"/>
+					<xs:enumeration value="xeSMB"/>
+					<xs:enumeration value="xeLDAP"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<!-- complex types: structures -->
+			<xs:complexType name="ButtonType">
+				<xs:sequence>
+					<xs:element name="ButtonName" type="xrx:ConfigScreenShortString" minOccurs="1" maxOccurs="1">
+						<!-- This name is what is passed in the FieldID of ValidateAndContinueRequest if pressed-->
+					</xs:element>
+					<xs:element name="ButtonString" type="xrx:ConfigScreenString" minOccurs="0" maxOccurs="1" default=""/>
+					<xs:element name="ButtonState" type="xrx:STButtonState" minOccurs="0" maxOccurs="1" default="UnChecked"/>
+					<xs:element name="ButtonSelectable" type="xs:boolean" minOccurs="0" maxOccurs="1" default="true"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ButtonList">
+				<xs:sequence>
+					<xs:element ref="xrx:AButton" minOccurs="1" maxOccurs="6"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="TextBoxList">
+				<xs:sequence>
+					<xs:element ref="xrx:ATextBox" minOccurs="1" maxOccurs="6"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="TextBoxType">
+				<xs:sequence>
+					<xs:element name="TextBoxName" type="xrx:ConfigScreenShortString" minOccurs="1" maxOccurs="1">
+						<!-- This name is what is passed in the FieldID of ValidateAndContinueRequest if used-->
+					</xs:element>
+					<xs:element name="HelperText" type="xrx:ConfigScreenString" minOccurs="0" maxOccurs="1" default=""/>
+					<xs:element name="TextBoxDefaultValue" type="xrx:ConfigScreenLongString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="MaskInput" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="PromptType">
+				<xs:sequence>
+					<xs:element name="WindowTitle" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="FieldName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ShortMessage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="FieldID" type="xrx:FieldIDType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="DefaultValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="MaskInput" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ConfirmType">
+				<xs:sequence>
+					<xs:element name="WindowTitle" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ShortMessage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="FieldID" type="xrx:FieldIDType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Text" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="NumericPromptType">
+				<xs:sequence>
+					<xs:element name="WindowTitle" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="FieldName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ShortMessage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="FieldID" type="xrx:FieldIDType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Text" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="DefaultValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="MaskInput" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="AccessAllowedType">
+				<xs:sequence>
+					<xs:element name="NetworkUserName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="NetworkPassword" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="AuthenticationType" type="xrx:AuthenticationType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="AuthenticationServer" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="EmailAddress" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<!-- formatted like "Shawn Hurley <shurley@xerox.com>" -->
+					<xs:element name="AcctUserID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="AcctAcctID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="CloseFinalizedType">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ConfigurableScreenType">
+				<xs:sequence>
+					<xs:element name="ScreenName" type="xrx:ConfigScreenShortString" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="WindowTitle" type="xrx:ConfigScreenShortString" minOccurs="0" maxOccurs="1"/>
+					<!--This short message goes in the SR3 area of the LUI-->
+					<xs:element name="ShortMessage" type="xrx:ConfigScreenString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TheListOfButtons" type="xrx:ButtonList" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TheListOfTextBoxes" type="xrx:TextBoxList" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="BodyText" type="xrx:ConfigScreenLongerString" minOccurs="0" maxOccurs="1"/>
+					<!--If this is true, the device will pass back the card data in next ValidateAndContinueRequest. FieldID = "CardSwipeAllowed" and Value is the bardcode. -->
+					<xs:element name="CardSwipeAllowed" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<!-- Complex types (method parameters and results) -->
+			<xs:complexType name="ValidateAndContinueRequest">
+				<xs:sequence>
+					<xs:element name="SessionID" type="xrx:SessionIDType"/>
+					<xs:sequence minOccurs="0" maxOccurs="1">
+						<xs:element name="LastFieldID" type="xrx:FieldIDType"/>
+						<xs:element name="LastFieldValue" type="xs:string"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ValidateAndContinueResponse">
+				<xs:sequence>
+					<!-- session id omitted, since we just told them what it was. -->
+					<!-- of the following, exactly one is required -->
+					<xs:element name="Prompt" type="xrx:PromptType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Confirm" type="xrx:ConfirmType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="AccessAllowed" type="xrx:AccessAllowedType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="NumericPrompt" type="xrx:NumericPromptType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ConfigurableScreen" type="xrx:ConfigurableScreenType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ContinueOrCloseSessionRequest">
+				<xs:sequence>
+					<xs:element name="SessionID" type="xrx:SessionIDType"/>
+					<xs:element name="Reason" type="xrx:ContinueOrCloseSessionReasonType"/>
+					<xs:sequence minOccurs="0" maxOccurs="1">
+						<xs:element name="LastFieldID" type="xrx:FieldIDType"/>
+						<xs:element name="LastFieldValue" type="xs:string"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="ContinueOrCloseSessionResponse">
+				<xs:sequence>
+					<!-- session id omitted, since we just told them what it was. -->
+					<!-- of the following, exactly one is required -->
+					<xs:element name="Prompt" type="xrx:PromptType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="Confirm" type="xrx:ConfirmType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="CloseTheSession" type="xrx:CloseFinalizedType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="NumericPrompt" type="xrx:NumericPromptType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ConfigurableScreen" type="xrx:ConfigurableScreenType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InitAuthenticationSessionRequest">
+				<xs:sequence>
+					<xs:element name="AuthDetailXml" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="VoidResponse">
+				<xs:sequence>
+					<!-- no parameters -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="CloseSessionRequest">
+				<xs:sequence>
+					<xs:element name="SessionID" type="xrx:SessionIDType"/>
+					<xs:element name="Reason" type="xrx:CloseSessionReasonType"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="NoSuchSessionException">
+				<xs:sequence>
+					<!-- no contents; this is only returned synchronously after giving a bad session id -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="UnrecognizedFieldException">
+				<xs:sequence>
+					<!-- no contents; this is only returned synchronously after giving a bad field id -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="AbortException">
+				<xs:sequence>
+					<xs:element name="ResidualText" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="LoggedReason" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<!-- to be recorded in logs for tracking purposes -->
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="InvalidDataException">
+				<xs:sequence>
+					<!-- no contents; this is only returned synchronously invalid data was passed to InitAuthenticateSession -->
+				</xs:sequence>
+			</xs:complexType>
+			<!-- elements -->
+			<xs:element name="AButton" type="xrx:ButtonType"/>
+			<xs:element name="ATextBox" type="xrx:TextBoxType"/>
+			<xs:element name="ValidateAndContinueRequest" type="xrx:ValidateAndContinueRequest"/>
+			<xs:element name="ValidateAndContinueResponse" type="xrx:ValidateAndContinueResponse"/>
+			<xs:element name="ContinueOrCloseSessionRequest" type="xrx:ContinueOrCloseSessionRequest"/>
+			<xs:element name="ContinueOrCloseSessionResponse" type="xrx:ContinueOrCloseSessionResponse"/>
+			<xs:element name="VoidResponse" type="xrx:VoidResponse"/>
+			<xs:element name="CloseSessionRequest" type="xrx:CloseSessionRequest"/>
+			<xs:element name="InitAuthenticationSessionRequest" type="xrx:InitAuthenticationSessionRequest"/>
+			<xs:element name="NoSuchSessionException" type="xrx:NoSuchSessionException"/>
+			<xs:element name="UnrecognizedFieldException" type="xrx:UnrecognizedFieldException"/>
+			<xs:element name="AbortException" type="xrx:AbortException"/>
+			<xs:element name="InvalidDataException" type="xrx:InvalidDataException"/>
+		</xs:schema>
+	</types>
+	<message name="ValidateAndContinueRequest">
+		<part name="request" element="xrx:ValidateAndContinueRequest"/>
+	</message>
+	<message name="ValidateAndContinueResponse">
+		<part name="response" element="xrx:ValidateAndContinueResponse"/>
+	</message>
+	<message name="ContinueOrCloseSessionRequest">
+		<part name="request" element="xrx:ContinueOrCloseSessionRequest"/>
+	</message>
+	<message name="ContinueOrCloseSessionResponse">
+		<part name="response" element="xrx:ContinueOrCloseSessionResponse"/>
+	</message>
+	<message name="CloseSessionRequest">
+		<part name="request" element="xrx:CloseSessionRequest"/>
+	</message>
+	<message name="CloseSessionResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+	<message name="InitAuthenticationSessionRequest">
+		<part name="request" element="xrx:InitAuthenticationSessionRequest"/>
+	</message>
+	<message name="InitAuthenticationSessionResponse">
+		<part name="response" element="xrx:VoidResponse"/>
+	</message>
+	<message name="NoSuchSessionException">
+		<part name="NoSuchSessionException" element="xrx:NoSuchSessionException"/>
+	</message>
+	<message name="UnrecognizedFieldException">
+		<part name="UnrecognizedFieldException" element="xrx:UnrecognizedFieldException"/>
+	</message>
+	<message name="AbortException">
+		<part name="AbortException" element="xrx:AbortException"/>
+	</message>
+	<message name="InvalidDataException">
+		<part name="InvalidDataException" element="xrx:InvalidDataException"/>
+	</message>
+	<portType name="SmartAuthenticationServerPort">
+		<operation name="ValidateAndContinue">
+			<input name="ValidateAndContinueRequest" message="xrx:ValidateAndContinueRequest"/>
+			<output name="ValidateAndContinueResponse" message="xrx:ValidateAndContinueResponse"/>
+			<fault name="NoSuchSessionException" message="xrx:NoSuchSessionException"/>
+			<fault name="UnrecognizedFieldException" message="xrx:UnrecognizedFieldException"/>
+			<fault name="AbortException" message="xrx:AbortException"/>
+		</operation>
+		<operation name="CloseSession">
+			<input name="CloseSessionRequest" message="xrx:CloseSessionRequest"/>
+			<output name="CloseSessionResponse" message="xrx:CloseSessionResponse"/>
+			<fault name="NoSuchSessionException" message="xrx:NoSuchSessionException"/>
+		</operation>
+		<operation name="InitAuthenticationSession">
+			<input name="InitAuthenticationSessionRequest" message="xrx:InitAuthenticationSessionRequest"/>
+			<output name="InitAuthenticationSessionResponse" message="xrx:InitAuthenticationSessionResponse"/>
+		</operation>
+		<operation name="ContinueOrCloseSession">
+			<input name="ContinueOrCloseSessionRequest" message="xrx:ContinueOrCloseSessionRequest"/>
+			<output name="ContinueOrCloseSessionResponse" message="xrx:ContinueOrCloseSessionResponse"/>
+			<fault name="NoSuchSessionException" message="xrx:NoSuchSessionException"/>
+			<fault name="UnrecognizedFieldException" message="xrx:UnrecognizedFieldException"/>
+			<fault name="AbortException" message="xrx:AbortException"/>
+			<fault name="InvalidDataException" message="xrx:InvalidDataException"/>
+		</operation>
+	</portType>
+	<binding name="SmartAuthServer" type="xrx:SmartAuthenticationServerPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="ValidateAndContinue">
+			<soap:operation soapAction="urn:#NewOperation" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="NoSuchSessionException">
+				<soap:fault name="NoSuchSessionException" use="literal"/>
+			</fault>
+			<fault name="UnrecognizedFieldException">
+				<soap:fault name="UnrecognizedFieldException" use="literal"/>
+			</fault>
+			<fault name="AbortException">
+				<soap:fault name="AbortException" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="CloseSession">
+			<soap:operation soapAction="urn:#NewOperation" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="NoSuchSessionException">
+				<soap:fault name="NoSuchSessionException" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="InitAuthenticationSession">
+			<soap:operation soapAction="urn:#NewOperation" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="ContinueOrCloseSession">
+			<soap:operation soapAction="urn:#NewOperation" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="NoSuchSessionException">
+				<soap:fault name="NoSuchSessionException" use="literal"/>
+			</fault>
+			<fault name="UnrecognizedFieldException">
+				<soap:fault name="UnrecognizedFieldException" use="literal"/>
+			</fault>
+			<fault name="AbortException">
+				<soap:fault name="AbortException" use="literal"/>
+			</fault>
+			<fault name="InvalidDataException">
+				<soap:fault name="InvalidDataException" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="SmartAuthServerService">
+		<port name="SmartAuthServer" binding="xrx:SmartAuthServer">
+			<soap:address location="http://localhost/"/>
+			<!-- this is required by WSDL, but used per device configuration -->
+		</port>
+	</service>
+	<!-- exception messages -->
+</definitions>
