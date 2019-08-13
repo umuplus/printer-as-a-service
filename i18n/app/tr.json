@@ -14,6 +14,7 @@
         "apply": "Uygula",
         "back": "Geri Dön",
         "custom_photocopy": "Özel Fotokopi",
+        "delete": "Sil",
         "download": "İndir",
         "edit": "Düzenle",
         "exit": "Çıkış",
@@ -55,7 +56,9 @@
         "driver": "Sürücü",
         "duplex": "Çift Taraflı",
         "email": "E-posta",
+        "error": "Hata",
         "hardware": "Donanım",
+        "info": "Information",
         "key": "Anahtar",
         "level": {
             "_": "Yetki Seviyesi",
@@ -106,6 +109,7 @@
         "del": "%s tarihinde silinmiş.",
         "e403": "Erişim engellendi.",
         "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
+        "jobs": "<b>%s</b> kullanıcısına ait herhangi bir baskı işi bulunamadı.",
         "license": {
             "date": "Lisans süreniz sona ermiştir.",
             "hardware": "Donanımınızla uyumlu bir lisansınız bulunmamaktadır.",

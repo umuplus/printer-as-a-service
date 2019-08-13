@@ -14,6 +14,7 @@
         "apply": "Apply",
         "back": "Back",
         "custom_photocopy": "Custom Copy",
+        "delete": "Delete",
         "download": "Download",
         "edit": "Edit",
         "exit": "Exit",
@@ -55,7 +56,9 @@
         "driver": "Driver",
         "duplex": "Duplex",
         "email": "E-mail",
+        "error": "Error",
         "hardware": "Hardware",
+        "info": "Bilgi",
         "key": "Key",
         "level": {
             "_": "Access Level",
@@ -106,6 +109,7 @@
         "del": "Deleted at %s",
         "e403": "Access denied.",
         "e500": "Something went terribly wrong.",
+        "jobs": "There is no print job belong to <b>%s</b>.",
         "license": {
             "date": "Your license is expired.",
             "hardware": "You don't have any license for your hardware.",
