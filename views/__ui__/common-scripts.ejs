@@ -1,7 +1,6 @@
 <script>
-    var $username, tableHeight = $.screenHeight() < 481 ? 330 : 430;
     function buildPopUp(title, content, isStatic) {
-        var $widgetPopUp = $('<div></div>');
+        var $widgetPopUp = $('<div id="popup-alert"></div>');
         if (content) $widgetPopUp.append(content);
         $widgetPopUp.xrxpopup({
             title: title,
@@ -27,9 +26,9 @@
     }
     function parseSessionInformation(sessInfo, success, fail) {
         try {
-            $username = xrxGetElementValue(sessInfo, 'username');
+            $('body').data('u', xrxGetElementValue(sessInfo, 'username'));
             var $list = $('<ul></ul>');
-            $list.append("<li><%- __('field.username') %> : " + $username + '</li>');
+            $list.append("<li><%- __('field.username') %> : " + $('body').data('u') + '</li>');
             $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfo, 'password') + '</li>');
             $list.append("<li><%- __('field.email') %> : " + xrxGetElementValue(sessInfo, 'from') + '</li>');
             if (xrxFindFirstElement(sessInfo, 'jba')) {
@@ -46,6 +45,11 @@
         }
     }
     $(function() {
+        $('body').data('h', $.screenHeight() < 481 ? 330 : 430);
+        $('#btn-home').xrxbutton({ icons: { glyph: 'glyphicon-home' }, text: false })
+            .bind('click', function() {
+                location.reload();
+            });
         $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: true })
             .bind('click', function() {
                 console.log('exit');

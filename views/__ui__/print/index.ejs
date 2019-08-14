@@ -1,29 +1,8 @@
 <div id="action_bar" class="xrx-action-bar xrx-background blue">
     <div id="title-bar" class="xrx-action-bar-label"><%- __('app.jobs') %></div>
+    <button id="btn-home" class="xrx-action-bar-button-left"><%- __('btn.home') %></button>
     <button id="btn-exit" class="xrx-action-bar-button-right"><%- __('btn.exit') %></button>
 </div>
-<div id="tableContainer">
-    <table id="table-jobs">
-        <thead>
-            <tr>
-                <th><input type="checkbox" class="checkall" /></th>
-                <th><%- __('field.name') %></th>
-                <th><i class="fa fa-palette"></i></th>
-                <th><i class="fa fa-book"></i></th>
-                <th colspan="2"><i class="fa fa-copy"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox" /></td>
-                <td>The Good Life.pdf</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-                <td><button class="delete fa-pull-right"></button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div id="tableContainer"></div>
 <% include ../common-scripts %>
 <% include ./scripts %>

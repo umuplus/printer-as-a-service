@@ -1,30 +1,55 @@
 <script>
     $(function() {
-        var $popup, $username, tableHeight = $.screenHeight() < 481 ? 330 : 430;
-        $('#table-jobs').xrxtable({ bordered: true, selectable: true, height: tableHeight, scroll: true });
-        $('.delete').xrxbutton({ icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
-                        borderless: true, text: false, customClass: 'not-checkbox' })
-                    .click(function () {
-                    });
         document.documentElement.style.overflow = 'hidden';
 
         function loadUI() {
-            $username = 'umut';
-            $('#title-bar').html("<%- __('app.jobs') %> (" + $username + ")");
-            $popup.html($('<p></p>').html("<%- __('txt.welcome') %>".replace('%s', $username))).xrxpopup('open');
-            $.post('/jobs', { username: $username })
+            $('body').data('u', 'umut');
+            $('#title-bar').html("<%- __('app.jobs') %> (" + $('body').data('u') + ")");
+            $('#popup-alert').html($('<p></p>').html("<%- __('txt.welcome') %>"
+                .replace('%s', $('body').data('u')))).xrxpopup('open');
+            $.post('/jobs', { username: $('body').data('u') })
                 .done(function (jobs) {
-                    // TODO: populate table
-                    $popup.xrxpopup('close');
+                    $('#tableContainer').empty();
+                    if (jobs instanceof Array && jobs.length) {
+                        var $table = $('<table></table>');
+                        var $row = $('<tr></tr>')
+                            .append('<th><input type="checkbox" class="checkall" /></th>')
+                            .append('<th><%- __('field.name') %></th>')
+                            .append('<th><i class="fa fa-palette"></i></th>')
+                            .append('<th><i class="fa fa-book"></i></th>')
+                            .append('<th colspan="2"><i class="fa fa-copy"></i></th>');
+                        $table.append($('<thead></thead>').html($row));
+                        $table.append('<tbody></tbody>');
+                        jobs.forEach(function (job) {
+                            $row = $('<tr></tr>')
+                                .append('<td><input type="checkbox" data-id="' + job._id + '" /></td>')
+                                .append('<td>' + job.name + '</td>')
+                                .append('<td>' + (job.options.color ? "<%- __('field.yes') %>".substr(0, 1) :
+                                    "<%- __('field.no') %>".substr(0, 1)) + '</td>')
+                                .append('<td>' + (job.options.pages || 1) + '</td>')
+                                .append('<td>' + (job.options.copies || 1) + '</td>')
+                                .append('<td><button class="delete fa-pull-right"></button></td>');
+                            $row.find('button').xrxbutton({
+                                icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
+                                borderless: true, text: false, customClass: 'not-checkbox'
+                            }).click(function () {
+                            });
+                            $table.find('tbody').append($row);
+                        });
+                        $('#tableContainer').append($table);
+                        $table.xrxtable({ bordered: true, selectable: true, height: $('body').data('h'), scroll: true });
+                        $('#popup-alert').xrxpopup('close');
+                    } else $('#popup-alert').html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $('body').data('u'))))
+                        .xrxpopup({ title: "<%- __('field.error') %>" }).xrxpopup('open');
                 })
-                .fail(function (e) {
-                    console.log(e);
-                    $popup.html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $username)))
+                .fail(function () {
+                    $('#popup-alert').html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $('body').data('u'))))
                         .xrxpopup({ title: "<%- __('field.error') %>" }).xrxpopup('open');
                 });
         }
+
         <% if ($printer && $license) { %>
-        $popup = buildPopUp("<%- __('field.info') %>", $('<p></p>').html("<%- __('field.loading') %>"), true).xrxpopup('open');
+        buildPopUp("<%- __('field.info') %>", $('<p></p>').html("<%- __('field.loading') %>"), true).xrxpopup('open');
         getSessionInformation(function (content) {
         }, function (e) {
             if (e) console.log(e);
