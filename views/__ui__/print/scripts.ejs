@@ -14,15 +14,16 @@
                         var $table = $('<table></table>');
                         var $row = $('<tr></tr>')
                             .append('<th><input type="checkbox" class="checkall" /></th>')
-                            .append('<th><%- __('field.name') %></th>')
+                            .append('<th><b><%- __('field.name') %></b></th>')
                             .append('<th><i class="fa fa-palette"></i></th>')
                             .append('<th><i class="fa fa-book"></i></th>')
                             .append('<th colspan="2"><i class="fa fa-copy"></i></th>');
                         $table.append($('<thead></thead>').html($row));
                         $table.append('<tbody></tbody>');
+                        for (let i = 0 ; i < 20 ; i++)
                         jobs.forEach(function (job) {
                             $row = $('<tr></tr>')
-                                .append('<td><input type="checkbox" data-id="' + job._id + '" /></td>')
+                                .append('<td><input type="checkbox" data-i="' + job._id + '" /></td>')
                                 .append('<td>' + job.name + '</td>')
                                 .append('<td>' + (job.options.color ? "<%- __('field.yes') %>".substr(0, 1) :
                                     "<%- __('field.no') %>".substr(0, 1)) + '</td>')
@@ -32,8 +33,18 @@
                             $row.find('button').xrxbutton({
                                 icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
                                 borderless: true, text: false, customClass: 'not-checkbox'
-                            }).click(function () {
+                            }).click(function (e) {
+                                e.preventDefault();
+                                if (confirm("<%- __('txt.sure') %>")) {
+                                    console.log('Delete - ' + $(this).closest('tr').find('input').data('i'));
+                                    $(this).closest('tr').remove();
+                                }
                             });
+                            if (job.prints) {
+                                $row.css('color', '#777');
+                                $row.find('button').css('color', '#777');
+                                job.prints = 0;
+                            }
                             $table.find('tbody').append($row);
                         });
                         $('#tableContainer').append($table);

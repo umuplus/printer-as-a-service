@@ -46,9 +46,8 @@
     }
     $(function() {
         $('body').data('h', $.screenHeight() < 481 ? 330 : 430);
-        $('#btn-home').xrxbutton({ icons: { glyph: 'glyphicon-home' }, text: false })
+        $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true })
             .bind('click', function() {
-                location.reload();
             });
         $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: true })
             .bind('click', function() {
