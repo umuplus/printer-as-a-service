@@ -1,77 +1,91 @@
-<script>
+<script type="text/javascript">
     $(function() {
-        document.documentElement.style.overflow = 'hidden';
-
-        function loadUI() {
-            $('body').data('u', 'umut');
-            $('#title-bar').html("<%- __('app.jobs') %> (" + $('body').data('u') + ")");
-            $('#popup-alert').html($('<p></p>').html("<%- __('txt.welcome') %>"
-                .replace('%s', $('body').data('u')))).xrxpopup('open');
-            $.post('/jobs', { username: $('body').data('u') })
-                .done(function (jobs) {
-                    $('#tableContainer').empty();
-                    if (jobs instanceof Array && jobs.length) {
-                        var $table = $('<table></table>');
-                        var $row = $('<tr></tr>')
-                            .append('<th><input type="checkbox" class="checkall" /></th>')
-                            .append('<th><b><%- __('field.name') %></b></th>')
-                            .append('<th><i class="fa fa-palette"></i></th>')
-                            .append('<th><i class="fa fa-book"></i></th>')
-                            .append('<th colspan="2"><i class="fa fa-copy"></i></th>');
-                        $table.append($('<thead></thead>').html($row));
-                        $table.append('<tbody></tbody>');
-                        for (let i = 0 ; i < 20 ; i++)
-                        jobs.forEach(function (job) {
-                            $row = $('<tr></tr>')
-                                .append('<td><input type="checkbox" data-i="' + job._id + '" /></td>')
-                                .append('<td>' + job.name + '</td>')
-                                .append('<td>' + (job.options.color ? "<%- __('field.yes') %>".substr(0, 1) :
-                                    "<%- __('field.no') %>".substr(0, 1)) + '</td>')
-                                .append('<td>' + (job.options.pages || 1) + '</td>')
-                                .append('<td>' + (job.options.copies || 1) + '</td>')
-                                .append('<td><button class="delete fa-pull-right"></button></td>');
-                            $row.find('button').xrxbutton({
-                                icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
-                                borderless: true, text: false, customClass: 'not-checkbox'
-                            }).click(function (e) {
-                                e.preventDefault();
-                                if (confirm("<%- __('txt.sure') %>")) {
-                                    console.log('Delete - ' + $(this).closest('tr').find('input').data('i'));
-                                    $(this).closest('tr').remove();
-                                }
-                            });
-                            if (job.prints) {
-                                $row.css('color', '#777');
-                                $row.find('button').css('color', '#777');
-                                job.prints = 0;
-                            }
-                            $table.find('tbody').append($row);
-                        });
-                        $('#tableContainer').append($table);
-                        $table.xrxtable({ bordered: true, selectable: true, height: $('body').data('h'), scroll: true });
-                        $('#popup-alert').xrxpopup('close');
-                    } else $('#popup-alert').html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $('body').data('u'))))
-                        .xrxpopup({ title: "<%- __('field.error') %>" }).xrxpopup('open');
-                })
-                .fail(function () {
-                    $('#popup-alert').html($('<p></p>').html("<%- __('txt.jobs') %>".replace('%s', $('body').data('u'))))
-                        .xrxpopup({ title: "<%- __('field.error') %>" }).xrxpopup('open');
-                });
+        <% if ($printer && user) { %>
+        function exitApplication() {
+            window.location.href = '/?app=print&ts=' + Date.now();
         }
 
-        <% if ($printer && $license) { %>
-        buildPopUp("<%- __('field.info') %>", $('<p></p>').html("<%- __('field.loading') %>"), true).xrxpopup('open');
-        getSessionInformation(function (content) {
+        function loadUI() {
+            $('body').data('u', 'master');
+            var $username = $('body').data('u'), $current = "<%- user.username %>";
+            if ($username !== $current) {
+                var $alert = $('#alert-container').html("<%- __('txt.claim', $printer.name, $printer.ip, user.username) %>");
+                $alert.xrxalert({ buttons: [] });
+                $alert.xrxalert('open');
+            } else {
+                <% if (!$qs.val('hello')) { %>
+                var $banner = $('#banner-container')
+                $banner.find('button').trigger('click');
+                $banner.find('.action-indicator').remove();
+                $banner.find('.firstline').html("<%- __('txt.welcome') %>".replace('%s', $username));
+                $banner.find('.secondline').remove();
+                $banner.xrxbanner('call');
+                <% }; %>
+            }
+        }
+        <% }; %>
+        $('#tableContainer').find('table').xrxtable({ bordered: true, themePrimary: true,
+            selectable: true, height: $('body').data('h') || 430, scroll: true });
+        $('button.delete').xrxbutton({ icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
+            borderless: true, text: false, customClass: 'not-checkbox' })
+            .click(function () {
+                var $el = $(this).closest('tr');
+                if (confirm("<%- __('txt.sure') %>"))
+                    $.post('/' + $('body').data('u') + '/' + $el.find('input').data('job') +
+                        '/remove?app=print&ts=' + Date.now(), {}).done(function (data) {
+                            var $banner = $('#banner-container')
+                            $banner.find('.action-indicator').remove();
+                            $banner.find('.secondline').remove();
+                            if (data && data.s) window.location.href = location.pathname + '?hello=' + Date.now();
+                            else {
+                                if (data && data.e) $banner.find('.firstline').html(data.e);
+                                else $banner.find('.firstline').html("<%- __('txt.e500') %>");
+                                $banner.xrxbanner('call');
+                            }
+                        }).fail(function () {
+                            var $banner = $('#banner-container')
+                            $banner.find('.action-indicator').remove();
+                            $banner.find('.firstline').html("<%- __('txt.e500') %>");
+                            $banner.find('.secondline').remove();
+                            $banner.xrxbanner('call');
+                        });
+            });
+        $('#tableContainer').find('tr').click(function () {
+            var $el = $(this);
+            if (!$el.find('th[colspan]').length) {
+                setTimeout(function () {
+                    $el.find('input').get(0).checked ? $el.addClass('ui-state-selected') : $el.removeClass('ui-state-selected');
+                }, 250);
+            } else {
+                $el.find('input').get(0).checked ? $el.closest('table').find('tbody tr').addClass('ui-state-selected') :
+                    $el.closest('table').find('tbody tr').removeClass('ui-state-selected');
+            }
+        });
+        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: false, themePrimary: true })
+            .click(function () {
+                if (confirm("<%- __('txt.sure') %>"))
+                    $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
+                        .done(exitApplication).fail(exitApplication);
+            });
+        $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true, themePrimary: true });
+        applyTheme("<%- $sys.theme || '' %>");
+
+        <% if ($printer && $license && user) { %>
+        var $banner = $('#banner-container')
+        $banner.xrxbanner({});
+        getSessionInformation(function () {
+            loadUI();
         }, function (e) {
             if (e) console.log(e);
             loadUI();
         });
         <% } else if (flash && flash.length) { %>
-            var $errors = $('<div></div>');
+            var $alert = $('#alert-container');
             <% while(alert = flash.shift()) { %>
-                $errors.append("<div><%- alert.message %></div>");
+                $alert.append("<p><%- alert.message %></p>");
             <% }; %>
-            buildPopUp("<%- __('field.error') %>", $errors, true).xrxpopup('open');
+            $alert.xrxalert({ buttons: [] });
+            $alert.xrxalert('open');
         <% }; %>
     });
 </script>

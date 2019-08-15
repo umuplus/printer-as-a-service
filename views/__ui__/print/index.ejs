@@ -1,8 +1,32 @@
-<div id="action_bar" class="xrx-action-bar xrx-background blue">
+<div id="action_bar" class="xrx-action-bar xrx-background">
     <div id="title-bar" class="xrx-action-bar-label"><%- __('app.jobs') %></div>
     <button id="btn-exit" class="xrx-action-bar-button-left"><%- __('btn.exit') %></button>
     <button id="btn-print" class="xrx-action-bar-button-right"><%- __('btn.print') %></button>
 </div>
-<div id="tableContainer"></div>
+<div id="tableContainer">
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="checkall" /></th>
+                <th><b><%- __('field.name') %></b></th>
+                <th><i class="fa fa-book"></i></th>
+                <th><i class="fa fa-copy"></i></th>
+                <th colspan="2"><i class="fa fa-palette"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let job of jobs) { %>
+            <tr>
+                <td><input type="checkbox" data-job="<%- job._id %>" /></td>
+                <td><%- job.name %></td>
+                <td><%- job.options.pages %></td>
+                <td><%- job.options.copies %></td>
+                <td><% if (job.options.color) { %><%- __('field.color').substr(0, 1) %><%};%></td>
+                <td><button class="delete fa-pull-right"></button></td>
+            </tr>
+            <% }; %>
+        </tbody>
+    </table>
+</div>
 <% include ../common-scripts %>
 <% include ./scripts %>
