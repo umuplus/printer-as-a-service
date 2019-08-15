@@ -1,176 +1,48 @@
-<script>
-    function buildPopUp(title, content, isStatic) {
-        var $widgetPopUp = $('<div id="popup-alert"></div>');
-        if (content) $widgetPopUp.append(content);
-        $widgetPopUp.xrxpopup({
-            title: title,
-            open: function(event, ui) {
-                if (isStatic) {
-                    $(this).xrxpopup('selectClose').xrxbutton('option', 'disabled', true);
-                    $(this).xrxpopup('selectCancel').xrxbutton('option', 'disabled', true);
-                }
-            },
-        });
-        return $widgetPopUp;
-    }
-    function getSessionInformation(success, fail) {
-        try {
-            xrxSessionGetSessionInfo('https://localhost', function (req, res) {
-                var sessInfoObj = xrxSessionParseGetSessionInfo(sessResponse);
-                if (sessInfoObj) parseSessionInformation(sessInfoObj, success);
-                else fail();
-            }, fail);
-        } catch (e) {
-            fail(e);
-        }
-    }
-    function parseSessionInformation(sessInfo, success, fail) {
-        try {
-            $('body').data('u', xrxGetElementValue(sessInfo, 'username'));
-            var $list = $('<ul></ul>');
-            $list.append("<li><%- __('field.username') %> : " + $('body').data('u') + '</li>');
-            $list.append("<li><%- __('field.password') %> : " + xrxGetElementValue(sessInfo, 'password') + '</li>');
-            if (xrxFindFirstElement(sessInfo, 'jba')) {
-                $list.append("<li>JBA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
-                $list.append("<li>JBA: ACC : " + xrxGetElementValue(sessInfo, 'accountID') + '</li>');
-            } else if (xrxFindFirstElement(sessInfo, 'xsa')) {
-                $list.append("<li>XSA: <%- __('field.user') %> : " + xrxGetElementValue(sessInfo, 'userID') + '</li>');
-                $list.append("<li>XSA: TYPE : " + xrxGetElementValue(sessInfo, 'AccountType') + '</li>');
-                $list.append("<li>XSA: ACC : " + xrxGetElementValue(sessInfo, 'AccountID') + '</li>');
-            }
-            success($list);
-        } catch (e) {
-            fail(e);
-        }
-    }
-    function getDeviceCapability() {
-        xrxDeviceConfigGetDeviceCapabilities('http://127.0.0.1', function (req, res) {
-            var data = xrxDeviceConfigParseGetDeviceCapabilities(response);
-        }, function () {
-        }, null);
-    }
-    function getCapabilitiesByService(data, serviceType) {
-        var arr = xrxFindElements(data, 'CapabilitiesByService');
-        for (var i = 0; i < arr.length; i++) {
-            var service = xrxGetElementValue(arr[i], 'ServiceType');
-            if (service == serviceType) return xrxFindElement(arr[i], [ 'DeviceJobProcessingCapabilities' ]);
-        }
-        return null;
-    }
-    function getOptions(data, id, defaultVal) {
-        var arr = xrxFindElements(data, id), optionStr = '';
-        for (var i = 0; i < arr.length; i++) {
-            var val = xrxGetValue( arr[i] );
-            var displayVal = val;
-            switch (val) {
-            case 'MonochromeGrayscale':
-                displayVal = 'GrayScale';
-                break;
-            default:
-                break;
-            }
-            if (val === defaultVal) optionStr += '<option selected value="' + val + '">' + displayVal + '</option>';
-            else optionStr += '<option value="' + val + '">' + displayVal + '</option>';
-        }
-        return optionStr;
-    }
-
-    /**
-     * Help function, build the PrintJobTicket.
-     *
-     * @param jobDescription    job description tag string
-     * @param jobProcessing     job processing tag string
-     * @return string PrintJobTicket tag in escaped form
-     */
-    function xrxPrintJobTicket(jobDescription, jobProcessing){
-        var ticketStr = '<?xml version=\"1.0\" encoding=\"utf-8\"?>' +
-            xrxCreateTag('PrintJobTicket', 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://schemas.xerox.com/enterprise/eipjobmodel/1\"', jobDescription + jobProcessing);
-        return xrxEscape(ticketStr);
-    }
-    /**
-     * Help function, build the JobDescription tag in the PrintJobTicket
-     *
-     * @param jobName   job name
-     * @param jobOriginating    job owner
-     * @return string JobDescription tag in PrintJobTicket
-     */
-    function xrxPrintJobDescription(jobName, jobOriginating){
-        return xrxCreateTag('JobDescription', '',
-            xrxCreateTag('JobName', '', jobName) + xrxCreateTag('JobOriginatingUserName', '', jobOriginating));
-    }
-    /**
-     * Help function, build the JobProcessing tag in the PrintJobTicket
-     * @param input     input tag string
-     * @param output    output tag string
-     * @return string   JobProcessing tag in PrintJobTicket
-     */
-    function xrxPrintJobProcessing(input, output){
-        return xrxCreateTag('JobProcessing', '', input + output);
-    }
-    /**
-     * Help function, build the Input tag in the PrintJobTicket when the accouting type is JBA
-     *
-     * @param jbaUserId JBA user id
-     * @param jbaAcctId JBA account id
-     * @return string   Input tag in PrintJobTicket
-     */
+<script type='text/javascript'>
     function xrxPrintInputJBA(jbaUserId, jbaAcctId){
         return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Jba', '',
-            xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
+                xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
     }
-    /**
-     * Help function, build the Input tag in the PrintJobTicket when the accouting type is XSA
-     *
-     * @param xsaUserId     XSA user id
-     * @param xsaAcctType   XSA account type
-     * @param xsaAcctId     XSA account id
-     * @return string       Input tag in PrintJobTicket
-     */
+
     function xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId){
         return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Xsa', '',
-                xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
-                    xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
-                        xrxCreateTag('AccountBillingId', '', ''))));
+                    xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
+                        xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
+                    xrxCreateTag('AccountBillingId', '', ''))));
     }
-    /**
-     * Help function, build the Output tag in the PrintJobTicket
-     *
-     * @param staple    StapleFinishing value
-     * @param punch     PunchFinishing value
-     * @param fold      FoldFinishing value
-     * @param color     ColorEffectsType value
-     * @param collate   SheetCollate value
-     * @param copies    Number of copies
-     * @param sides     Output plex value
-     * @param inputTray Input tray value
-     * @return string   Output tag in PrintJobTicket
-     *
-     */
-    function xrxPrintOutput(staple, punch, fold, color, collate, copies, sides, inputTray){
-        var finishingTag = xrxCreateTag('Finishings', '', xrxCreateTag('StapleFinishing', '', staple) +
-            xrxCreateTag('PunchFinishing', '', punch) + xrxCreateTag('FoldFinishing', '', fold));
-        var colorEffectsTag = xrxCreateTag('ColorEffectsType', '', color);
-        var collationTag = xrxCreateTag('SheetCollate', '', collate);
-        var copiesTag = xrxCreateTag('Copies', '', copies);
-        var sidesTag = xrxCreateTag('Sides', '', sides);
-        var trayTag = xrxCreateTag('InputTraysCol', '', xrxCreateTag('InputTrayName', '', inputTray));
-        return xrxCreateTag('Output', '', finishingTag + colorEffectsTag + collationTag + copiesTag + sidesTag + trayTag);
+
+    function applyTheme(theme, target) {
+        if (!theme || !theme.trim()) theme = 'darkgray';
+        if (!target) {
+            $('#action_bar').attr('class', 'xrx-action-bar xrx-background ' + theme);
+            $('body').find('.xrx-widget').theme(theme);
+        } else $(target).theme(theme);
     }
-    function xrxEscape(text){
-        text = unescape(text);
-        text = xrxReplaceChars(text, '<', '&lt;');
-        text = xrxReplaceChars(text, '>', '&gt;');
-        return text;
+
+    function getSessionInformation(success, fail) {
+        xrxSessionGetSessionInfo('http://127.0.0.1', function (request, response) {
+            var data = xrxSessionParseGetSessionInfo(response), input = undefined;
+            $('body').data('u', xrxGetElementValue(data, 'username'));
+            var jba = xrxGetElementValue(data, 'jba');
+            var xsa = xrxGetElementValue(data, 'xsa');
+            if (jba && jba.trim()) {
+                var jbaUserId = xrxGetElementValue(data, 'userID');
+                var jbaAcctId = xrxGetElementValue(data, 'accountID');
+                input = xrxPrintInputJBA(jbaUserId, jbaAcctId);
+            }
+            if (xsa && xsa.trim()) {
+                var xsaUserId = xrxGetElementValue(data, 'userID');
+                var xsaAcctType = xrxGetElementValue(data, 'AccountType');
+                var xsaAcctId = xrxGetElementValue(data, 'AccountID');
+                input = xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId);
+            }
+            if (input) success(input);
+            else fail();
+        }, fail);
     }
 
     $(function() {
         $('body').data('h', $.screenHeight() < 481 ? 330 : 430);
-        $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true })
-            .bind('click', function() {
-            });
-        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: true })
-            .bind('click', function() {
-                console.log('exit');
-            });
+        document.documentElement.style.overflow = 'hidden';
     });
 </script>

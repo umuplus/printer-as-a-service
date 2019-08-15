@@ -1,0 +1,96 @@
+<div id="action_bar" class="xrx-action-bar xrx-background">
+    <div id="title-bar" class="xrx-action-bar-label"><%- __('reg.' + $app) %></div>
+</div>
+<div id="tableContainer">
+    <% if ($sys.menu) { %>
+    <table style="width: 90%;">
+        <tr>
+            <td style="width: 50%;">
+                <center><button id="btn-print" style="display: none;"><%- __('reg.print') %></button></center>
+            </td>
+            <td style="width: 50%;">
+                <center><button id="btn-scan" style="display: none;"><%- __('reg.scan') %></button></center>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%;">
+                <center><button id="btn-copy" style="display: none;"><%- __('reg.copy') %></button></center>
+            </td>
+            <td style="width: 50%;">
+                <center><button id="btn-custom" style="display: none;"><%- __('reg.custom') %></button></center>
+            </td>
+        </tr>
+    </table>
+    <% } else { %>
+    <center><img alt="<%- __('reg.' + $app) %>" src="/images/favicon.png" ></center>
+    <% }; %>
+</div>
+<% include common-scripts %>
+<script type="text/javascript">
+    $(function() {
+        <% if ($printer) { %>
+        function sessionFailed(user) {
+            var msg = "<%- __('txt.claim', $printer.name, $printer.ip, '%s') %>";
+            var $alert = $('#alert-container').html(msg.replace('%s', user));
+            $alert.xrxalert({ buttons: [] });
+            $alert.xrxalert('open');
+        }
+
+        function loadUI() {
+            setTimeout(function () {
+                $('body').data('u', 'master');
+                var $username = $('body').data('u');
+                if (!$username || !$username.trim()) return sessionFailed('?');
+
+                $.post('/' + $username + '/claim', {}).done(function (data) {
+                    if (!data || !data.s) return sessionFailed($username);
+
+                    setTimeout(function () {
+                        <% if (!$sys.menu) { %>
+                        window.location.href = '/' + $username + '/<%- $app %>?ts=' + Date.now();
+                        <% } else { %>
+                        $('#tableContainer').find('table').css('height', $('body').data('h') - 10 + 'px');
+                        $('#btn-print').css('display', 'block').xrxbutton({ text: true, themePrimary: true })
+                            .click(function () {
+                                window.location.href = '/' + $username + '/<%- $app %>?ts=' + Date.now();
+                            });
+                        applyTheme("<%- $sys.theme || '' %>", '#btn-print');
+                        $('#btn-custom').css('display', 'block').xrxbutton({ text: true, themePrimary: true });
+                        applyTheme("<%- $sys.theme || '' %>", '#btn-custom');
+                        $('#btn-scan').css('display', 'block').xrxbutton({ text: true, themePrimary: true });
+                        applyTheme("<%- $sys.theme || '' %>", '#btn-scan');
+                        $('#btn-copy').css('display', 'block').xrxbutton({ text: true, themePrimary: true });
+                        applyTheme("<%- $sys.theme || '' %>", '#btn-copy');
+                        <% }; %>
+                    }, 1000);
+                })
+                .fail(function () {
+                    sessionFailed($username);
+                });
+            }, 1000);
+        }
+        <% }; %>
+        applyTheme("<%- $sys.theme || '' %>");
+        <% if ($printer && $license) { %>
+        var $banner = $('#banner-container')
+        $banner.xrxbanner({});
+        $banner.find('.firstline').html("<%- __('txt.loading') %>");
+        $banner.find('.secondline').html("<%- __('txt.wait') %>");
+        $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
+        $banner.xrxbanner('call');
+        getSessionInformation(function () {
+            loadUI();
+        }, function (e) {
+            if (e) console.log(e);
+            loadUI();
+        });
+        <% } else if (flash && flash.length) { %>
+            var $alert = $('#alert-container');
+            <% while(alert = flash.shift()) { %>
+                $alert.append("<p><%- alert.message %></p>");
+            <% }; %>
+            $alert.xrxalert({ buttons: [] });
+            $alert.xrxalert('open');
+        <% }; %>
+    });
+</script>

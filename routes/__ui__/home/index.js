@@ -6,6 +6,9 @@ const router = express.Router();
 const Controller = require('./controller.class');
 
 router.get('/', Controller.index);
-router.post('/jobs', Controller.jobs);
+router.post('/:username/unclaim', Controller.unclaim);
+router.post('/:username/claim', Controller.claim);
+router.get('/:username/print', Controller.print);
+router.post('/:username/:job/remove', Controller.remove);
 
 module.exports = router;
