@@ -66,7 +66,6 @@
             "master": "Sistem Yöneticisi",
             "user": "Kullanıcı"
         },
-        "loading": "Yükleniyor...",
         "location": "Bulunduğu Yer",
         "login": "Son Giriş Tarihi",
         "model": "Model",
@@ -93,6 +92,7 @@
         "yes": "Evet"
     },
     "reg": {
+        "copy": "Fotokopi",
         "custom": "ÖzelFotokopi",
         "print": "KolayYazdır",
         "scan": "ÖzelTarama"
@@ -106,9 +106,12 @@
         "system": "Sistem Ayarları"
     },
     "txt": {
+        "claim": "<b>%s (%s)</b> cihazı üzerinde <b>%s</b> kullanıcısı için oturum açılamadı.",
         "del": "%s tarihinde silinmiş.",
         "e403": "Erişim engellendi.",
         "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
+        "fail": "İşlem başarısız oldu.",
+        "folder": "Lütfen dosya ayarlarını ve izinlerini kontrol ediniz.",
         "jobs": "<b>%s</b> kullanıcısına ait herhangi bir baskı işi bulunamadı.",
         "license": {
             "date": "Lisans süreniz sona ermiştir.",
@@ -116,14 +119,18 @@
             "printers": "İzin verilen yazıcı sayısına ulaştınız.",
             "users": "İzin verilen kullanıcı sayısına ulaştınız."
         },
+        "loading": "Yükleniyor...",
         "login": "Lütfen bilgilerinizi kontrol ettikten sonra tekrar deneyiniz.",
         "name": "Lütfen isim alanını kontrol ediniz.",
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
         "printer": "Tanımsız bir cihaz (%s) üzerindesiniz.",
         "seen": "%s tarihinde görüldü.",
         "session": "Oturum bilgileri alınamadı!",
+        "success": "İşlem başarıyla gerçekleştirildi.",
         "sure": "Emin misiniz?",
+        "user": "<b>%s</b> adlı kullanıcı bulunamadı.",
         "username": "Lütfen kullanıcı adı alanını kontrol ediniz.",
+        "wait": "Lütfen bekleyiniz.",
         "welcome": "Sayın %s, hoşgeldiniz!"
     }
 }

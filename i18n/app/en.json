@@ -66,7 +66,6 @@
             "master": "Master",
             "user": "User"
         },
-        "loading": "Loading...",
         "location": "Location",
         "login": "Last Sign In",
         "model": "Model",
@@ -93,6 +92,7 @@
         "yes": "Yes"
     },
     "reg": {
+        "copy": "PhotocopyII",
         "custom": "CustomCopy",
         "print": "EasyPrint",
         "scan": "Scan2Home"
@@ -106,9 +106,12 @@
         "system": "System Settings"
     },
     "txt": {
+        "claim": "Creating a new session on <b>%s (%s)</b> has been failed for <b>%s</b>",
         "del": "Deleted at %s",
         "e403": "Access denied.",
         "e500": "Something went terribly wrong.",
+        "fail": "Process has been failed.",
+        "folder": "Please check folder configuration and permissions.",
         "jobs": "There is no print job belong to <b>%s</b>.",
         "license": {
             "date": "Your license is expired.",
@@ -116,14 +119,18 @@
             "printers": "You have reached limit for allowed number of printers.",
             "users": "You have reached limit for allowed number of users."
         },
+        "loading": "Loading...",
         "login": "Please check your credentials and try again.",
         "name": "Please check name field.",
         "password": "Please check password fields.",
         "printer": "You're on an unknown (%s) device.",
         "seen": "Seen at %s",
         "session": "Fetching session info has been failed!",
+        "success": "Process has been completed successfully.",
         "sure": "Are you sure?",
+        "user": "<b>%s</b> not found.",
         "username": "Please check username field.",
+        "wait": "Please wait.",
         "welcome": "Welcome %s!"
     }
 }
