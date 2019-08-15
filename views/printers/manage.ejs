@@ -103,7 +103,7 @@
         try {
             if (confirm(msg)) {
                 container.empty();
-                container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+                container.append(`<tr><td colspan="2"><%- __('txt.loading') %></td></tr>`);
                 container.closest('table').removeClass('d-none');
                 await ajax(`/printers/${ pid }/apps/${ name }/${ checksum }`, {
                     username: $('#field-username').val(), password: $('#field-password').val(),
@@ -118,7 +118,7 @@
     async function registerApp(pid) {
         try {
             container.empty();
-            container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+            container.append(`<tr><td colspan="2"><%- __('txt.loading') %></td></tr>`);
             container.closest('table').removeClass('d-none');
             const apps = [];
             for (let app of [ 'copy', 'print', 'scan', 'custom' ])
@@ -147,7 +147,7 @@
                 const el = $(this);
                 try {
                     container.empty();
-                    container.append(`<tr><td colspan="2"><%- __('field.loading') %></td></tr>`);
+                    container.append(`<tr><td colspan="2"><%- __('txt.loading') %></td></tr>`);
                     container.closest('table').removeClass('d-none');
                     const apps = await ajax(`/printers/${ el.data('printer') }/apps`, {
                         username: $('#field-username').val(),
