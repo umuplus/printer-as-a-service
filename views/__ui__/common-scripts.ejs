@@ -1,16 +1,7 @@
 <script type='text/javascript'>
-    function xrxPrintInputJBA(jbaUserId, jbaAcctId){
-        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Jba', '',
-                xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
+    function exitApplication() {
+        window.location.href = '/?app=print&ts=' + Date.now();
     }
-
-    function xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId){
-        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Xsa', '',
-                    xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
-                        xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
-                    xrxCreateTag('AccountBillingId', '', ''))));
-    }
-
     function applyTheme(theme, target) {
         if (!theme || !theme.trim()) theme = 'darkgray';
         if (!target) {
@@ -18,7 +9,16 @@
             $('body').find('.xrx-widget').theme(theme);
         } else $(target).theme(theme);
     }
-
+    function xrxPrintInputJBA(jbaUserId, jbaAcctId){
+        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Jba', '',
+                xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
+    }
+    function xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId){
+        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Xsa', '',
+                    xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
+                        xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
+                    xrxCreateTag('AccountBillingId', '', ''))));
+    }
     function getSessionInformation(success, fail) {
         xrxSessionGetSessionInfo('http://127.0.0.1', function (request, response) {
             var data = xrxSessionParseGetSessionInfo(response), input = undefined;
@@ -40,7 +40,53 @@
             else fail();
         }, fail);
     }
+    function getDeviceCapability(success, fail) {
+        xrxDeviceConfigGetDeviceCapabilities( "http://127.0.0.1", function getDeviceCapabilities_success(request, response){
+            var data = xrxDeviceConfigParseGetDeviceCapabilities(response), capabilities = {};
+            capabilities.color = xrxFindElement(data, ['Output', 'ColorEffectsTypeCapabilities']);
+            var printCapabilities = getCapabilitiesByService(data, 'Print');
+            if (printCapabilities) {
+                var collation = xrxFindElement(printCapabilities, ['SheetCollateCapabilities']);
+                if (collation) {
+                    var collationDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
+                    capabilities.collation = getOptions(collation, 'AllowedValue', collationDefault);
+                }
 
+                var sides = xrxFindElement(printCapabilities, ['Output', 'SidesCapabilities', 'SidesSupported']);
+                if (sides) {
+                    var sidesDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
+                    capabilities.sides = getOptions(sides, 'AllowedValue', sidesDefault);
+                }
+            }
+            var trayDefault = xrxGetElementValue(data, 'InputTrayNameDefault');
+            capabilities.tray = getOptions(data, 'InputTrayName', trayDefault);
+            success(capabilities);
+        }, fail, null);
+    }
+    function getCapabilitiesByService(data, serviceType){
+        var arr = xrxFindElements(data, 'CapabilitiesByService');
+        for (var i = 0; i < arr.length; i++) {
+            var service = xrxGetElementValue (arr[i], 'ServiceType');
+            if (service == serviceType) return xrxFindElement(arr[i], [ 'DeviceJobProcessingCapabilities' ]);
+        }
+        return null;
+    }
+    function getOptions(data, id, defaultVal){
+        var arr = xrxFindElements(data, id), optionStr = '';
+        for (var i = 0; i < arr.length; i++) {
+            var val = xrxGetValue(arr[i]), displayVal = val;
+            switch (val) {
+                case 'MonochromeGrayscale':
+                    displayVal = 'GrayScale';
+                    break;
+                default:
+                    break;
+            }
+            if (val == defaultVal) optionStr += '<option selected value="' + val + '">' + displayVal + '</option>';
+            else optionStr += '<option value="' + val + '">' + displayVal + '</option>';
+        }
+        return optionStr;
+    }
     $(function() {
         $('body').data('h', $.screenHeight() < 481 ? 330 : 430);
         document.documentElement.style.overflow = 'hidden';
