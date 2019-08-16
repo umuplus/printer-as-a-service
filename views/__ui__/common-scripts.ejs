@@ -2,6 +2,12 @@
     function exitApplication() {
         window.location.href = '/?app=print&ts=' + Date.now();
     }
+    function hideBanner(delay) {
+        if (delay === 0) $('#banner-container').find('button').trigger('click');
+        else setTimeout(function () {
+            $('#banner-container').find('button').trigger('click');
+        }, delay > 0 ? delay : 2000);
+    }
     function applyTheme(theme, target) {
         if (!theme || !theme.trim()) theme = 'darkgray';
         if (!target) {

@@ -30,12 +30,12 @@
     $(function() {
         <% if ($printer) { %>
         function sessionFailed(user) {
+            hideBanner();
             var msg = "<%- __('txt.claim', $printer.name, $printer.ip, '%s') %>";
             var $alert = $('#alert-container').html(msg.replace('%s', user));
             $alert.xrxalert({ buttons: [] });
             $alert.xrxalert('open');
         }
-
         function loadUI() {
             setTimeout(function () {
                 if (!$('body').data('u')) $('body').data('u', 'master');
@@ -70,10 +70,11 @@
             }, 500);
         }
         <% }; %>
+        $('#alert-container').xrxalert({ buttons: [] });
         applyTheme("<%- $sys.theme || '' %>");
         <% if ($printer && $license) { %>
-        var $banner = $('#banner-container')
-        $banner.xrxbanner({});
+        var $banner = $('#banner-container');
+        $banner.xrxbanner({ bannerType: 'active' });
         $banner.find('.firstline').html("<%- __('txt.loading') %>");
         $banner.find('.secondline').html("<%- __('txt.wait') %>");
         $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
@@ -81,7 +82,6 @@
         getSessionInformation(function () {
             loadUI();
         }, function (e) {
-            if (e) console.log(e);
             loadUI();
         });
         <% } else if (flash && flash.length) { %>

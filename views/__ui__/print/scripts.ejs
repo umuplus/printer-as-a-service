@@ -1,38 +1,62 @@
 <script type="text/javascript">
     $(function() {
+        var printing = false, selectedJobs = [];
         <% if ($printer && user) { %>
         function processByStep(job, input, output, description) {
             return function (done) {
                 var $banner = $('#banner-container');
                 $banner.find('.firstline').html(job.name);
                 $banner.find('.secondline').html("<%- __('txt.print') %>");
-                $banner.xrxbanner('call');
+                if (!printing) {
+                    printing = true;
+                    $banner.xrxbanner('call');
+                }
                 printJob(input, output, description, function (e, jid) {
                     setTimeout(function () {
-                        if (e) {
-                            $banner.find('.secondline').html(e.message);
-                            $banner.xrxbanner('call');
-                        }
+                        if (e) $banner.find('.secondline').html(e.message);
                         setTimeout(done, 2000);
                     }, 2000);
                 });
             }
         }
-        function processAll(jobs, input) {
+        function processAll(input) {
+            applyTheme("<%- $sys.themeAlt || '' %>", '#btn-print');
+            $('#btn-print').attr('disabled', true);
+            var $el = $('#tableContainer').find('thead input');
+            if ($el.length) {
+                if (!$el.get(0).checked) $el.trigger('click');
+                $el.trigger('click');
+            }
             var run = {};
-            jobs.forEach(function (job) {
+            selectedJobs.forEach(function (job) {
                 var output = xrxPrintOutput('None', 'None', 'None', job.color ? 'Color' : 'Auto',
                     job.collate || 'Auto', job.copies || 1, 'Auto', job.tray || 'Auto');
                 run[job.job + Date.now()] = processByStep(job, input, output,
                     xrxPrintJobDescription(job.name + ' - ' + job.id, "<%- user.username %>"));
             });
             async.series(run, function () {
-                console.log('completed');
+                printing = false;
                 setTimeout(function () {
                     applyTheme("<%- $sys.theme || '' %>", '#btn-print');
                     $('#btn-print').attr('disabled', false);
+                    window.location.href = location.pathname + '?hello=' + Date.now();
                 }, 500);
             });
+        }
+        function printOptions(capabilities, input) {
+            $('#title-bar').html(selectedJobs[0].name);
+            $('#tableContainer').html($('#print-container').html());
+            $('#tableContainer').find('table').xrxtable({ bordered: true, themePrimary: false,
+                selectable: false, height: $('body').data('h') || 430, scroll: true });
+            applyTheme("<%- $sys.themeAlt || '' %>", '#tableContainer table');
+            $('#switch-color').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-color');
+            $('#switch-side').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-side');
+            $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-arrow-left' }, text: false, themePrimary: true }).data('b', true);
+            $('#field-copies').xrxkeyboard({ initialPlaceholder: '1', layout: 'xrxNum', restrictInput: true, preventPaste: true });
+            applyTheme("<%- $sys.themeAlt || '' %>", '#field-copies');
+            $('#btn-print').data('p', true);
         }
         function loadUI(input) {
             if (!$('body').data('u')) $('body').data('u', 'master');
@@ -44,33 +68,43 @@
             } else {
                 <% if (!$qs.val('hello')) { %>
                 var $banner = $('#banner-container');
-                $banner.find('button').trigger('click');
                 $banner.find('.firstline').html("<%- __('txt.welcome') %>".replace('%s', $username));
                 $banner.find('.secondline').html('');
                 $banner.xrxbanner('call');
+                hideBanner();
                 <% }; %>
                 $('#btn-exit').click(function () {
-                    if (confirm("<%- __('txt.sure') %>")) $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
+                    if ($(this).data('b')) window.location.href = location.pathname + '?hello=' + Date.now();
+                    else if (confirm("<%- __('txt.sure') %>")) $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
                             .done(exitApplication).fail(exitApplication);
                 });
                 $('#btn-print').click(function () {
-                    var selectedJobs = [];
-                    $('#tableContainer').find('tbody input').each(function () {
-                        var $el = $(this);
-                        if ($el.get(0).checked) selectedJobs.push($el.data());
-                    });
-                    if (selectedJobs.length) {
-                        applyTheme("<%- $sys.themeAlt || '' %>", '#btn-print');
-                        $('#btn-print').attr('disabled', true);
-                        $el = $('#tableContainer').find('thead input');
-                        if (!$el.get(0).checked) $el.trigger('click');
-                        $el.trigger('click');
-                        processAll(selectedJobs, input);
-                    } else {
-                        var $banner = $('#banner-container');
-                        $banner.find('.secondline').html('');
-                        $banner.find('.firstline').html("<%- __('txt.select') %>");
-                        $banner.xrxbanner('call');
+                    if ($(this).data('p')) processAll(input); // TODO: apply modifications to job object!
+                    else {
+                        selectedJobs = [];
+                        $('#tableContainer').find('tbody input').each(function () {
+                            var $el = $(this);
+                            if ($el.get(0).checked) selectedJobs.push($el.data());
+                        });
+                        if (selectedJobs.length) {
+                            if (selectedJobs.length > 1) processAll(input);
+                            else getDeviceCapability(function (capabilities) {
+                                printOptions(capabilities, input);
+                            }, function () {
+                                printOptions({}, input); return;
+                                var $banner = $('#banner-container');
+                                $banner.find('.firstline').html(selectedJobs[0].name);
+                                $banner.find('.secondline').html("<%- __('txt.fail') %>");
+                                $banner.xrxbanner('call');
+                                hideBanner();
+                            });
+                        } else {
+                            var $banner = $('#banner-container');
+                            $banner.find('.secondline').html('');
+                            $banner.find('.firstline').html("<%- __('txt.select') %>");
+                            $banner.xrxbanner('call');
+                            hideBanner();
+                        }
                     }
                 });
                 $('button.delete').click(function () {
@@ -93,6 +127,17 @@
                                 $banner.xrxbanner('call');
                             });
                 });
+                $('#tableContainer').find('tr').click(function () {
+                    var $el = $(this);
+                    if (!$el.find('th[colspan]').length) {
+                        setTimeout(function () {
+                            $el.find('input').get(0).checked ? $el.addClass('ui-state-selected') : $el.removeClass('ui-state-selected');
+                        }, 250);
+                    } else {
+                        $el.find('input').get(0).checked ? $el.closest('table').find('tbody tr').addClass('ui-state-selected') :
+                            $el.closest('table').find('tbody tr').removeClass('ui-state-selected');
+                    }
+                });
             }
         }
         <% }; %>
@@ -100,29 +145,17 @@
             selectable: true, height: $('body').data('h') || 430, scroll: true });
         $('button.delete').xrxbutton({ icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
             borderless: true, text: false, customClass: 'not-checkbox' });
-        $('#tableContainer').find('tr').click(function () {
-            var $el = $(this);
-            if (!$el.find('th[colspan]').length) {
-                setTimeout(function () {
-                    $el.find('input').get(0).checked ? $el.addClass('ui-state-selected') : $el.removeClass('ui-state-selected');
-                }, 250);
-            } else {
-                $el.find('input').get(0).checked ? $el.closest('table').find('tbody tr').addClass('ui-state-selected') :
-                    $el.closest('table').find('tbody tr').removeClass('ui-state-selected');
-            }
-        });
         $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: false, themePrimary: true });
         $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true, themePrimary: true });
+        $('#alert-container').xrxalert({ buttons: [] });
         applyTheme("<%- $sys.theme || '' %>");
-
         <% if ($printer && $license && user) { %>
         var $banner = $('#banner-container');
         $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
-        $banner.xrxbanner({});
+        $banner.xrxbanner({ bannerType: 'active' });
         getSessionInformation(function (input) {
             loadUI(input);
-        }, function (e) {
-            if (e) console.log(e);
+        }, function () {
             loadUI();
         });
         <% } else if (flash && flash.length) { %>
