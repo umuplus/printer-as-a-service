@@ -125,6 +125,7 @@
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
         "printer": "Tanımsız bir cihaz (%s) üzerindesiniz.",
         "seen": "%s tarihinde görüldü.",
+        "select": "Lütfen önce yazdırmak istediğiniz iş veya işleri seçiniz.",
         "session": "Oturum bilgileri alınamadı!",
         "success": "İşlem başarıyla gerçekleştirildi.",
         "sure": "Emin misiniz?",
