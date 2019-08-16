@@ -1,0 +1,33 @@
+{
+    "apps": [{
+        "name": "manager",
+        "script": "./bin/start",
+        "instances": 1,
+        "exec_mode": "fork",
+        "env": { "NODE_ENV": "production" }
+    }, {
+        "name": "ui",
+        "script": "./bin/ui",
+        "instances": 1,
+        "exec_mode": "fork",
+        "env": { "NODE_ENV": "production" }
+    }, {
+        "name": "printer",
+        "script": "./bin/virtual-printer",
+        "instances": 1,
+        "exec_mode": "fork",
+        "env": { "NODE_ENV": "production" }
+    }, {
+        "name": "security",
+        "script": "./bin/security",
+        "instances": 1,
+        "exec_mode": "fork",
+        "env": { "NODE_ENV": "production" }
+    }, {
+        "name": "queue",
+        "script": "./bin/queue",
+        "instances": 1,
+        "exec_mode": "fork",
+        "env": { "NODE_ENV": "production" }
+    }]
+}
