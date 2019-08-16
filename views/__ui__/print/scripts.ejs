@@ -1,47 +1,41 @@
 <script type="text/javascript">
     $(function() {
         <% if ($printer && user) { %>
-        function xrxPrintJobTicket(jobDescription, jobProcessing) {
-            var ticketStr = '<?xml version=\"1.0\" encoding=\"utf-8\"?>' +
-                xrxCreateTag('PrintJobTicket', 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://schemas.xerox.com/enterprise/eipjobmodel/1\"', jobDescription + jobProcessing);
-            return xrxEscape( ticketStr );
+        function processByStep(job, input, output, description) {
+            return function (done) {
+                var $banner = $('#banner-container');
+                $banner.find('.firstline').html(job.name);
+                $banner.find('.secondline').html("<%- __('txt.print') %>");
+                $banner.xrxbanner('call');
+                printJob(input, output, description, function (e, jid) {
+                    setTimeout(function () {
+                        if (e) {
+                            $banner.find('.secondline').html(e.message);
+                            $banner.xrxbanner('call');
+                        }
+                        setTimeout(done, 2000);
+                    }, 2000);
+                });
+            }
         }
-        function xrxPrintJobDescription(jobName, jobOriginating) {
-            return xrxCreateTag('JobDescription', '', xrxCreateTag('JobName', '', jobName) +
-                xrxCreateTag('JobOriginatingUserName', '', jobOriginating));
+        function processAll(jobs, input) {
+            var run = {};
+            jobs.forEach(function (job) {
+                var output = xrxPrintOutput('None', 'None', 'None', job.color ? 'Color' : 'Auto',
+                    job.collate || 'Auto', job.copies || 1, 'Auto', job.tray || 'Auto');
+                run[job.job + Date.now()] = processByStep(job, input, output,
+                    xrxPrintJobDescription(job.name + ' - ' + job.id, "<%- user.username %>"));
+            });
+            async.series(run, function () {
+                console.log('completed');
+                setTimeout(function () {
+                    applyTheme("<%- $sys.theme || '' %>", '#btn-print');
+                    $('#btn-print').attr('disabled', false);
+                }, 500);
+            });
         }
-        function xrxPrintJobProcessing(input, output) {
-            return xrxCreateTag('JobProcessing', '', input + output);
-        }
-        function xrxPrintInputJBA(jbaUserId, jbaAcctId) {
-            return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Jba', '',
-                    xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
-        }
-        function xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId) {
-            return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Xsa', '',
-                        xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
-                            xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
-                                xrxCreateTag('AccountBillingId', '', ''))));
-        }
-        function xrxPrintOutput(staple, punch, fold, color, collate, copies, sides, inputTray) {
-            var finishingTag = xrxCreateTag('Finishings', '', xrxCreateTag('StapleFinishing', '', staple) +
-                xrxCreateTag('PunchFinishing', '', punch) + xrxCreateTag('FoldFinishing', '', fold));
-            var colorEffectsTag = xrxCreateTag('ColorEffectsType', '', color);
-            var collationTag = xrxCreateTag('SheetCollate', '', collate);
-            var copiesTag = xrxCreateTag('Copies', '', copies);
-            var sidesTag = xrxCreateTag('Sides', '', sides);
-            var trayTag = xrxCreateTag('InputTraysCol', '', xrxCreateTag('InputTrayName', '', inputTray));
-            return xrxCreateTag('Output', '', finishingTag + colorEffectsTag + collationTag + copiesTag + sidesTag + trayTag);
-        }
-        function xrxEscape(text){
-            text = unescape(text);
-            text = xrxReplaceChars( text, "<", "&lt;" );
-            text = xrxReplaceChars( text, ">", "&gt;" );
-            return text;
-        }
-
-        function loadUI() {
-            $('body').data('u', 'master');
+        function loadUI(input) {
+            if (!$('body').data('u')) $('body').data('u', 'master');
             var $username = $('body').data('u'), $current = "<%- user.username %>";
             if ($username !== $current) {
                 var $alert = $('#alert-container').html("<%- __('txt.claim', $printer.name, $printer.ip, user.username) %>");
@@ -51,40 +45,61 @@
                 <% if (!$qs.val('hello')) { %>
                 var $banner = $('#banner-container');
                 $banner.find('button').trigger('click');
-                $banner.find('.action-indicator').remove();
                 $banner.find('.firstline').html("<%- __('txt.welcome') %>".replace('%s', $username));
-                $banner.find('.secondline').remove();
+                $banner.find('.secondline').html('');
                 $banner.xrxbanner('call');
                 <% }; %>
+                $('#btn-exit').click(function () {
+                    if (confirm("<%- __('txt.sure') %>")) $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
+                            .done(exitApplication).fail(exitApplication);
+                });
+                $('#btn-print').click(function () {
+                    var selectedJobs = [];
+                    $('#tableContainer').find('tbody input').each(function () {
+                        var $el = $(this);
+                        if ($el.get(0).checked) selectedJobs.push($el.data());
+                    });
+                    if (selectedJobs.length) {
+                        applyTheme("<%- $sys.themeAlt || '' %>", '#btn-print');
+                        $('#btn-print').attr('disabled', true);
+                        $el = $('#tableContainer').find('thead input');
+                        if (!$el.get(0).checked) $el.trigger('click');
+                        $el.trigger('click');
+                        processAll(selectedJobs, input);
+                    } else {
+                        var $banner = $('#banner-container');
+                        $banner.find('.secondline').html('');
+                        $banner.find('.firstline').html("<%- __('txt.select') %>");
+                        $banner.xrxbanner('call');
+                    }
+                });
+                $('button.delete').click(function () {
+                    var $el = $(this).closest('tr');
+                    if (confirm("<%- __('txt.sure') %>"))
+                        $.post('/' + $('body').data('u') + '/' + $el.find('input').data('job') +
+                            '/remove?app=print&ts=' + Date.now(), {}).done(function (data) {
+                                var $banner = $('#banner-container');
+                                $banner.find('.secondline').html('');
+                                if (data && data.s) window.location.href = location.pathname + '?hello=' + Date.now();
+                                else {
+                                    if (data && data.e) $banner.find('.firstline').html(data.e);
+                                    else $banner.find('.firstline').html("<%- __('txt.e500') %>");
+                                    $banner.xrxbanner('call');
+                                }
+                            }).fail(function () {
+                                var $banner = $('#banner-container');
+                                $banner.find('.firstline').html("<%- __('txt.e500') %>");
+                                $banner.find('.secondline').html('');
+                                $banner.xrxbanner('call');
+                            });
+                });
             }
         }
         <% }; %>
         $('#tableContainer').find('table').xrxtable({ bordered: true, themePrimary: true,
             selectable: true, height: $('body').data('h') || 430, scroll: true });
         $('button.delete').xrxbutton({ icons: { glyph: 'glyphicon-trash' }, widgetSize: 'xrx-small',
-            borderless: true, text: false, customClass: 'not-checkbox' })
-            .click(function () {
-                var $el = $(this).closest('tr');
-                if (confirm("<%- __('txt.sure') %>"))
-                    $.post('/' + $('body').data('u') + '/' + $el.find('input').data('job') +
-                        '/remove?app=print&ts=' + Date.now(), {}).done(function (data) {
-                            var $banner = $('#banner-container');
-                            $banner.find('.action-indicator').remove();
-                            $banner.find('.secondline').remove();
-                            if (data && data.s) window.location.href = location.pathname + '?hello=' + Date.now();
-                            else {
-                                if (data && data.e) $banner.find('.firstline').html(data.e);
-                                else $banner.find('.firstline').html("<%- __('txt.e500') %>");
-                                $banner.xrxbanner('call');
-                            }
-                        }).fail(function () {
-                            var $banner = $('#banner-container');
-                            $banner.find('.action-indicator').remove();
-                            $banner.find('.firstline').html("<%- __('txt.e500') %>");
-                            $banner.find('.secondline').remove();
-                            $banner.xrxbanner('call');
-                        });
-            });
+            borderless: true, text: false, customClass: 'not-checkbox' });
         $('#tableContainer').find('tr').click(function () {
             var $el = $(this);
             if (!$el.find('th[colspan]').length) {
@@ -96,36 +111,16 @@
                     $el.closest('table').find('tbody tr').removeClass('ui-state-selected');
             }
         });
-        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: false, themePrimary: true })
-            .click(function () {
-                if (confirm("<%- __('txt.sure') %>"))
-                    $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
-                        .done(exitApplication).fail(exitApplication);
-            });
-        $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true, themePrimary: true })
-            .click(function () {
-                var selectedJobs = [];
-                $('#tableContainer').find('tbody input').each(function () {
-                    var $el = $(this);
-                    if ($el.get(0).checked) selectedJobs.push($el.data());
-                });
-                if (selectedJobs.length) {
-                    console.log(selectedJobs);
-                } else {
-                    var $banner = $('#banner-container');
-                    $banner.find('.action-indicator').remove();
-                    $banner.find('.secondline').remove();
-                    $banner.find('.firstline').html("<%- __('txt.select') %>");
-                    $banner.xrxbanner('call');
-                }
-            });
+        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: false, themePrimary: true });
+        $('#btn-print').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true, themePrimary: true });
         applyTheme("<%- $sys.theme || '' %>");
 
         <% if ($printer && $license && user) { %>
         var $banner = $('#banner-container');
+        $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
         $banner.xrxbanner({});
-        getSessionInformation(function () {
-            loadUI();
+        getSessionInformation(function (input) {
+            loadUI(input);
         }, function (e) {
             if (e) console.log(e);
             loadUI();

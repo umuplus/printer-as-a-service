@@ -38,7 +38,7 @@
 
         function loadUI() {
             setTimeout(function () {
-                $('body').data('u', 'master');
+                if (!$('body').data('u')) $('body').data('u', 'master');
                 var $username = $('body').data('u');
                 if (!$username || !$username.trim()) return sessionFailed('?');
 
@@ -62,12 +62,12 @@
                         $('#btn-copy').css('display', 'block').xrxbutton({ text: true, themePrimary: true });
                         applyTheme("<%- $sys.theme || '' %>", '#btn-copy');
                         <% }; %>
-                    }, 1000);
+                    }, 500);
                 })
                 .fail(function () {
                     sessionFailed($username);
                 });
-            }, 1000);
+            }, 500);
         }
         <% }; %>
         applyTheme("<%- $sys.theme || '' %>");

@@ -1,0 +1,61 @@
+<script type='text/javascript'>
+    function xrxPrintJobTicket(jobDescription, jobProcessing) {
+        var ticketStr = '<?xml version=\"1.0\" encoding=\"utf-8\"?>' +
+            xrxCreateTag('PrintJobTicket', 'xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://schemas.xerox.com/enterprise/eipjobmodel/1\"', jobDescription + jobProcessing);
+        return xrxEscape( ticketStr );
+    }
+    function xrxPrintJobDescription(jobName, jobOriginating) {
+        return xrxCreateTag('JobDescription', '', xrxCreateTag('JobName', '', jobName) +
+            xrxCreateTag('JobOriginatingUserName', '', jobOriginating));
+    }
+    function xrxPrintJobProcessing(input, output) {
+        return xrxCreateTag('JobProcessing', '', input + output);
+    }
+    function xrxPrintInputJBA(jbaUserId, jbaAcctId) {
+        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Jba', '',
+                xrxCreateTag('JobAccountingUserId', '', jbaUserId) + xrxCreateTag('JobAccountId', '', jbaAcctId))));
+    }
+    function xrxPrintInputXSA(xsaUserId, xsaAcctType, xsaAcctId) {
+        return xrxCreateTag('Input', '', xrxCreateTag('Accounting', '', xrxCreateTag('Xsa', '',
+                    xrxCreateTag('AccountUserId', '', xsaUserId) + xrxCreateTag('AccountTypeInfo', '',
+                        xrxCreateTag('AccountType', '', xsaAcctType) + xrxCreateTag('AccountID', '', xsaAcctId)) +
+                            xrxCreateTag('AccountBillingId', '', ''))));
+    }
+    function xrxPrintOutput(staple, punch, fold, color, collate, copies, sides, inputTray) {
+        var finishingTag = xrxCreateTag('Finishings', '', xrxCreateTag('StapleFinishing', '', staple) +
+            xrxCreateTag('PunchFinishing', '', punch) + xrxCreateTag('FoldFinishing', '', fold));
+        var colorEffectsTag = xrxCreateTag('ColorEffectsType', '', color);
+        var collationTag = xrxCreateTag('SheetCollate', '', collate);
+        var copiesTag = xrxCreateTag('Copies', '', copies);
+        var sidesTag = xrxCreateTag('Sides', '', sides);
+        var trayTag = xrxCreateTag('InputTraysCol', '', xrxCreateTag('InputTrayName', '', inputTray));
+        return xrxCreateTag('Output', '', finishingTag + colorEffectsTag + collationTag + copiesTag + sidesTag + trayTag);
+    }
+    function xrxEscape(text){
+        text = unescape(text);
+        text = xrxReplaceChars( text, "<", "&lt;" );
+        text = xrxReplaceChars( text, ">", "&gt;" );
+        return text;
+    }
+    function printJob(input, output, description, cb) {
+        var jobProcessing = xrxPrintJobProcessing(input, output);
+        var ticket = xrxPrintJobTicket(description, jobProcessing);
+        var ppUrl = "";
+        xrxPrintInitiatePrintJobURL('http://127.0.0.1', ppUrl, '', '', ticket, function (envelope, response) {
+            var jid = xrxPrintParseInitiatePrintJobURL(response);
+            getJobDetails(jid, Date.now(), function (e) { cb(e, jid); });
+        }, function () {
+            cb(new Error("<%- __('txt.fail') %>"));
+        });
+    }
+    function getJobDetails(jid, now, cb) {
+        xrxGetJobDetails('http://127.0.0.1', 'Print', 'JobId', jid, function (request, response) {
+            var jobDetails = xrxJobMgmtParseGetJobDetails(response);
+            var jobStateNode = xrxFindElement(jobDetails, ['JobInfo', 'JobState']);
+            var jobState = xrxGetValue(jobStateNode);
+            if (jobState === 'Completed') cb();
+            else if (Date.now() - now > 15 * 60000) cb(new Error("<%- __('txt.timeout') %>")); // TODO: optimize 15 min!
+            else setTimeout(function () { getJobDetails(jid, now, cb); }, 3000);
+        });
+    }
+</script>
