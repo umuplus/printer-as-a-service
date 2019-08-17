@@ -11,7 +11,7 @@
                     printing = true;
                     $banner.xrxbanner('call');
                 }
-                printJob(input, output, description, function (e, jid) {
+                printJob(job.job, input, output, description, function (e, jid) {
                     setTimeout(function () {
                         if (e) $banner.find('.secondline').html(e.message);
                         setTimeout(done, 2000);
