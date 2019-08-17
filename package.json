@@ -1,6 +1,6 @@
 {
   "name": "printer-as-a-service",
-  "version": "0.1.2",
+  "version": "0.9.0",
   "private": true,
   "scripts": {
     "coverage": "./node_modules/.bin/jest --coverage",
@@ -15,7 +15,7 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",
-    "dot-bee": "^0.1.6",
+    "dot-bee": "^0.1.7",
     "dotenv": "^8.0.0",
     "easy-soap-request": "^2.6.0",
     "ejs": "^2.6.1",
@@ -37,7 +37,7 @@
     "mongoose-delete": "^0.5.0",
     "mongoose-timestamp": "^0.6.0",
     "msgpack5": "^4.2.1",
-    "node-authjs": "^0.1.4",
+    "node-authjs": "^0.1.5",
     "node-machine-id": "^1.1.12",
     "pem": "^1.14.2",
     "qoa": "^0.2.0",
@@ -45,15 +45,15 @@
     "raw-body": "^2.4.1",
     "shortid": "^2.2.14",
     "soap": "^0.29.0",
-    "xlsx": "^0.14.5",
+    "xlsx": "^0.15.1",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
-    "cli-progress": "^2.1.1",
+    "cli-progress": "^3.0.0",
     "eslint": "^6.1.0",
-    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "jest": "^24.8.0"
+    "jest": "^24.9.0"
   },
   "jest": {
     "testEnvironment": "node"
