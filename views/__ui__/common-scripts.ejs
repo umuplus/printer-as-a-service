@@ -1,6 +1,16 @@
 <script type='text/javascript'>
     function exitApplication() {
+        xrxSessionExitApplication('http://127.0.0.1', function () { }, 10);
         window.location.href = '/?app=print&ts=' + Date.now();
+    }
+    function showBanner(line1, line2, hide, init) {
+        var $banner = $('#banner-container');
+        $banner.xrxbanner({ bannerType: 'active' });
+        $banner.find('.firstline').html(line1);
+        $banner.find('.secondline').html(line2);
+        $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
+        if (!init) $banner.xrxbanner('call');
+        hideBanner(hide);
     }
     function hideBanner(delay) {
         if (delay === 0) $('#banner-container').find('button').trigger('click');

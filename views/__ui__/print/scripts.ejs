@@ -67,11 +67,7 @@
                 $alert.xrxalert('open');
             } else {
                 <% if (!$qs.val('hello')) { %>
-                var $banner = $('#banner-container');
-                $banner.find('.firstline').html("<%- __('txt.welcome') %>".replace('%s', $username));
-                $banner.find('.secondline').html('');
-                $banner.xrxbanner('call');
-                hideBanner();
+                showBanner("<%- __('txt.welcome') %>".replace('%s', $username), '', null);
                 <% }; %>
                 $('#btn-exit').click(function () {
                     if ($(this).data('b')) window.location.href = location.pathname + '?hello=' + Date.now();
@@ -92,19 +88,9 @@
                                 printOptions(capabilities, input);
                             }, function () {
                                 printOptions({}, input); return;
-                                var $banner = $('#banner-container');
-                                $banner.find('.firstline').html(selectedJobs[0].name);
-                                $banner.find('.secondline').html("<%- __('txt.fail') %>");
-                                $banner.xrxbanner('call');
-                                hideBanner();
+                                showBanner(selectedJobs[0].name, "<%- __('txt.fail') %>", null);
                             });
-                        } else {
-                            var $banner = $('#banner-container');
-                            $banner.find('.secondline').html('');
-                            $banner.find('.firstline').html("<%- __('txt.select') %>");
-                            $banner.xrxbanner('call');
-                            hideBanner();
-                        }
+                        } else showBanner("<%- __('txt.select') %>", '', null);
                     }
                 });
                 $('button.delete').click(function () {
@@ -112,19 +98,10 @@
                     if (confirm("<%- __('txt.sure') %>"))
                         $.post('/' + $('body').data('u') + '/' + $el.find('input').data('job') +
                             '/remove?app=print&ts=' + Date.now(), {}).done(function (data) {
-                                var $banner = $('#banner-container');
-                                $banner.find('.secondline').html('');
                                 if (data && data.s) window.location.href = location.pathname + '?hello=' + Date.now();
-                                else {
-                                    if (data && data.e) $banner.find('.firstline').html(data.e);
-                                    else $banner.find('.firstline').html("<%- __('txt.e500') %>");
-                                    $banner.xrxbanner('call');
-                                }
+                                else showBanner(data && data.e ? data.e : "<%- __('txt.e500') %>", '', null);
                             }).fail(function () {
-                                var $banner = $('#banner-container');
-                                $banner.find('.firstline').html("<%- __('txt.e500') %>");
-                                $banner.find('.secondline').html('');
-                                $banner.xrxbanner('call');
+                                showBanner("<%- __('txt.e500') %>", '', null);
                             });
                 });
                 $('#tableContainer').find('tr').click(function () {
@@ -150,9 +127,7 @@
         $('#alert-container').xrxalert({ buttons: [] });
         applyTheme("<%- $sys.theme || '' %>");
         <% if ($printer && $license && user) { %>
-        var $banner = $('#banner-container');
-        $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
-        $banner.xrxbanner({ bannerType: 'active' });
+        showBanner('', '', null, true);
         getSessionInformation(function (input) {
             loadUI(input);
         }, function () {

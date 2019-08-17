@@ -73,12 +73,7 @@
         $('#alert-container').xrxalert({ buttons: [] });
         applyTheme("<%- $sys.theme || '' %>");
         <% if ($printer && $license) { %>
-        var $banner = $('#banner-container');
-        $banner.xrxbanner({ bannerType: 'active' });
-        $banner.find('.firstline').html("<%- __('txt.loading') %>");
-        $banner.find('.secondline').html("<%- __('txt.wait') %>");
-        $banner.find('.action-indicator').xrxactivityindicator({ buttons: [] });
-        $banner.xrxbanner('call');
+        showBanner("<%- __('txt.loading') %>", "<%- __('txt.wait') %>", 5000);
         getSessionInformation(function () {
             loadUI();
         }, function (e) {
