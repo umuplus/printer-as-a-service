@@ -34,7 +34,7 @@ class Service {
             if (!job) throw new Error('job not found');
 
             // TODO what to do if document has not been archived yet and already printed?
-            if (!payload.data.printed || job.prints) {
+            if (!payload.data.printed || job.prints.length) {
                 const printer = await Configuration.printer({});
                 if (is.not.string(printer.folder) || !exists(printer.folder) || access(printer.folder, constants.W_OK))
                     throw new Error('invalid folder');
