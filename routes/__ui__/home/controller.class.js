@@ -113,6 +113,24 @@ class Controller {
             }
         }
     }
+
+    static async pair(req, res) {
+        try {
+            if (!res.locals.$printer || !res.locals.$license) throw new Error('invalid request');
+            else if (!mongoose.Types.ObjectId.isValid(req.params.job)) new Error('invalid job');
+            else if (req.params.jid === '-' || !req.body.s) new Error('invalid request');
+
+            const job = await JobModel.single({ _id: mongoose.Types.ObjectId(req.params.job) });
+            if (!job) throw new Error('job');
+
+            job.prints.push(req.params.jid);
+            await job.save();
+            res.json({ s: true });
+        } catch (e) {
+            console.log(req.url, e.message);
+            res.json({});
+        }
+    }
 }
 
 module.exports = Controller;

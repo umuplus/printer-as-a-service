@@ -17,8 +17,9 @@ const QueryString = require('libqs');
 const session = require('express-session');
 
 const app = express();
-const hardware = machineId();
 const ConnectRedis = require('connect-redis')(session);
+const hardware = machineId();
+
 const PrinterModel = mongoose.model('Printer');
 const SettingModel = mongoose.model('Setting');
 
