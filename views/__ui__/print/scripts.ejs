@@ -14,6 +14,11 @@
                 printJob(job.job, input, output, description, function (e, jid) {
                     setTimeout(function () {
                         if (e) $banner.find('.secondline').html(e.message);
+                        $.post('/' + ( jid || '-' ) + '/' + job.job + '/pair', { s: !e }).done(function () {
+                            // TODO: paired successfully
+                        }).fail(function () {
+                            // TODO: pair failed
+                        });
                         setTimeout(done, 2000);
                     }, 2000);
                 });

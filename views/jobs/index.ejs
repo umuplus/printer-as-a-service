@@ -22,7 +22,7 @@
                 <td><%- job.name %></td>
                 <td><%- job.user.name %> (<%- job.user.username %>)</td>
                 <td><%- job.archived ? __('field.yes') : __('field.no') %></td>
-                <td><%- job.prints %></td>
+                <td><%- job.prints.length %></td>
                 <td>
                     <% if (job.options.paper) { %><span class="badge badge-dark"><%- job.options.paper %></span><% }; %>
                     <% if (job.options.pages) { %><span class="badge badge-dark"><%- job.options.pages %>
