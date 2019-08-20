@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fa fa-<%- $sys.currency || 'dollar' %>-sign"></i> <%= __('app.settings') %> » <%= __('settings.prices') %>
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a href="/<%- $module %>?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-history"></i> <%= __('btn.back') %></a>
+        </div>
+    </div>
+</div>
+
+<% include ../common/alerts %>
+
+<form method="post">
+    <% for (let paper of papers) { %>
+    <% const key = `${ paper }_c`; %>
+    <div class="form-group">
+        <label for="field-<%- paper %>"><%- paper %></label>
+        <input class="form-control" id="field-<%- paper %>" name="<%- paper %>"
+            placeholder="<%- paper %>" value="<%- value[paper] || 0 %>">
+    </div>
+    <div class="form-group">
+        <label for="field-<%- key %>"><%- paper %> (<%- __('field.color') %>)</label>
+        <input class="form-control" id="field-<%- key %>" name="<%- key %>"
+            placeholder="<%- paper %> (<%- __('field.color') %>)" value="<%- value[key] || 0 %>">
+    </div>
+    <% }; %>
+    <button type="submit" class="btn btn-success mr-2"><%= __('btn.submit') %></button>
+    <button type="reset" class="btn btn-light"><%= __('btn.reset') %></button>
+</form>

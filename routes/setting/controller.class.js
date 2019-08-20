@@ -54,6 +54,8 @@ class Controller {
             if (!setting) return res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
             else if (setting.name === 'license')
                 return res.redirect(`/${ res.locals.$module }/license?ts=${ res.locals.$qs.val('ts') }`);
+            else if (setting.name === 'prices')
+                return res.redirect(`/${ res.locals.$module }/prices?ts=${ res.locals.$qs.val('ts') }`);
 
             if (req.method === 'POST' && is.string(req.body.value) && is.not.empty(req.body.value)) {
                 req.body.value = JSON.parse(req.body.value);
@@ -90,6 +92,35 @@ class Controller {
             req.log.error(e.message);
             req.flash('danger', res.__('txt.e500'));
             res.redirect(`/${ res.locals.$module }/license?ts=${ res.locals.$qs.val('ts') }`);
+        }
+    }
+
+    static async prices(req, res) {
+        const papers = [ 'A3', 'A4', 'A5', 'LETTER' ];
+        try {
+            let setting = await SettingModel.single({ name: 'prices' }), value;
+            if (req.method === 'POST') {
+                if (is.empty(req.body)) throw new Error('invalid values');
+
+                if (!setting) setting = new SettingModel({ name: 'prices', keep: true });
+                else setting.increment();
+                for (let field in req.body) {
+                    req.body[field] = Math.abs(parseFloat(req.body[field]));
+                    if (is.not.number(req.body[field])) req.body[field] = 0;
+                }
+                setting.value = auth.sign(req.body);
+                await setting.save();
+                res.redirect(`/${ res.locals.$module }/prices?ts=${ res.locals.$qs.val('ts') }`);
+            } else {
+                if (setting) value = auth.verify(setting.value);
+                if (!value) value = {};
+                if (value.iat) delete value.iat;
+                res.render(`${ res.locals.$module }/prices`, { value, papers });
+            }
+        } catch (e) {
+            req.log.error(e.message);
+            req.flash('danger', res.__('txt.e500'));
+            res.redirect(`/${ res.locals.$module }?ts=${ res.locals.$qs.val('ts') }`);
         }
     }
 

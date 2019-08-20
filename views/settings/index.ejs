@@ -4,6 +4,9 @@
         <div class="btn-group mr-2">
             <a href="/<%- $module %>/create?ts=<%- $qs.val('ts') %>"
                 class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus-circle"></i> <%= __('btn.new.setting') %></a>
+            <a href="/<%- $module %>/prices?ts=<%- $qs.val('ts') %>"
+                class="btn btn-sm btn-outline-secondary"><i class="fa fa-<%- $sys.currency || 'dollar' %>-sign"></i>
+                <%= __('settings.prices') %></a>
             <a href="/<%- $module %>/license?ts=<%- $qs.val('ts') %>"
                 class="btn btn-sm btn-outline-secondary"><i class="fa fa-certificate"></i> <%= __('settings.license') %></a>
         </div>
