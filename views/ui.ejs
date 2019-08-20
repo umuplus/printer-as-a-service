@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta http-equiv="Cache-control" content="no-cache" />
         <title><%= __('app.title') %></title>
-        <% if (!$printer || !$printer.model || ($printer.model.options && $printer.model.code.startsWith('xrx'))) { %>
+        <% if (!$printer || !$printer.model || ($printer.model.options && $printer.model.options.code.startsWith('xrx'))) { %>
         <script type="text/javascript" src="/js/async.min.js"></script>
         <script type="text/javascript" src="/xrx_g9_widgets/XRXg9Widgets.min.js"></script>
         <script type="text/javascript" src="/xrx/XRXXmlHandler.js"></script>

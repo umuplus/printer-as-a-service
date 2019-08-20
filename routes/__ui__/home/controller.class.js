@@ -3,9 +3,11 @@
 const { accessSync: access, constants, existsSync: exists, unlinkSync: unlink } = require('fs');
 const apps = [ 'copy', 'print', 'scan', 'custom' ];
 const Configuration = require('../../../lib/config');
+const ip = require('ip');
 const is = require('is_js');
 const mongoose = require('../../../models');
 
+const address = ip.address();
 const JobModel = mongoose.model('Job');
 const UserModel = mongoose.model('User');
 
@@ -67,13 +69,13 @@ class Controller {
             else if (!res.locals.$printer.options || res.locals.$printer.options.user !== user.id) throw new Error('claim');
 
             const jobs = await JobModel.paginate({ user: user._id }, -1);
-            res.render('__ui__/print/index', { layout: 'ui', jobs: is.array(jobs) ? jobs : [], user });
+            res.render('__ui__/print/index', { layout: 'ui', jobs: is.array(jobs) ? jobs : [], user, $ip: address });
         } catch (e) {
             if (e.message.startsWith('user')) req.flash('danger', res.__('txt.user', req.params.username));
             else if (e.message.startsWith('claim'))
                 req.flash('danger', res.__('txt.claim', res.locals.$printer.name, res.locals.$printer.ip, req.params.username));
             else console.log(e.message);
-            res.render('__ui__/print/index', { layout: 'ui', jobs: [], user: null });
+            res.render('__ui__/print/index', { layout: 'ui', jobs: [], user: null, $ip: address });
         }
     }
 

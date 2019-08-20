@@ -18,7 +18,7 @@
             <% for (let job of jobs) { %>
             <tr>
                 <td><input type="checkbox" data-job="<%- job._id %>" data-name="<%- job.name.replace(/"/g, '').replace(/'/g, '') %>"
-                    <% for (let option in job.options) { %>data-<%- option %>="<%- job.options[option] %>"<% }; %> /></td>
+                    <% for (let option in job.options) { %>data-<%- option %>="<%- job.options[option] %>" <% }; %> /></td>
                 <td><%- job.name %></td>
                 <td><%- job.options.pages %></td>
                 <td><%- job.options.copies %></td>
