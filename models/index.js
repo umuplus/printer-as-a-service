@@ -13,5 +13,6 @@ require('./user');
 
 require('./printer');
 require('./job');
+require('./report');
 
 module.exports = mongoose;

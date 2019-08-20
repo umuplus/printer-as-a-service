@@ -52,8 +52,9 @@ exports.statics = {
         };
     },
     paginate: function (populate) {
-        return function (query, page, sort, fields) {
-            const run = this.find(query).sort(sort || '-_id').lean();
+        return function (query, page, sort, fields, full) {
+            const run = this.find(query).sort(sort || '-_id');
+            if (!full) run.lean();
             if (fields instanceof Array && fields.length) run.select(fields.join(' '));
             if (populate instanceof Array && populate.length) run.populate(populate.join(' '));
             if (page >= 0) run.skip(page * limit).limit(limit);
