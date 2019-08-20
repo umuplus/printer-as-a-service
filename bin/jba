@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+'use strict';
+
+require('dotenv').config();
+
+const { Client: DotBee } = require('dot-bee');
+const formatDate = require('date-fns/format');
+const is = require('is_js');
+const JobBasedAccounting = require('../lib/job-based-accounting');
+const mongoose = require('../models');
+const shortid = require('shortid');
+
+const JobModel = mongoose.model('Job');
+const PrinterModel = mongoose.model('Printer');
+const UserModel = mongoose.model('User');
+
+const bee = new DotBee();
+bee.acceptServices([ 'stats' ]);
+
+async function upsertReports() {
+    const printers = await PrinterModel.paginate({ deleted: false, model: { $exists: true } }, -1, null, null, true);
+    if (is.not.array(printers) || is.empty(printers)) throw new Error('printers not found');
+
+    for (let printer of printers) {
+        if (!printer.isReachable()) {
+            console.log(`${ printer.name } (${ printer.ip }) is unreachable`);
+            continue;
+        }
+
+        const jba = new JobBasedAccounting(printer.options ? printer.options.secure : false);
+        try {
+            const jobs = await jba.report(printer.ip);
+            if (!jobs || is.not.object(jobs)) throw new Error('invalid jobs');
+
+            for (let jid in jobs) {
+                try {
+                    const username = jobs[jid]['job-owner'];
+                    const payload = { p: printer.id, t: formatDate(new Date(), 'YYYYMMDD') };
+                    const job = await JobModel.single({ prints: jid });
+                    if (job && job.id) {
+                        payload.u = job.user.id;
+                    } else if (is.string(username)) {
+                        console.log(`${ jid } from ${ printer.name } (${ printer.ip }) not found in jobs`);
+                        let user = UserModel.single({ username });
+                        if (!user) {
+                            user = new UserModel({ username, name: username, password: '-' });
+                            user.updatePassword(shortid.generate());
+                            await user.save();
+                        }
+                        payload.u = user.id;
+                    }
+                    if (payload.u && is.array(jobs[jid].media) && is.not.empty(jobs[jid].media)) {
+                        payload.d = jobs[jid].media;
+                        await bee.forward('stats', 'upsert', payload); // TODO: backoff policy?!
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            //await jba.purge(printer.ip);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+upsertReports().catch(console.log).finally(() => mongoose.connection.close());
+
+process.on('unhandledRejection', function (e) {
+    console.error('unhandledRejection', e.message);
+});
