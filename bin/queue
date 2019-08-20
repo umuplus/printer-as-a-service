@@ -8,6 +8,7 @@ const { Server: DotBee } = require('dot-bee');
 
 const server = new DotBee({ bee: { removeOnSuccess: true }, level: process.env.LOG_LEVEL });
 server.addService(require('../services/spool'));
+server.addService(require('../services/stats'));
 
 process.on('unhandledRejection', function (e) {
     console.error('unhandledRejection', e.message);
