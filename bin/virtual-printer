@@ -166,16 +166,15 @@ class VirtualPrinter {
                 job.markModified('options');
                 await job.save();
                 fs.renameSync(ps, `${ spool }/${ job.id }.ps`);
-                bee.forward('spool', 'archive', { id: job.id }); // TODO: backoff policy?!
+                await bee.forward('spool', 'archive', { id: job.id }); // TODO: backoff policy?!
                 if (is.number(printer.expire) && printer.expire > 0)
-                    bee.forward('spool', 'expire', { id: job.id }, {
+                    await bee.forward('spool', 'expire', { id: job.id }, {
                         delayUntil: timeTravel(new Date(), printer.expire), printed: !printer.expirePrinted
                     });
                 if (is.number(printer.expirePrinted) && printer.expirePrinted > 0)
-                    bee.forward('spool', 'expire', { id: job.id, printed: true }, {
+                    await bee.forward('spool', 'expire', { id: job.id, printed: true }, {
                         delayUntil: timeTravel(new Date(), printer.expirePrinted)
                     });
-
             } catch (e) {
                 console.log(e.message);
                 if (fs.existsSync(ps)) fs.unlinkSync(ps); // TODO: notify the owner about error
