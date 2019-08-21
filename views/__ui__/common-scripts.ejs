@@ -3,6 +3,14 @@
         xrxSessionExitApplication('http://127.0.0.1', function () { }, 10);
         window.location.href = '/?app=print&ts=' + Date.now();
     }
+    function series(tasks, cb) {
+
+        function stepCompleted() {
+            if (!tasks.length) return cb();
+            else tasks.shift()(stepCompleted);
+        }
+        stepCompleted();
+    }
     function showBanner(line1, line2, hide, init) {
         var $banner = $('#banner-container');
         $banner.xrxbanner({ bannerType: 'active' });

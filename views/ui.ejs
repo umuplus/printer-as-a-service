@@ -7,7 +7,6 @@
         <meta http-equiv="Cache-control" content="no-cache" />
         <title><%= __('app.title') %></title>
         <% if (!$printer || !$printer.model || ($printer.model.options && $printer.model.options.code.startsWith('xrx'))) { %>
-        <script type="text/javascript" src="/js/async.min.js"></script>
         <script type="text/javascript" src="/xrx_g9_widgets/XRXg9Widgets.min.js"></script>
         <script type="text/javascript" src="/xrx/XRXXmlHandler.js"></script>
         <script type="text/javascript" src="/xrx/XRXWebservices.js"></script>
