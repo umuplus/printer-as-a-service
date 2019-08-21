@@ -79,6 +79,27 @@ class Controller {
         }
     }
 
+    static async download(req, res) {
+        try {
+            if (!res.locals.$printer || !res.locals.$license) throw new Error('invalid request');
+            else if (!mongoose.Types.ObjectId.isValid(req.params.job)) new Error('invalid job');
+
+            const job = await JobModel.single({ _id: mongoose.Types.ObjectId(req.params.job) });
+            if (!job) throw new Error('job');
+
+            const printer = await Configuration.printer({});
+            if (is.not.string(printer.folder) || !exists(printer.folder) || access(printer.folder, constants.W_OK))
+                throw new Error('invalid folder');
+
+            if (!printer.folder.endsWith('/')) printer.folder = `${ printer.folder }/`;
+            const ps = `${ printer.folder }spool/${ job.id }.ps`;
+            res.download(ps);
+        } catch (e) {
+            console.log(e.message);
+            res.status(500).json({});
+        }
+    }
+
     static async remove(req, res) {
         try {
             if (!res.locals.$printer || !res.locals.$license) throw new Error('invalid request');
