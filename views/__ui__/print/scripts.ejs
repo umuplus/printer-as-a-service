@@ -32,14 +32,14 @@
                 if (!$el.get(0).checked) $el.trigger('click');
                 $el.trigger('click');
             }
-            var run = {};
+            var run = [];
             selectedJobs.forEach(function (job) {
                 var output = xrxPrintOutput('None', 'None', 'None', job.color ? 'Color' : 'Auto',
                     job.collate || 'Auto', job.copies || 1, 'Auto', job.tray || 'Auto');
-                run[job.job + Date.now()] = processByStep(job, input, output,
-                    xrxPrintJobDescription(job.name + ' - ' + job.id, "<%- user.username %>"));
+                run.push(processByStep(job, input, output,
+                    xrxPrintJobDescription(job.name + ' - ' + job.id, "<%- user.username %>")));
             });
-            async.series(run, function () {
+            series(run, function () {
                 printing = false;
                 setTimeout(function () {
                     applyTheme("<%- $sys.theme || '' %>", '#btn-print');
@@ -80,22 +80,26 @@
                             .done(exitApplication).fail(exitApplication);
                 });
                 $('#btn-print').click(function () {
-                    if ($(this).data('p')) processAll(input); // TODO: apply modifications to job object!
-                    else {
-                        selectedJobs = [];
-                        $('#tableContainer').find('tbody input').each(function () {
-                            var $el = $(this);
-                            if ($el.get(0).checked) selectedJobs.push($el.data());
-                        });
-                        if (selectedJobs.length) {
-                            if (selectedJobs.length > 1) processAll(input);
-                            else getDeviceCapability(function (capabilities) {
-                                printOptions(capabilities, input);
-                            }, function () {
-                                printOptions({}, input); return;
-                                showBanner(selectedJobs[0].name, "<%- __('txt.fail') %>", null);
+                    try {
+                        if ($(this).data('p')) processAll(input); // TODO: apply modifications to job object!
+                        else {
+                            selectedJobs = [];
+                            $('#tableContainer').find('tbody input').each(function () {
+                                var $el = $(this);
+                                if ($el.get(0).checked) selectedJobs.push($el.data());
                             });
-                        } else showBanner("<%- __('txt.select') %>", '', null);
+                            if (selectedJobs.length) {
+                                if (selectedJobs.length > 1) processAll(input);
+                                else getDeviceCapability(function (capabilities) {
+                                    printOptions(capabilities, input);
+                                }, function () {
+                                    printOptions({}, input); return;
+                                    showBanner(selectedJobs[0].name, "<%- __('txt.fail') %>", null);
+                                });
+                            } else showBanner("<%- __('txt.select') %>", '', null);
+                        }
+                    } catch (e) {
+                        showBanner(e.message, '', null);
                     }
                 });
                 $('button.delete').click(function () {

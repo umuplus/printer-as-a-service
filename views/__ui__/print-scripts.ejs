@@ -40,7 +40,7 @@
     function printJob(job, input, output, description, cb) {
         var jobProcessing = xrxPrintJobProcessing(input, output);
         var ticket = xrxPrintJobTicket(description, jobProcessing);
-        var ppUrl = "http://<%- $ip %>:<%- process.env.APP_PORT %>/" + job + '/download';
+        var ppUrl = "http://<%- $ip %>:<%- process.env.UI_PORT %>/" + job + '/download';
         xrxPrintInitiatePrintJobURL('http://127.0.0.1', ppUrl, '', '', ticket, function (envelope, response) {
             var jid = xrxPrintParseInitiatePrintJobURL(response);
             getJobDetails(jid, Date.now(), function (e) { cb(e, jid); });
