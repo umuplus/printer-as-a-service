@@ -3,7 +3,7 @@
 </div>
 <div id="tableContainer">
     <% if ($sys.menu) { %>
-    <table style="width: 90%;">
+    <table>
         <tr>
             <td style="width: 50%;">
                 <center><button id="btn-print" style="display: none;"><%- __('reg.print') %></button></center>
@@ -49,23 +49,25 @@
                         <% if (!$sys.menu) { %>
                         window.location.href = '/' + $username + '/<%- $app %>?ts=' + Date.now();
                         <% } else { %>
-                        $('#tableContainer').find('table').css('height', $('body').data('h') - 10 + 'px');
-                        $('#btn-print').css('display', 'block').xrxbutton({ text: true, themePrimary: true })
+                        $('#tableContainer').find('table').xrxtable({ bordered: true, themePrimary: true,
+                            selectable: false, scroll: false }).css('height', $('body').data('h') - 10 + 'px');
+                        applyTheme("<%- $sys.theme || '' %>", '#tableContainer table');
+                        $('#btn-print').css('display', 'block').xrxbutton({ text: true, themePrimary: false })
                             .click(function () {
                                 window.location.href = '/' + $username + '/print?ts=' + Date.now();
                             });
                         applyTheme("<%- $sys.theme || '' %>", '#btn-print');
-                        $('#btn-custom').css('display', 'block').xrxbutton({ text: true, themePrimary: true })
+                        $('#btn-custom').css('display', 'block').xrxbutton({ text: true, themePrimary: false })
                             .click(function () {
                                 window.location.href = '/' + $username + '/custom?ts=' + Date.now();
                             });
                         applyTheme("<%- $sys.theme || '' %>", '#btn-custom');
-                        $('#btn-scan').css('display', 'block').xrxbutton({ text: true, themePrimary: true })
+                        $('#btn-scan').css('display', 'block').xrxbutton({ text: true, themePrimary: false })
                             .click(function () {
                                 window.location.href = '/' + $username + '/scan?ts=' + Date.now();
                             });
                         applyTheme("<%- $sys.theme || '' %>", '#btn-scan');
-                        $('#btn-copy').css('display', 'block').xrxbutton({ text: true, themePrimary: true })
+                        $('#btn-copy').css('display', 'block').xrxbutton({ text: true, themePrimary: false })
                             .click(function () {
                                 window.location.href = '/' + $username + '/copy?ts=' + Date.now();
                             });
