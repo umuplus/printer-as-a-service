@@ -13,6 +13,7 @@
     "btn": {
         "apply": "Apply",
         "back": "Back",
+        "copy": "Copy",
         "custom_photocopy": "Custom Copy",
         "delete": "Delete",
         "download": "Download",
@@ -68,6 +69,7 @@
         },
         "location": "Location",
         "login": "Last Sign In",
+        "menu": "Menu",
         "model": "Model",
         "name": "Name",
         "no": "No",
@@ -108,6 +110,7 @@
     },
     "txt": {
         "claim": "Creating a new session on <b>%s (%s)</b> has been failed for <b>%s</b>",
+        "copy": "Copying...",
         "del": "Deleted at %s",
         "e403": "Access denied.",
         "e500": "Something went terribly wrong.",
@@ -126,6 +129,7 @@
         "password": "Please check password fields.",
         "print": "Printing...",
         "printer": "You're on an unknown (%s) device.",
+        "scan": "Scanning...",
         "seen": "Seen at %s",
         "select": "Please select job(s) to print first.",
         "session": "Fetching session info has been failed!",

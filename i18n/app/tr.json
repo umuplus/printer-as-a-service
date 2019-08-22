@@ -13,6 +13,7 @@
     "btn": {
         "apply": "Uygula",
         "back": "Geri Dön",
+        "copy": "Kopyala",
         "custom_photocopy": "Özel Fotokopi",
         "delete": "Sil",
         "download": "İndir",
@@ -68,6 +69,7 @@
         },
         "location": "Bulunduğu Yer",
         "login": "Son Giriş Tarihi",
+        "menu": "Menü",
         "model": "Model",
         "name": "İsim",
         "no": "Hayır",
@@ -108,6 +110,7 @@
     },
     "txt": {
         "claim": "<b>%s (%s)</b> cihazı üzerinde <b>%s</b> kullanıcısı için oturum açılamadı.",
+        "copy": "Kopyalanıyor...",
         "del": "%s tarihinde silinmiş.",
         "e403": "Erişim engellendi.",
         "e500": "Ulaşmaya çalıştığınız sayfa yüklenirken bir sorun oluştu.",
@@ -126,6 +129,7 @@
         "password": "Lütfen şifre alanlarını kontrol ediniz.",
         "print": "Yazdırılıyor...",
         "printer": "Tanımsız bir cihaz (%s) üzerindesiniz.",
+        "scan": "Taranıyor...",
         "seen": "%s tarihinde görüldü.",
         "select": "Lütfen önce yazdırmak istediğiniz iş veya işleri seçiniz.",
         "session": "Oturum bilgileri alınamadı!",
