@@ -12,6 +12,7 @@
                     $banner.xrxbanner('call');
                 }
                 printJob(job.job, input, output, description, function (e, jid) {
+                    //$banner.find('.secondline').html("http://<%- $ip %>:<%- process.env.UI_PORT %>/" + job.job + '/download');
                     setTimeout(function () {
                         if (e) $banner.find('.secondline').html(e.message);
                         $.post('/' + ( jid || '-' ) + '/' + job.job + '/pair', { s: !e }).done(function () {

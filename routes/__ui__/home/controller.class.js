@@ -62,6 +62,38 @@ class Controller {
         res.render('__ui__/index', { layout: 'ui', $app });
     }
 
+    static async copy(req, res) {
+        try {
+            const user = await UserModel.single({ username: req.params.username });
+            if (!user || user.deleted) throw new Error('user');
+            else if (!res.locals.$printer.options || res.locals.$printer.options.user !== user.id) throw new Error('claim');
+
+            res.render('__ui__/copy/index', { layout: 'ui', user, $ip: address });
+        } catch (e) {
+            if (e.message.startsWith('user')) req.flash('danger', res.__('txt.user', req.params.username));
+            else if (e.message.startsWith('claim'))
+                req.flash('danger', res.__('txt.claim', res.locals.$printer.name, res.locals.$printer.ip, req.params.username));
+            else console.log(e.message);
+            res.render('__ui__/copy/index', { layout: 'ui', user: null, $ip: address });
+        }
+    }
+
+    static async custom(req, res) {
+        try {
+            const user = await UserModel.single({ username: req.params.username });
+            if (!user || user.deleted) throw new Error('user');
+            else if (!res.locals.$printer.options || res.locals.$printer.options.user !== user.id) throw new Error('claim');
+
+            res.render('__ui__/custom/index', { layout: 'ui', user, $ip: address });
+        } catch (e) {
+            if (e.message.startsWith('user')) req.flash('danger', res.__('txt.user', req.params.username));
+            else if (e.message.startsWith('claim'))
+                req.flash('danger', res.__('txt.claim', res.locals.$printer.name, res.locals.$printer.ip, req.params.username));
+            else console.log(e.message);
+            res.render('__ui__/custom/index', { layout: 'ui', user: null, $ip: address });
+        }
+    }
+
     static async print(req, res) {
         try {
             const user = await UserModel.single({ username: req.params.username });
@@ -76,6 +108,22 @@ class Controller {
                 req.flash('danger', res.__('txt.claim', res.locals.$printer.name, res.locals.$printer.ip, req.params.username));
             else console.log(e.message);
             res.render('__ui__/print/index', { layout: 'ui', jobs: [], user: null, $ip: address });
+        }
+    }
+
+    static async scan(req, res) {
+        try {
+            const user = await UserModel.single({ username: req.params.username });
+            if (!user || user.deleted) throw new Error('user');
+            else if (!res.locals.$printer.options || res.locals.$printer.options.user !== user.id) throw new Error('claim');
+
+            res.render('__ui__/scan/index', { layout: 'ui', user, $ip: address });
+        } catch (e) {
+            if (e.message.startsWith('user')) req.flash('danger', res.__('txt.user', req.params.username));
+            else if (e.message.startsWith('claim'))
+                req.flash('danger', res.__('txt.claim', res.locals.$printer.name, res.locals.$printer.ip, req.params.username));
+            else console.log(e.message);
+            res.render('__ui__/scan/index', { layout: 'ui', user: null, $ip: address });
         }
     }
 
@@ -95,8 +143,8 @@ class Controller {
             const ps = `${ printer.folder }spool/${ job.id }.ps`;
             res.download(ps);
         } catch (e) {
-            console.log(e.message);
-            res.status(500).json({});
+            console.log(e);
+            res.status(500).json({ e: e.message });
         }
     }
 
