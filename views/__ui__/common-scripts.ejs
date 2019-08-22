@@ -1,7 +1,7 @@
 <script type='text/javascript'>
-    function exitApplication() {
+    function exitApplication(target) {
         xrxSessionExitApplication('http://127.0.0.1', function () { }, 10);
-        window.location.href = '/?app=print&ts=' + Date.now();
+        window.location.href = '/?app=' + (target || 'print') + '&ts=' + Date.now();
     }
     function series(tasks, cb) {
 
