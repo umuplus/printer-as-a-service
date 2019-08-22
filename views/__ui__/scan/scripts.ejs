@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    $(function() {
+        <% if ($printer && user) { %>
+        function loadUI(input) {
+            if (!$('body').data('u')) $('body').data('u', 'master');
+            var $username = $('body').data('u'), $current = "<%- user.username %>";
+            if ($username !== $current) {
+                var $alert = $('#alert-container').html("<%- __('txt.claim', $printer.name, $printer.ip, user.username) %>");
+                $alert.xrxalert({ buttons: [] });
+                $alert.xrxalert('open');
+            } else {
+                <% if (!$qs.val('hello')) { %>
+                showBanner("<%- __('txt.welcome') %>".replace('%s', $username), '', null);
+                <% }; %>
+                $('#btn-exit').click(function () {
+                    if ($(this).data('b')) window.location.href = location.pathname + '?hello=' + Date.now();
+                    else if (confirm("<%- __('txt.sure') %>")) $.post('/' + ($('body').data('u') || '-') + '/unclaim', {})
+                        .done(function () {
+                            exitApplication('scan');
+                        }).fail(function () {
+                            exitApplication('scan');
+                        });
+                });
+                $('#btn-scan').click(function () {
+                    try {
+                    } catch (e) {
+                        showBanner(e.message, '', null);
+                    }
+                });
+            }
+        }
+        <% }; %>
+        $('#btn-exit').xrxbutton({ icons: { glyph: 'glyphicon-exit' }, text: false, themePrimary: true });
+        $('#btn-scan').xrxbutton({ icons: { glyph: 'glyphicon-print' }, text: true, themePrimary: true });
+        $('#alert-container').xrxalert({ buttons: [] });
+        applyTheme("<%- $sys.theme || '' %>");
+        <% if ($printer && $license && user) { %>
+        showBanner('', '', null, true);
+        getSessionInformation(function (input) {
+            loadUI(input);
+        }, function () {
+            loadUI();
+        });
+        <% } else if (flash && flash.length) { %>
+            var $alert = $('#alert-container');
+            <% while(alert = flash.shift()) { %>
+                $alert.append("<p><%- alert.message %></p>");
+            <% }; %>
+            $alert.xrxalert({ buttons: [] });
+            $alert.xrxalert('open');
+        <% }; %>
+    });
+</script>
