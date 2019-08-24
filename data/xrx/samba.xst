@@ -1,0 +1,18 @@
+[service xrx_svc_file]
+ {
+    * enum_filingpolicy DocumentFilingPolicy = $filing_policy;
+    * string RepositoryAlias = "$user";
+    * string DocumentPath = "$path";
+    * enum_loginsource LoginSource = TEMPLATE;
+    * string NDSNameContext = "";
+    * string NDSTree = "";
+    * string RepositoryName = "$host:$port";
+    * string RepositoryVolume = "$shareName";
+    * enum_filingprotocol FilingProtocol = $filing_protocol;
+    * string UserNetworkFilingLoginName = "$login";
+    * boolean ServerValidationReq = FALSE;
+    * string XrxHTTPScriptLocation = "";
+    * boolean DocumentDirectoryXSM = TRUE;
+    * string UserNetworkFilingLoginID = "$pass";
+ }
+end

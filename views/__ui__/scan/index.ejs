@@ -4,6 +4,39 @@
     <button id="btn-scan" class="xrx-action-bar-button-right"><%- __('btn.scan') %></button>
 </div>
 <div id="tableContainer">
+    <table>
+        <tbody>
+            <tr id="line-color">
+                <td><img src="/images/iconset/output_color_full_48.png" height="48" width="48"></td>
+                <td><%- __('btn.color') %></td>
+                <td id="color-value" align="right"><%- __('field.default') %></td>
+            </tr>
+            <tr>
+                <td><img src="/images/iconset/2sided_1sided_48.png" height="48" width="48"></td>
+                <td><%- __('btn.two_sided') %></td>
+                <td align="right"><div style="float:right" id="switch-side"></td>
+            </tr>
+            <% if (!samba || !samba.username || !samba.password) { %>
+            <tr>
+                <td><i class="fa fa-user"></i></td>
+                <td><%- __('field.username') %></td>
+                <td align="right"><input id="txt-username" value="<%- user ? user.username : '' %>" type="text"></td>
+            </tr>
+            <tr>
+                <td><i class="fa fa-user-lock"></i></td>
+                <td><%- __('field.password') %></td>
+                <td align="right"><input id="txt-password" type="password"></td>
+            </tr>
+            <% }; %>
+        </tbody>
+    </table>
+</div>
+<div id="select-color">
+    <select>
+        <option value="BLACK_AND_WHITE"><%- __('field.default') %></option>
+        <option value="GRAYSCALE"><%- __('field.grayscale') %></option>
+        <option value="FULL_COLOR"><%- __('field.color') %></option>
+    </select>
 </div>
 <% include ../common-scripts %>
 <% include ./scripts %>

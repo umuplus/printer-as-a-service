@@ -1,6 +1,22 @@
 <script type="text/javascript">
     $(function() {
         <% if ($printer && user) { %>
+        function printOptions(capabilities, input) {
+            $('#tableContainer').find('table').xrxtable({ bordered: true, theme: "<%- $sys.themeAlt || '' %>",
+                themePrimary: false, selectable: false, height: $('body').data('h') || 430, scroll: true });
+            $('#select-color').xrxpopover({ targetControl: '#line-color', basedOnTouch: true });
+            $('#select-color select').xrxsegmentedcontrol({ type: 'textandicon', widgetSize: 'xrx-small',
+                select: function(event, data) {
+                    $('#color-value').data('v', $('#select-color select').val())
+                        .html($('#select-color select option:selected').html());
+                }
+            });
+            $('#txt-username').xrxkeyboard({ initialPlaceholder: "<%- __('field.username') %>", layout: '<%- $sys.language || '' %>',
+                restrictInput: true, preventPaste: true, theme: '<%- $sys.themeAlt || '' %>' });
+            $('#txt-password').xrxkeyboard({ initialPlaceholder: "<%- __('field.password') %>", layout: '<%- $sys.language || '' %>',
+                restrictInput: true, preventPaste: true, theme: '<%- $sys.themeAlt || '' %>' });
+            $('#switch-side').xrxtoggleswitch({ widgetSize: 'xrx-small', theme: "<%- $sys.themeAction || '' %>" });
+        }
         function loadUI(input) {
             if (!$('body').data('u')) $('body').data('u', 'master');
             var $username = $('body').data('u'), $current = "<%- user.username %>";
@@ -22,10 +38,37 @@
                         });
                 });
                 $('#btn-scan').click(function () {
-                    try {
-                    } catch (e) {
-                        showBanner(e.message, '', null);
-                    }
+                    $('#btn-scan').attr('disabled', true);
+                    var valColor = $('#color-value').data('v') || 'Auto';
+                    var valSide = $('#switch-side').xrxtoggleswitch('value') ? 'TwoSidedLongEdge' : 'Onsided';
+                    var valUsername = $('#txt-username').val();
+                    var valPassword = $('#txt-password').val();
+                    setTimeout(function() {
+                        var payload = { color: valColor, side: valSide, username: valUsername, password: valPassword };
+                        if (!payload.username) payload.folder = $username;
+                        $.post('/template', payload).done(function (data) {
+                            if (data && data.t) xrxScanInitiateScan(null, data.t, false, function (request, response) {
+                                showBanner("<%- __('txt.success') %>", '', null, true);
+                                $('#btn-scan').attr('disabled', false);
+                            }, function () {
+                                showBanner("<%- __('txt.fail') %>", '', null, true);
+                                $('#btn-scan').attr('disabled', false);
+                            });
+                            else {
+                                showBanner("<%- __('txt.fail') %>", '', null, true);
+                                $('#btn-scan').attr('disabled', false);
+                            }
+                        })
+                        .fail(function () {
+                            showBanner("<%- __('txt.fail') %>", '', null, true);
+                            $('#btn-scan').attr('disabled', false);
+                        });
+                    }, 2000)
+                });
+                getDeviceCapability(function (capabilities) {
+                    printOptions(capabilities, input);
+                }, function () {
+                    printOptions({}, input);
                 });
             }
         }
