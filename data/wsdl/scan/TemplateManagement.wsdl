@@ -1,0 +1,565 @@
+<definitions 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:xrxpath="http://www.xerox.com/webservices/office/template_management/1/"
+    targetNamespace="http://www.xerox.com/webservices/office/template_management/1/">
+
+    <documentation>
+        Version 1.0.12 
+        This provides the template management API.
+    </documentation>
+
+    <types>
+        <schema targetNamespace="http://www.xerox.com/webservices/office/template_management/1/" 
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified">
+
+            <!--  Simple types  -->
+            <simpleType name="TemplateName">
+                <restriction base="xsd:string"/>
+            </simpleType>
+            <simpleType name="TemplateChecksum">
+                <restriction base="xsd:int"/>
+            </simpleType>
+            <simpleType name="TemplateContent">
+                <restriction base="xsd:string"/>
+            </simpleType>
+            <simpleType name="TemplateErrorDescription">
+                <restriction base="xsd:string"/>
+            </simpleType>
+            <simpleType name="Password">
+                <restriction base="xsd:string"/>
+            </simpleType>
+            <simpleType name="CustomServiceName">
+                <restriction base="xsd:string"/>
+            </simpleType>
+            <simpleType name="UnauthorizedReason">
+                <restriction base="xsd:string"/>
+            </simpleType>
+
+            <!--  Complex types (structures) -->
+            <complexType name="InterfaceVersion">
+                <sequence>
+                    <element name="MajorVersion" type="xsd:short"/>
+                    <element name="MinorVersion" type="xsd:short"/>
+                    <element name="Revision"     type="xsd:short"/>
+                </sequence>
+            </complexType>
+            <complexType name="TemplateEntry">
+                <sequence>
+                    <element name="TemplateName"  type="xrxpath:TemplateName"/>
+                    <element name="TemplateChecksum" type="xrxpath:TemplateChecksum"/>
+                </sequence>
+            </complexType>
+            <complexType name="TemplateEntries">
+                <sequence>
+                    <element name="TemplateEntry" type="xrxpath:TemplateEntry" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </complexType>
+
+            <!-- Complex types (return values) -->
+            <complexType name="GetTemplateResponse">
+                <sequence>
+                    <element name="TemplateContent"  type="xrxpath:TemplateContent"/>
+                    <element name="TemplateChecksum" type="xrxpath:TemplateChecksum"/>
+                </sequence>
+            </complexType>
+            <complexType name="VoidResponse">
+                <sequence>
+                    <!-- no parameters -->
+                </sequence>
+            </complexType>
+            <complexType name="ChecksumResponse">
+                <sequence>
+                    <element name="TemplateChecksum" type="xrxpath:TemplateChecksum"/>
+                </sequence>
+            </complexType>
+
+            <!-- Complex types (parameter lists) -->
+            <complexType name="ListTemplatesRequest">
+                <!-- no parameters -->
+            </complexType>
+            <complexType name="GetTemplateRequest">
+                <sequence>
+                    <element name="templateName"   type="xrxpath:TemplateName" minOccurs="1" maxOccurs="1" nillable="false"/>
+                </sequence>
+            </complexType>
+            <complexType name="PutTemplateRequest">
+                <sequence>
+                    <element name="templateName"    type="xrxpath:TemplateName"    minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="templateContent" type="xrxpath:TemplateContent" minOccurs="1" maxOccurs="1" nillable="false"/>
+                </sequence>
+            </complexType>
+            <complexType name="ReplaceTemplateRequest">
+                <sequence>
+                    <element name="templateName"    type="xrxpath:TemplateName"      minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="templateContent" type="xrxpath:TemplateContent"   minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="priorChecksum"   type="xrxpath:TemplateChecksum"  minOccurs="1" maxOccurs="1" nillable="false"/>
+                </sequence>
+            </complexType>
+            <complexType name="DeleteTemplateRequest">
+                <sequence>
+                    <element name="templateName"    type="xrxpath:TemplateName"      minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="priorChecksum"   type="xrxpath:TemplateChecksum"  minOccurs="1" maxOccurs="1" nillable="false"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetDefaultTemplateRequest">
+                <sequence>
+                    <element name="serviceName"     type="xrxpath:CustomServiceName" minOccurs="0" maxOccurs="1" nillable="true"/>
+                </sequence>
+            </complexType>
+            <complexType name="ReplaceDefaultTemplateRequest">
+                <sequence>
+                    <element name="priorChecksum"   type="xrxpath:TemplateChecksum"  minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="templateContent" type="xrxpath:TemplateContent"   minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="password"        type="xrxpath:Password"          minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="serviceName"     type="xrxpath:CustomServiceName" minOccurs="0" maxOccurs="1" nillable="true"/>
+                </sequence>
+            </complexType>
+            <complexType name="RestoreDefaultTemplateRequest">
+                <sequence>
+                    <element name="priorChecksum"   type="xrxpath:TemplateChecksum"  minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="password"        type="xrxpath:Password"          minOccurs="1" maxOccurs="1" nillable="false"/>
+                    <element name="serviceName"     type="xrxpath:CustomServiceName" minOccurs="0" maxOccurs="1" nillable="true"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetInterfaceVersionRequest">
+                <!-- No parameters -->
+            </complexType>
+
+            <!-- Exceptions -->
+            <complexType name="UnauthorizedException">
+                <sequence>
+                    <element name="reason" type="xrxpath:UnauthorizedReason"/>
+                </sequence>
+            </complexType>
+            <complexType name="NoSuchTemplateException">
+                <sequence>
+                    <!-- No parameters -->
+                </sequence>
+            </complexType>
+            <complexType name="NoSuchServiceException">
+                <sequence>
+                    <!-- No parameters -->
+                </sequence>
+            </complexType>
+            <complexType name="RepositoryFullException">
+                <sequence>
+                    <!-- This is treated as a union; exactly one is required. -->
+                    <element name="maxEntries" type="xsd:unsignedInt"  minOccurs="0" maxOccurs="1"/>
+                    <element name="maxSize"    type="xsd:unsignedLong" minOccurs="0" maxOccurs="1"/>
+                    <element name="dynamic"    type="xsd:boolean"      minOccurs="0" maxOccurs="1"/>
+                </sequence>
+            </complexType>
+            <complexType name="TemplateExistsException">
+                <sequence>
+                    <!-- No parameters -->
+                </sequence>
+            </complexType>
+            <complexType name="InvalidTemplateException">
+                <sequence>
+                    <element name="TemplateErrorDescription" type="xrxpath:TemplateErrorDescription"/>
+                </sequence>
+            </complexType>
+            <complexType name="InvalidChecksumException">
+                <sequence>
+                    <element name="correctChecksum" type="xrxpath:TemplateChecksum"/>
+                </sequence>
+            </complexType>
+
+            <!-- Elements -->
+            <element name="InterfaceVersion"                type="xrxpath:InterfaceVersion"/>
+            <element name="TemplateEntries"                 type="xrxpath:TemplateEntries"/>
+
+            <element name="GetTemplateResponse"             type="xrxpath:GetTemplateResponse"/>
+            <element name="VoidResponse"                    type="xrxpath:VoidResponse"/>
+            <element name="ChecksumResponse"                type="xrxpath:ChecksumResponse"/>
+
+            <element name="GetInterfaceVersionRequest"      type="xrxpath:GetInterfaceVersionRequest"/>
+            <element name="GetDefaultTemplateRequest"       type="xrxpath:GetDefaultTemplateRequest"/>
+            <element name="ReplaceDefaultTemplateRequest"   type="xrxpath:ReplaceDefaultTemplateRequest"/>
+            <element name="RestoreDefaultTemplateRequest"   type="xrxpath:RestoreDefaultTemplateRequest"/>
+            <element name="ListTemplatesRequest"            type="xrxpath:ListTemplatesRequest"/>
+            <element name="GetTemplateRequest"              type="xrxpath:GetTemplateRequest"/>
+            <element name="PutTemplateRequest"              type="xrxpath:PutTemplateRequest"/>
+            <element name="ReplaceTemplateRequest"          type="xrxpath:ReplaceTemplateRequest"/>
+            <element name="DeleteTemplateRequest"           type="xrxpath:DeleteTemplateRequest"/>
+
+            <element name="UnauthorizedException"            type="xrxpath:UnauthorizedException"/>
+            <element name="NoSuchTemplateException"          type="xrxpath:NoSuchTemplateException"/>
+            <element name="NoSuchServiceException"           type="xrxpath:NoSuchServiceException"/>
+            <element name="RepositoryFullException"          type="xrxpath:RepositoryFullException"/>
+            <element name="TemplateExistsException"          type="xrxpath:TemplateExistsException"/>
+            <element name="InvalidTemplateException"         type="xrxpath:InvalidTemplateException"/>
+            <element name="InvalidChecksumException"         type="xrxpath:InvalidChecksumException"/>
+        </schema>
+    </types>
+
+    <!-- Interface version port -->
+    <message name="GetInterfaceVersionRequest">
+        <part name="request" element="xrxpath:GetInterfaceVersionRequest"/>
+    </message>
+    <message name="GetInterfaceVersionResponse">
+        <part name="response" element="xrxpath:InterfaceVersion"/>
+    </message>
+
+    <!-- default template management port -->
+    <message name="GetDefaultTemplateRequest">
+        <part name="request" element="xrxpath:GetDefaultTemplateRequest"/>
+    </message>
+    <message name="GetDefaultTemplateResponse">
+        <part name="response" element="xrxpath:GetTemplateResponse"/>
+    </message>
+
+    <message name="ReplaceDefaultTemplateRequest">
+        <part name="request" element="xrxpath:ReplaceDefaultTemplateRequest"/>
+    </message>
+    <message name="ReplaceDefaultTemplateResponse">
+        <part name="response" element="xrxpath:ChecksumResponse"/>
+    </message>
+
+    <message name="RestoreDefaultTemplateRequest">
+        <part name="request" element="xrxpath:RestoreDefaultTemplateRequest"/>
+    </message>
+    <message name="RestoreDefaultTemplateResponse">
+        <part name="response" element="xrxpath:ChecksumResponse"/>
+    </message>
+
+    <!-- regular template management port -->
+    <message name="ListTemplatesRequest">
+        <part name="request" element="xrxpath:ListTemplatesRequest"/>
+    </message>
+    <message name="ListTemplatesResponse">
+        <part name="response" element="xrxpath:TemplateEntries"/>
+    </message>
+
+    <message name="GetTemplateRequest">
+        <part name="request" element="xrxpath:GetTemplateRequest"/>
+    </message>
+    <message name="GetTemplateResponse">
+        <part name="response" element="xrxpath:GetTemplateResponse"/>
+    </message>
+
+    <message name="PutTemplateRequest">
+        <part name="request" element="xrxpath:PutTemplateRequest"/>
+    </message>
+    <message name="PutTemplateResponse">
+        <part name="response" element="xrxpath:ChecksumResponse"/>
+    </message>
+
+    <message name="ReplaceTemplateRequest">
+        <part name="request" element="xrxpath:ReplaceTemplateRequest"/>
+    </message>
+    <message name="ReplaceTemplateResponse">
+        <part name="response" element="xrxpath:ChecksumResponse"/>
+    </message>
+
+    <message name="DeleteTemplateRequest">
+        <part name="request" element="xrxpath:DeleteTemplateRequest"/>
+    </message>
+    <message name="DeleteTemplateResponse">
+        <part name="void" element="xrxpath:VoidResponse"/>
+    </message>
+
+    <!-- exception messages -->
+    <message name="UnauthorizedException">
+        <part name="UnauthorizedException" element="xrxpath:UnauthorizedException"/>
+    </message>
+    <message name="NoSuchTemplateException">
+        <part name="NoSuchTemplateException" element="xrxpath:NoSuchTemplateException"/>
+    </message>
+    <message name="RepositoryFullException">
+        <part name="RepositoryFullException" element="xrxpath:RepositoryFullException"/>
+    </message>
+    <message name="TemplateExistsException">
+        <part name="TemplateExistsException" element="xrxpath:TemplateExistsException"/>
+    </message>
+    <message name="InvalidTemplateException">
+        <part name="InvalidTemplateException" element="xrxpath:InvalidTemplateException"/>
+    </message>
+    <message name="InvalidChecksumException">
+        <part name="InvalidChecksumException" element="xrxpath:InvalidChecksumException"/>
+    </message>
+    <message name="NoSuchServiceException">
+        <part name="NoSuchServiceException" element="xrxpath:NoSuchServiceException"/>
+    </message>
+
+    <portType name="XrxTemplateRepositoryPort">
+
+        <!-- ===========================  -->
+        <!-- Standard template management -->
+        <operation name="ListTemplates">
+            <input  name="ListTemplatesRequest"  message="xrxpath:ListTemplatesRequest"/>
+            <output name="ListTemplatesResponse" message="xrxpath:ListTemplatesResponse"/>
+            <fault name="UnauthorizedException"  message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <operation name="GetTemplate">
+            <input  name="GetTemplateRequest"  message="xrxpath:GetTemplateRequest"/>
+            <output name="GetTemplateResponse" message="xrxpath:GetTemplateResponse"/>
+            <fault name="NoSuchTemplateException" message="xrxpath:NoSuchTemplateException"/>
+            <fault name="UnauthorizedException"   message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <operation name="PutTemplate">
+            <input  name="PutTemplateRequest"  message="xrxpath:PutTemplateRequest"/>
+            <output name="PutTemplateResponse" message="xrxpath:PutTemplateResponse"/>
+            <fault name="TemplateExistsException"  message="xrxpath:TemplateExistsException"/>
+            <fault name="InvalidTemplateException" message="xrxpath:InvalidTemplateException"/>
+            <fault name="RepositoryFullException"  message="xrxpath:RepositoryFullException"/>
+            <fault name="UnauthorizedException"    message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <operation name="ReplaceTemplate">
+            <input  name="ReplaceTemplateRequest"  message="xrxpath:ReplaceTemplateRequest"/>
+            <output name="ReplaceTemplateResponse" message="xrxpath:ReplaceTemplateResponse"/>
+            <fault name="NoSuchTemplateException"  message="xrxpath:NoSuchTemplateException"/>
+            <fault name="InvalidChecksumException" message="xrxpath:InvalidChecksumException"/>
+            <fault name="InvalidTemplateException" message="xrxpath:InvalidTemplateException"/>
+            <fault name="UnauthorizedException"    message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <operation name="DeleteTemplate">
+            <input  name="DeleteTemplateRequest"   message="xrxpath:DeleteTemplateRequest"/>
+            <output name="DeleteTemplateResponse"  message="xrxpath:DeleteTemplateResponse"/>
+            <fault name="NoSuchTemplateException"  message="xrxpath:NoSuchTemplateException"/>
+            <fault name="InvalidChecksumException" message="xrxpath:InvalidChecksumException"/>
+            <fault name="UnauthorizedException"   message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <!-- =========================== -->
+        <!-- default template management -->
+        <operation name="GetDefaultTemplate">
+            <input  name="GetDefaultTemplateRequest"  message="xrxpath:GetDefaultTemplateRequest"/>
+            <output name="GetDefaultTemplateResponse" message="xrxpath:GetDefaultTemplateResponse"/>
+            <fault name="NoSuchServiceException"  message="xrxpath:NoSuchServiceException"/>
+            <fault name="UnauthorizedException"   message="xrxpath:UnauthorizedException"/>
+        </operation>
+
+        <operation name="ReplaceDefaultTemplate">
+            <input  name="ReplaceDefaultTemplateRequest"  message="xrxpath:ReplaceDefaultTemplateRequest"/>
+            <output name="ReplaceDefaultTemplateResponse" message="xrxpath:ReplaceDefaultTemplateResponse"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+            <fault name="InvalidChecksumException" message="xrxpath:InvalidChecksumException"/>
+            <fault name="InvalidTemplateException" message="xrxpath:InvalidTemplateException"/>
+            <fault name="UnauthorizedException"    message="xrxpath:UnauthorizedException"/>
+        </operation>
+
+        <operation name="RestoreDefaultTemplate">
+            <input name="RestoreDefaultTemplateRequest"   message="xrxpath:RestoreDefaultTemplateRequest"/>
+            <output name="RestoreDefaultTemplateResponse" message="xrxpath:RestoreDefaultTemplateResponse"/>
+            <fault name="InvalidChecksumException" message="xrxpath:InvalidChecksumException"/>
+            <fault name="UnauthorizedException"   message="xrxpath:UnauthorizedException"/>
+            <fault name="NoSuchServiceException"   message="xrxpath:NoSuchServiceException"/>
+        </operation>
+
+        <!-- ================= -->
+        <!-- Interface version -->
+        <operation name="GetInterfaceVersion">
+            <input  name="GetInterfaceVersionRequest"  message="xrxpath:GetInterfaceVersionRequest"/>
+            <output name="GetInterfaceVersionResponse" message="xrxpath:GetInterfaceVersionResponse"/>
+            <!-- no (application level) faults -->
+        </operation>
+    </portType>
+
+    <binding name="XrxTemplateRepositorySoapBinding" type="xrxpath:XrxTemplateRepositoryPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <!-- ================================================================================================ -->
+        <!-- ===========================       Regular template management       ============================ -->
+        <!-- ================================================================================================ -->
+        <operation name="ListTemplates">
+            <soap:operation/>
+            <input name="ListTemplatesRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="ListTemplatesResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="GetTemplate">
+            <soap:operation/>
+            <input name="GetTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="GetTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="NoSuchTemplateException">
+                <soap:fault name="NoSuchTemplateException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="PutTemplate">
+            <soap:operation/>
+            <input name="PutTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="PutTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="TemplateExistsException">
+                <soap:fault name="TemplateExistsException" use="literal"/>
+            </fault>
+            <fault name="InvalidTemplateException">
+                <soap:fault name="InvalidTemplateException" use="literal"/>
+            </fault>
+            <fault name="RepositoryFullException">
+                <soap:fault name="RepositoryFullException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="ReplaceTemplate">
+            <soap:operation/>
+            <input name="ReplaceTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="ReplaceTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="NoSuchTemplateException">
+                <soap:fault name="NoSuchTemplateException" use="literal"/>
+            </fault>
+            <fault name="InvalidChecksumException">
+                <soap:fault name="InvalidChecksumException" use="literal"/>
+            </fault>
+            <fault name="InvalidTemplateException">
+                <soap:fault name="InvalidTemplateException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="DeleteTemplate">
+            <soap:operation/>
+            <input name="DeleteTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="DeleteTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="NoSuchTemplateException">
+                <soap:fault name="NoSuchTemplateException" use="literal"/>
+            </fault>
+            <fault name="InvalidChecksumException">
+                <soap:fault name="InvalidChecksumException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <!-- ================================================================================================ -->
+        <!-- ===========================       Default template management       ============================ -->
+        <!-- ================================================================================================ -->
+        <operation name="GetDefaultTemplate">
+            <soap:operation/>
+            <input name="GetDefaultTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="GetDefaultTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="ReplaceDefaultTemplate">
+            <soap:operation/>
+            <input name="ReplaceDefaultTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="ReplaceDefaultTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="InvalidChecksumException">
+                <soap:fault name="InvalidChecksumException" use="literal"/>
+            </fault>
+            <fault name="InvalidTemplateException">
+                <soap:fault name="InvalidTemplateException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="RestoreDefaultTemplate">
+            <soap:operation/>
+            <input name="RestoreDefaultTemplateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="RestoreDefaultTemplateResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidChecksumException">
+                <soap:fault name="InvalidChecksumException" use="literal"/>
+            </fault>
+            <fault name="UnauthorizedException">
+                <soap:fault name="UnauthorizedException" use="literal"/>
+            </fault>
+            <fault name="NoSuchServiceException">
+                <soap:fault name="NoSuchServiceException" use="literal"/>
+            </fault>
+        </operation>
+
+        <!-- ================================================================================================ -->
+        <!-- =================================       Interface version       ================================ -->
+        <!-- ================================================================================================ -->
+        <operation name="GetInterfaceVersion">
+            <soap:operation/>
+            <input name="GetInterfaceVersionRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="GetInterfaceVersionResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="XrxTemplateManagementService">
+        <port name="XrxTemplateRepositoryPort" binding="xrxpath:XrxTemplateRepositorySoapBinding">
+            <soap:address location="http://localhost/webservices/office/template_management/1/"/>
+        </port>
+    </service>
+</definitions>

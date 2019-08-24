@@ -1,0 +1,18 @@
+SSLINK:"_resources/includes/xrxSDK.css"
+---CONTENT BREAK---
+
+<p class=Subtitle>Scan Services</p>
+
+<p class=Abstract>This section provides the features, specifications and
+design guidelines for Scan Services.</p>
+
+	<p class=BodyText>&nbsp;</p>
+<h1>Scan Template Management WSDL Contents</h1>
+	<p class=BodyText>
+	The Scan Template Management Web Service Description Language Files (WSDL) include:
+<ul>
+<li>Scan Template Management WSDL</li>
+</ul>
+	</p>
+
+<!-- ****************************************************** -->
