@@ -4,6 +4,55 @@
     <button id="btn-copy" class="xrx-action-bar-button-right"><%- __('btn.copy') %></button>
 </div>
 <div id="tableContainer">
+    <table>
+        <tbody>
+            <tr id="line-color">
+                <td><img src="/images/iconset/output_color_full_48.png" height="48" width="48"></td>
+                <td><%- __('btn.color') %></td>
+                <td id="color-value" align="right"><%- __('field.default') %></td>
+            </tr>
+            <tr>
+                <td><img src="/images/iconset/2sided_1sided_48.png" height="48" width="48"></td>
+                <td><%- __('btn.two_sided') %> <%- __('btn.in') %></td>
+                <td align="right"><div style="float:right" id="switch-side-in"></td>
+            </tr>
+            <tr>
+                <td><img src="/images/iconset/2sided_2sided_48.png" height="48" width="48"></td>
+                <td><%- __('btn.two_sided') %> <%- __('btn.out') %></td>
+                <td align="right"><div style="float:right" id="switch-side-out"></td>
+            </tr>
+            <tr id="line-type">
+                <td><img src="/images/iconset/original_type_photo_text_48.png" height="48" width="48"></td>
+                <td><%- __('btn.doc') %></td>
+                <td id="type-value" align="right"><%- __('field.default') %></td>
+            </tr>
+            <tr>
+                <td><img src="/images/iconset/finish_collate_48.png" height="48" width="48"></td>
+                <td><%- __('field.collate') %></td>
+                <td align="right"><div style="float:right" id="switch-collate"></td>
+            </tr>
+            <tr>
+                <td><img src="/images/iconset/book_copy_48.png" height="48" width="48"></td>
+                <td><%- __('field.copies.p') %></td>
+                <td align="right"><input id="field-copies" type="text"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="select-color">
+    <select>
+        <option value="Auto"><%- __('field.default') %></option>
+        <option value="Grayscale"><%- __('field.grayscale') %></option>
+        <option value="FullColor"><%- __('field.color') %></option>
+    </select>
+</div>
+<div id="select-type">
+    <select>
+        <option value="Auto"><%- __('field.default') %></option>
+        <option value="Photo"><%- __('field.photo') %></option>
+        <option value="Text"><%- __('field.text') %></option>
+        <option value="PhotoAndText"><%- __('field.photo_text') %></option>
+    </select>
 </div>
 <% include ../common-scripts %>
 <% include ./scripts %>

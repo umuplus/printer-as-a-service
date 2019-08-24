@@ -1,6 +1,35 @@
 <script type="text/javascript">
     $(function() {
         <% if ($printer && user) { %>
+        function printOptions(capabilities, input) {
+            $('#tableContainer').find('table').xrxtable({ bordered: true, themePrimary: false,
+                selectable: false, height: $('body').data('h') || 430, scroll: true });
+            applyTheme("<%- $sys.themeAlt || '' %>", '#tableContainer table');
+            $('#select-color').xrxpopover({ targetControl: '#line-color', basedOnTouch: true });
+            $('#select-color select').xrxsegmentedcontrol({ type: 'textandicon', widgetSize: 'xrx-small',
+                select: function(event, data) {
+                    $('#color-value').data('v', $('#select-color select').val())
+                        .html($('#select-color select option:selected').html());
+                }
+            });
+            $('#select-type').xrxpopover({ targetControl: '#line-type', basedOnTouch: true });
+            $('#select-type select').xrxsegmentedcontrol({ type: 'textandicon', widgetSize: 'xrx-small',
+                select: function(event, data) {
+                    $('#type-value').data('v', $('#select-type select').val())
+                        .html($('#select-type select option:selected').html());
+                }
+            });
+            $('#switch-side-in').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-side-in');
+            $('#switch-side-out').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-side-out');
+            $('#switch-document').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-document');
+            $('#switch-collate').xrxtoggleswitch({ widgetSize: 'xrx-small' });
+            applyTheme("<%- $sys.themeAction || '' %>", '#switch-collate');
+            $('#field-copies').xrxkeyboard({ initialPlaceholder: '1', layout: 'xrxNum', restrictInput: true, preventPaste: true });
+            applyTheme("<%- $sys.themeAlt || '' %>", '#field-copies');
+        }
         function loadUI(input) {
             if (!$('body').data('u')) $('body').data('u', 'master');
             var $username = $('body').data('u'), $current = "<%- user.username %>";
@@ -22,10 +51,23 @@
                         });
                 });
                 $('#btn-copy').click(function () {
-                    try {
-                    } catch (e) {
-                        showBanner(e.message, '', null);
-                    }
+                    var copyCount = $('#field-copies').val();
+                    var valTwoSided = $('#switch-side-out').xrxtoggleswitch('value') ? 'TwoSidedLongEdge' : 'Onsided';
+                    var valTwoSidedInput = $('#switch-side-in').xrxtoggleswitch('value') ? 'TwoSidedLongEdge' : 'Onsided';
+                    var valType = $('#field-type').data('v');
+                    var copyJobTicket = xrxCopyJobTicket(valTwoSidedInput, '', '', $('#color-value').data('v') || 'Auto',
+                        $('#switch-collate').xrxtoggleswitch('value') ? 'Collated' : 'Uncollated',
+                        parseInt(copyCount) ? copyCount : "1", valTwoSided, '');
+                    xrxCopyInitiateCopyJob(null, copyJobTicket, function (request, response) {
+                        showBanner("<%- __('txt.success') %>", '', null);
+                    }, function () {
+                        showBanner("<%- __('txt.fail') %>", '', null);
+                    });
+                });
+                getDeviceCapability(function (capabilities) {
+                    printOptions(capabilities, input);
+                }, function () {
+                    printOptions({}, input);
                 });
             }
         }
