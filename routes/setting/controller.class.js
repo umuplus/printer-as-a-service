@@ -57,18 +57,22 @@ class Controller {
             else if (setting.name === 'prices')
                 return res.redirect(`/${ res.locals.$module }/prices?ts=${ res.locals.$qs.val('ts') }`);
 
-            if (req.method === 'POST' && is.string(req.body.value) && is.not.empty(req.body.value)) {
-                req.body.value = JSON.parse(req.body.value);
-                if (is.not.object(req.body.value) || is.empty(req.body.value)) throw new Error('invalid value');
-
-                setting.value = auth.sign(req.body.value);
-                await setting.save();
-            }
 
             let value = auth.verify(setting.value);
             if (!value) value = {};
             if (value.iat) delete value.iat;
-            res.render(`${ res.locals.$module }/form`, { setting, value });
+            if (req.method === 'POST' && is.string(req.body.value) && is.not.empty(req.body.value)) {
+                req.body.value = JSON.parse(req.body.value);
+                if (is.not.object(req.body.value) || is.empty(req.body.value)) throw new Error('invalid value');
+
+                if (!req.body.value.password && value.password) req.body.value.password = value.password;
+                setting.value = auth.sign(req.body.value);
+                await setting.save();
+                res.redirect(`/${ res.locals.$module }/${ req.params.id }/edit?ts=${ res.locals.$qs.val('ts') }`);
+            } else {
+                if (value.password) delete value.password;
+                res.render(`${ res.locals.$module }/form`, { setting, value });
+            }
         } catch (e) {
             req.log.error(e.message);
             req.flash('danger', res.__('txt.e500'));
