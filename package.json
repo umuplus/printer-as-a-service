@@ -53,9 +53,20 @@
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "jest": "^24.9.0"
+    "fs-finder": "^1.8.1",
+    "jest": "^24.9.0",
+    "targz": "^1.0.1"
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "bin": "INSTALL",
+  "pkg": {
+    "assets": [
+      "deploy/*"
+    ],
+    "targets": [
+      "node10"
+    ]
   }
 }
