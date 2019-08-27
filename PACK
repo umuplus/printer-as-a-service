@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# common
+if [ -d "deploy" ]; then
+    rm -Rf deploy
+fi
+mkdir deploy
+cd deploy
+
+git clone git@github.com:umuplus/printer-as-a-service.git printer
+rm -Rf printer/.git
+tar czvf printer.tar.gz printer
+rm -Rf printer
+
+cd ..
+pkg .
