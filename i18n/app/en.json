@@ -145,6 +145,7 @@
         "session": "Fetching session info has been failed!",
         "success": "Process has been completed successfully.",
         "sure": "Are you sure?",
+        "template": "Scan template has been failed.",
         "timeout": "Your process has been timed out.",
         "user": "<b>%s</b> not found.",
         "username": "Please check username field.",

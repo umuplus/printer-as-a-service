@@ -145,6 +145,7 @@
         "session": "Oturum bilgileri alınamadı!",
         "success": "İşlem başarıyla gerçekleştirildi.",
         "sure": "Emin misiniz?",
+        "template": "Tarama şablonu başarısız oldu.",
         "timeout": "İşleminiz zaman aşımına uğradı.",
         "user": "<b>%s</b> adlı kullanıcı bulunamadı.",
         "username": "Lütfen kullanıcı adı alanını kontrol ediniz.",
