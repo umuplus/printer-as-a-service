@@ -36,7 +36,7 @@ async function upsertReports() {
             for (let jid in jobs) {
                 try {
                     const username = jobs[jid]['job-owner'];
-                    const payload = { p: printer.id, t: formatDate(new Date(), 'YYYYMMDD') };
+                    const payload = { p: printer.id, t: formatDate(new Date(), 'yyyyMMdd') };
                     const job = await JobModel.single({ prints: jid });
                     if (job && job.id) {
                         payload.u = job.user.id;
