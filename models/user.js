@@ -3,7 +3,6 @@
 const { auth, methods, statics } = require('./_');
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
-const mongooseTimestamps = require('mongoose-timestamp');
 const shortid = require('shortid');
 
 /**
@@ -18,6 +17,7 @@ const schema = mongoose.Schema({
     login: Number,
     options: Object
 }, {
+    timestamps: true,
     toObject: {
         transform: (doc, ret) => {
             delete ret.salt;
@@ -39,6 +39,5 @@ schema.statics._ADMINISTRATOR = 10;
 schema.statics._MASTER = 20;
 
 schema.plugin(mongooseDelete, { deletedAt: true });
-schema.plugin(mongooseTimestamps);
 
 module.exports = mongoose.model('User', schema);

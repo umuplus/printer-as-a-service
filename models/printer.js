@@ -4,7 +4,6 @@ const { methods, statics } = require('./_');
 const { execSync: execute } = require('child_process');
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
-const mongooseTimestamps = require('mongoose-timestamp');
 
 /**
  * Model class of db.printers
@@ -15,7 +14,7 @@ const schema = mongoose.Schema({
     ip: { type: String, required: true, index: true, unique: true },
     seen: Number,
     options: Object
-});
+}, { timestamps: true });
 
 for (let name in methods) schema.methods[name] = methods[name];
 schema.methods.isReachable = function () {
@@ -30,6 +29,5 @@ schema.methods.isReachable = function () {
 for (let name in statics) schema.statics[name] = statics[name]([ 'model' ]);
 
 schema.plugin(mongooseDelete, { deletedAt: true });
-schema.plugin(mongooseTimestamps);
 
 module.exports = mongoose.model('Printer', schema);

@@ -2,7 +2,6 @@
 
 const { methods, statics } = require('./_');
 const mongoose = require('mongoose');
-const mongooseTimestamps = require('mongoose-timestamp');
 
 /**
  * Model class of db.jobs
@@ -13,11 +12,9 @@ const schema = mongoose.Schema({
     prints: { type: Array, default: [] },
     archived: Boolean,
     options: Object
-});
+}, { timestamps: true });
 
 for (let name in methods) schema.methods[name] = methods[name];
 for (let name in statics) schema.statics[name] = statics[name]([ 'user' ]);
-
-schema.plugin(mongooseTimestamps);
 
 module.exports = mongoose.model('Job', schema);
