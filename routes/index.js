@@ -7,6 +7,7 @@ const express = require('express');
 const formatDate = require('date-fns/format');
 const helmet = require('helmet');
 const i18n = require('i18n');
+const IORedis = require('ioredis');
 const is = require('is_js');
 const layout = require('express-ejs-layouts');
 const { machineIdSync: machineId } = require('node-machine-id');
@@ -40,7 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-    store: new ConnectRedis({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT, ttl: 86400 }),
+    store: new ConnectRedis({ client: new IORedis(process.env.REDIS_PORT, process.env.REDIS_HOST) }), // ? ttl: 86400 * 3
     resave: true,
     secret: 'XRvJHkz7Q4w6CHnPgwwJkMGmG3qQPCdWWYrrNUxwfK93efnJ',
     saveUninitialized: true,
