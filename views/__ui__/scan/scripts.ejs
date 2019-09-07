@@ -45,29 +45,38 @@
                     var valPassword = $('#txt-password').length ? $('#txt-password').val() : null;
                     var payload = { color: valColor, side: valSide, username: valUsername, password: valPassword };
                     if (!payload.username) payload.folder = $username;
-                    $.post('/template', payload).done(function (data) {
-                        if (data && data.t) {
-                            xrxScanInitiateScan(null, data.t, false, function (request, response) {
-                                showBanner("<%- __('txt.success') %>", '', null);
+                    try {
+                        $.post('/template', payload).done(function (data) {
+                            if (data && data.t) {
+                                xrxScanInitiateScan(null, data.t, false, function (request, response) {
+                                    showBanner("<%- __('txt.success') %>", '', null);
+                                    $('#btn-scan').attr('disabled', false);
+                                }, function () {
+                                    showBanner("<%- __('txt.fail') %>", '', null);
+                                    $('#btn-scan').attr('disabled', false);
+                                });
+                            } else {
+                                showBanner("<%- __('txt.template') %>", data && data.e ? data.e : '', null);
                                 $('#btn-scan').attr('disabled', false);
-                            }, function () {
-                                showBanner("<%- __('txt.fail') %>", '', null);
-                                $('#btn-scan').attr('disabled', false);
-                            });
-                        } else {
-                            showBanner("<%- __('txt.template') %>", data && data.e ? data.e : '', null);
+                            }
+                        }).fail(function () {
+                            showBanner("<%- __('txt.template') %>", '-', null);
                             $('#btn-scan').attr('disabled', false);
-                        }
-                    }).fail(function () {
-                        showBanner("<%- __('txt.template') %>", '-', null);
+                        });
+                    } catch (e) {
+                        showBanner("<%- __('txt.template') %>", e.message, null);
                         $('#btn-scan').attr('disabled', false);
+                    }
+                });
+                try {
+                    getDeviceCapability(function (capabilities) {
+                        printOptions(capabilities, input);
+                    }, function () {
+                        printOptions({}, input);
                     });
-                });
-                getDeviceCapability(function (capabilities) {
-                    printOptions(capabilities, input);
-                }, function () {
-                    printOptions({}, input);
-                });
+                } catch (e) {
+                    showBanner("<%- __('txt.fail') %>", e.message, null);
+                }
             }
         }
         <% }; %>

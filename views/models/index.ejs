@@ -27,7 +27,7 @@
                 <td><%- model.brand %></td>
                 <td><%- model.model %></td>
                 <td><%- model.options.color ? __('field.yes') : __('field.no') %></td>
-                <td><%- $date(model.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td><%- $date(model.updatedAt, 'dd.MM.yyyy HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">
                         <a href="/<%- $module %>/<%- model._id %>/edit?ts=<%- $qs.val('ts') %>"

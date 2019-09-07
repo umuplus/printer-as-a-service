@@ -28,7 +28,7 @@
             <% const langKey = `settings.${ setting.name }` %>
             <tr>
                 <td><%- langKey === __(langKey) ? setting.name.toUpperCase() : __(langKey) %></td>
-                <td><%- $date(setting.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td><%- $date(setting.updatedAt, 'dd.MM.yyyy HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">
                         <a href="/<%- $module %>/<%- setting._id %>/edit?ts=<%- $qs.val('ts') %>"

@@ -30,8 +30,8 @@
                     <%- user.name %></td>
                 <td><%- user.username %></td>
                 <td><%- isMaster || (user.level >= $privileges.admin ? __('field.level.admin') : '') %></td>
-                <td><%- user.login ? $date(user.login, 'DD.MM.YYYY HH:mm') : '-' %></td>
-                <td><%- $date(user.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td><%- user.login ? $date(user.login, 'dd.MM.yyyy HH:mm') : '-' %></td>
+                <td><%- $date(user.updatedAt, 'dd.MM.yyyy HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">
                         <a href="/<%- $module %>/<%- user._id %>/edit?ts=<%- $qs.val('ts') %>"

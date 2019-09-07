@@ -40,8 +40,8 @@
                     <% }; %>
                 </td>
                 <td><%- printer.options.location %></td>
-                <td><%- printer.seen ? $date(printer.seen, 'DD.MM.YYYY HH:mm') : '-' %></td>
-                <td><%- $date(printer.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td><%- printer.seen ? $date(printer.seen, 'dd.MM.yyyy HH:mm') : '-' %></td>
+                <td><%- $date(printer.updatedAt, 'dd.MM.yyyy HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">
                         <a href="/<%- $module %>/<%- printer._id %>/edit?ts=<%- $qs.val('ts') %>"

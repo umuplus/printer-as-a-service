@@ -45,7 +45,7 @@
                     <% if (job.options.driver !== 'None') { %><span class="badge badge-dark"
                         title="<%- __('field.driver') %>"><%- job.options.driver %></span><% }; %>
                 </td>
-                <td><%- $date(job.updatedAt, 'DD.MM.YYYY HH:mm') %></td>
+                <td><%- $date(job.updatedAt, 'dd.MM.yyyy HH:mm') %></td>
                 <td>
                     <div class="btn-group float-right">
                         <a href="/<%- $module %>/<%- job._id %>/remove?ts=<%- $qs.val('ts') %>"

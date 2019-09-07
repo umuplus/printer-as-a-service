@@ -66,7 +66,7 @@ class Service {
             const ps = `${ printer.folder }spool/${ job.id }.ps`;
             if (!exists(ps) || access(printer.folder, constants.R_OK)) throw new Error('file not found in spool');
 
-            const when = formatDate(job.createdAt, 'YYYY-MM-DD');
+            const when = formatDate(job.createdAt, 'yyyy-MM-dd');
             if (is.not.string(printer.archive)) throw new Error('invalid archive');
             printer.archive = printer.archive.replace('{date}', when).replace('{user}', job.user.username);
             if (!printer.archive.endsWith('/')) printer.archive = `${ printer.archive }/`;

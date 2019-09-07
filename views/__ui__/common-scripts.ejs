@@ -65,26 +65,31 @@
         }, fail);
     }
     function getDeviceCapability(success, fail) {
-        xrxDeviceConfigGetDeviceCapabilities( "http://127.0.0.1", function getDeviceCapabilities_success(request, response){
-            var data = xrxDeviceConfigParseGetDeviceCapabilities(response), capabilities = {};
-            capabilities.color = xrxFindElement(data, ['Output', 'ColorEffectsTypeCapabilities']);
-            var printCapabilities = getCapabilitiesByService(data, 'Print');
-            if (printCapabilities) {
-                var collation = xrxFindElement(printCapabilities, ['SheetCollateCapabilities']);
-                if (collation) {
-                    var collationDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
-                    capabilities.collation = getOptions(collation, 'AllowedValue', collationDefault);
-                }
+        xrxDeviceConfigGetDeviceCapabilities('http://127.0.0.1', function getDeviceCapabilities_success(request, response){
+            try {
+                var data = xrxDeviceConfigParseGetDeviceCapabilities(response), capabilities = {};
+                capabilities.color = xrxFindElement(data, ['Output', 'ColorEffectsTypeCapabilities']);
+                var printCapabilities = getCapabilitiesByService(data, 'Print');
+                if (printCapabilities) {
+                    var collation = xrxFindElement(printCapabilities, ['SheetCollateCapabilities']);
+                    if (collation) {
+                        var collationDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
+                        capabilities.collation = getOptions(collation, 'AllowedValue', collationDefault);
+                    }
 
-                var sides = xrxFindElement(printCapabilities, ['Output', 'SidesCapabilities', 'SidesSupported']);
-                if (sides) {
-                    var sidesDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
-                    capabilities.sides = getOptions(sides, 'AllowedValue', sidesDefault);
+                    var sides = xrxFindElement(printCapabilities, ['Output', 'SidesCapabilities', 'SidesSupported']);
+                    if (sides) {
+                        var sidesDefault = xrxGetElementValue(printCapabilities, 'DefaultValue');
+                        capabilities.sides = getOptions(sides, 'AllowedValue', sidesDefault);
+                    }
                 }
+                var trayDefault = xrxGetElementValue(data, 'InputTrayNameDefault');
+                capabilities.tray = getOptions(data, 'InputTrayName', trayDefault);
+                success(capabilities);
+            } catch (e) {
+                showBanner(e.message, '', null);
+                fail();
             }
-            var trayDefault = xrxGetElementValue(data, 'InputTrayNameDefault');
-            capabilities.tray = getOptions(data, 'InputTrayName', trayDefault);
-            success(capabilities);
         }, fail, null);
     }
     function getCapabilitiesByService(data, serviceType){
