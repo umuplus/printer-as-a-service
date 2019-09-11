@@ -12,7 +12,6 @@ const is = require('is_js');
 const layout = require('express-ejs-layouts');
 const { machineIdSync: machineId } = require('node-machine-id');
 const mongoose = require('../models');
-const parseDate = require('date-fns/parse');
 const path = require('path');
 const pino = require('express-pino-logger')({ level: process.env.LOG_LEVEL });
 const QueryString = require('libqs');
@@ -58,7 +57,6 @@ app.use(function (req, res, next) {
     res.locals.$hardware = hardware;
     res.locals.$module = 'home';
     res.locals.$privileges = { admin: UserModel._ADMINISTRATOR, master: UserModel._MASTER, user: 0 };
-    res.locals.$parse = parseDate;
     res.locals.$qs = new QueryString();
     res.locals.$qs.overwrite(req.query);
     res.locals.$license = {};
